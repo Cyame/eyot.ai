@@ -325,19 +325,19 @@ export default function AppShell() {
 
       <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
         <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-line bg-surface/80 px-4 backdrop-blur-md sm:px-6">
-          <div className="hidden min-w-0 sm:block">
-            <p className="truncate text-sm font-semibold text-ink">{t('common.appName')}</p>
-            <p className="truncate text-xs text-muted">{t('common.controlStudio')}</p>
+          <div
+            className="flex min-w-0 flex-1 items-center justify-start gap-2"
+            data-testid="app-header-context"
+          >
+            {activeOrgId !== null ? (
+              <>
+                <OrgSwitcher variant="header" />
+                <StatusBar />
+              </>
+            ) : null}
           </div>
 
-          {activeOrgId !== null ? (
-            <div className="flex min-w-0 items-center gap-2">
-              <OrgSwitcher variant="header" />
-              <StatusBar />
-            </div>
-          ) : null}
-
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               to="/account"
               className="flex min-w-0 items-center gap-2 rounded-full px-2 py-1.5 hover:bg-surface-muted"

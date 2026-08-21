@@ -86,4 +86,10 @@ describe('0.5.3.dev1 shell flows', () => {
     renderShell('/orgs/org-1');
     expect(screen.getAllByTestId('theme-toggle')).toHaveLength(1);
   });
+
+  it('keeps Control studio only in the sidebar', () => {
+    renderShell('/orgs/org-1');
+    expect(screen.getAllByText('Control studio')).toHaveLength(1);
+    expect(within(screen.getByRole('banner')).queryByText('Control studio')).not.toBeInTheDocument();
+  });
 });

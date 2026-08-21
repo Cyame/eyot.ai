@@ -149,6 +149,22 @@ describe('AppShell sidebar sections', () => {
     expect(screen.getByTestId('org-switcher')).toBeInTheDocument();
     expect(desktopNav().getByRole('link', { name: 'Account' })).toBeInTheDocument();
   });
+
+  it('keeps Eyot Control studio in the sidebar and left-aligns continent chrome', async () => {
+    useSessionStore.setState({ currentOrgId: 'org-1' });
+    renderShell('/orgs/org-1');
+
+    expect(screen.getAllByText('Control studio')).toHaveLength(1);
+    const header = screen.getByRole('banner');
+    expect(within(header).queryByText('Control studio')).not.toBeInTheDocument();
+    expect(within(header).queryByText('Eyot')).not.toBeInTheDocument();
+
+    const context = screen.getByTestId('app-header-context');
+    expect(within(context).getByTestId('org-switcher')).toBeInTheDocument();
+    const status = await within(context).findByTestId('status-bar');
+    const account = within(header).getByRole('link', { name: /operator/i });
+    expect(status.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
 
 describe('AppShell route → session sync', () => {

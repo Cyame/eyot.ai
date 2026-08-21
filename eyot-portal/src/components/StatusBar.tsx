@@ -66,7 +66,7 @@ export default function StatusBar() {
   const preview = orgIdentity.atoms.slice(0, 2);
 
   return (
-    <div ref={rootRef} className="relative hidden lg:block">
+    <div ref={rootRef} className="relative hidden min-w-0 sm:block">
       <button
         type="button"
         data-testid="status-bar"
@@ -119,7 +119,7 @@ export default function StatusBar() {
           role="dialog"
           data-testid="status-bar-permissions"
           aria-label={t('statusBar.permissionsLabel')}
-          className="absolute right-0 z-50 mt-1.5 w-72 overflow-hidden rounded-lg border border-line bg-surface py-2 shadow-lg"
+          className="absolute left-0 z-50 mt-1.5 w-72 overflow-hidden rounded-lg border border-line bg-surface py-2 shadow-lg"
         >
           <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wide text-muted">
             {t('statusBar.geneLabel')} · {geneLabel}

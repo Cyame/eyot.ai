@@ -128,7 +128,7 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
           className={cn(
             'absolute z-50 mt-1.5 min-w-[13rem] max-w-72 overflow-hidden rounded-lg border py-1 shadow-lg',
             variant === 'header'
-              ? 'right-0 border-line bg-surface text-ink'
+              ? 'left-0 border-line bg-surface text-ink'
               : 'left-0 border-nav-line bg-nav text-nav-ink',
           )}
         >
