@@ -3,6 +3,7 @@ import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ThemeToggle from '@/components/ThemeToggle';
 import { createOrganization, fetchOrganizations } from '@/lib/api/organizations';
 import { resolveError } from '@/lib/apiError';
 import { toSlug } from '@/lib/slug';
@@ -99,37 +100,40 @@ export default function OrgPickerPage() {
   }
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-slate-950 px-4 py-10 text-slate-100">
-      <section className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl shadow-black/30 sm:p-8">
+    <main className="grid min-h-dvh place-items-center bg-canvas px-4 py-10 text-ink">
+      <section className="w-full max-w-2xl rounded-2xl border border-line bg-surface p-6 shadow-lg sm:p-8">
         <div className="mb-8 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-xl bg-blue-600 text-white">
+            <span className="grid size-11 place-items-center rounded-xl bg-brand text-brand-fg">
               <Building2 className="size-6" aria-hidden="true" />
             </span>
             <div>
               <p className="text-sm font-semibold tracking-tight">{t('common.appName')}</p>
-              <p className="text-xs text-slate-400">{t('common.appTagline')}</p>
+              <p className="text-xs text-muted">{t('common.appTagline')}</p>
             </div>
           </div>
-          <LanguageSwitcher variant="sidebar" placement="down" />
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle variant="surface" />
+            <LanguageSwitcher variant="surface" placement="down" />
+          </div>
         </div>
 
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight">{t('orgPicker.title')}</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{t('orgPicker.subtitle')}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-subtle">{t('orgPicker.subtitle')}</p>
         </div>
 
         {loadError !== null ? (
           <div
             role="alert"
-            className="mb-5 flex gap-3 rounded-lg border border-red-800/80 bg-red-950/70 px-4 py-3 text-sm text-red-200"
+            className="mb-5 flex gap-3 rounded-lg border border-danger/40 bg-danger-soft px-4 py-3 text-sm text-danger"
           >
             <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p className="flex-1">{loadError}</p>
             <button
               type="button"
               onClick={() => void load()}
-              className="rounded-md px-2 py-0.5 text-xs font-semibold text-red-200 hover:bg-red-900/60"
+              className="rounded-md px-2 py-0.5 text-xs font-semibold text-danger hover:bg-red-900/60"
             >
               {t('common.retry')}
             </button>
@@ -137,22 +141,20 @@ export default function OrgPickerPage() {
         ) : null}
 
         {isLoading ? (
-          <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted-subtle">
             <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
             {t('orgPicker.loading')}
           </div>
         ) : orgs === null ? null : orgs.length === 0 ? (
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 px-6 py-12 text-center">
-            <UserRound className="mx-auto size-8 text-slate-500" aria-hidden="true" />
-            <h2 className="mt-4 text-sm font-semibold text-slate-200">
-              {t('orgPicker.emptyTitle')}
-            </h2>
-            <p className="mt-2 text-sm text-slate-400">{t('orgPicker.emptyDetail')}</p>
+          <div className="rounded-xl border border-nav-line bg-overlay px-6 py-12 text-center">
+            <UserRound className="mx-auto size-8 text-muted" aria-hidden="true" />
+            <h2 className="mt-4 text-sm font-semibold text-nav-ink">{t('orgPicker.emptyTitle')}</h2>
+            <p className="mt-2 text-sm text-muted-subtle">{t('orgPicker.emptyDetail')}</p>
             <button
               type="button"
               onClick={openCreate}
               data-testid="org-picker-empty-cta"
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover"
             >
               <Plus className="size-4" aria-hidden="true" />
               {t('orgPicker.ctaCreate')}
@@ -161,12 +163,12 @@ export default function OrgPickerPage() {
         ) : (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-slate-200">{t('orgPicker.listTitle')}</h2>
+              <h2 className="text-sm font-semibold text-nav-ink">{t('orgPicker.listTitle')}</h2>
               <button
                 type="button"
                 onClick={openCreate}
                 data-testid="org-picker-create"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-slate-800"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-nav-line px-3 py-1.5 text-xs font-semibold text-nav-ink transition-colors hover:bg-surface-muted"
               >
                 <Plus className="size-3.5" aria-hidden="true" />
                 {t('orgPicker.ctaCreate')}
@@ -179,12 +181,14 @@ export default function OrgPickerPage() {
                     type="button"
                     onClick={() => handleSelect(org.id)}
                     data-testid={`org-card-${org.slug}`}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-left transition-colors hover:border-blue-500/60 hover:bg-slate-900"
+                    className="w-full rounded-xl border border-nav-line bg-overlay p-4 text-left transition-colors hover:border-brand/60 hover:bg-surface"
                   >
-                    <p className="truncate text-sm font-semibold text-slate-100">{org.name}</p>
-                    <p className="mt-0.5 truncate font-mono text-xs text-slate-500">{org.slug}</p>
+                    <p className="truncate text-sm font-semibold text-nav-ink">{org.name}</p>
+                    <p className="mt-0.5 truncate font-mono text-xs text-muted">{org.slug}</p>
                     {org.description ? (
-                      <p className="mt-2 line-clamp-2 text-xs text-slate-400">{org.description}</p>
+                      <p className="mt-2 line-clamp-2 text-xs text-muted-subtle">
+                        {org.description}
+                      </p>
                     ) : null}
                   </button>
                 </li>
@@ -196,11 +200,11 @@ export default function OrgPickerPage() {
         {showCreate ? (
           <form
             onSubmit={(event) => void handleCreate(event)}
-            className="mt-6 space-y-4 rounded-xl border border-slate-700 bg-slate-950/60 p-5"
+            className="mt-6 space-y-4 rounded-xl border border-nav-line bg-overlay p-5"
           >
-            <h2 className="text-sm font-semibold text-slate-200">{t('orgPicker.createTitle')}</h2>
+            <h2 className="text-sm font-semibold text-nav-ink">{t('orgPicker.createTitle')}</h2>
             <div>
-              <label htmlFor="org-name" className="mb-1.5 block text-sm font-medium text-slate-300">
+              <label htmlFor="org-name" className="mb-1.5 block text-sm font-medium text-nav-muted">
                 {t('orgPicker.name')}
               </label>
               <input
@@ -214,11 +218,11 @@ export default function OrgPickerPage() {
                   }
                 }}
                 required
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             <div>
-              <label htmlFor="org-slug" className="mb-1.5 block text-sm font-medium text-slate-300">
+              <label htmlFor="org-slug" className="mb-1.5 block text-sm font-medium text-nav-muted">
                 {t('orgPicker.slug')}
               </label>
               <input
@@ -230,13 +234,13 @@ export default function OrgPickerPage() {
                 }}
                 placeholder="kebab-case"
                 required
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             <div>
               <label
                 htmlFor="org-description"
-                className="mb-1.5 block text-sm font-medium text-slate-300"
+                className="mb-1.5 block text-sm font-medium text-nav-muted"
               >
                 {t('orgPicker.description')}
               </label>
@@ -245,11 +249,11 @@ export default function OrgPickerPage() {
                 value={description}
                 onChange={(event) => setDescription(event.currentTarget.value)}
                 rows={2}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             {createError !== null ? (
-              <p role="alert" className="flex items-center gap-2 text-sm text-red-400">
+              <p role="alert" className="flex items-center gap-2 text-sm text-danger">
                 <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
                 {createError}
               </p>
@@ -258,7 +262,7 @@ export default function OrgPickerPage() {
               <button
                 type="button"
                 onClick={() => setShowCreate(false)}
-                className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800"
+                className="rounded-lg border border-nav-line px-3 py-2 text-sm font-medium text-nav-muted hover:bg-surface-muted"
               >
                 {t('common.cancel')}
               </button>
@@ -266,7 +270,7 @@ export default function OrgPickerPage() {
                 type="submit"
                 disabled={creating}
                 aria-busy={creating}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-wait disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover disabled:cursor-wait disabled:opacity-60"
               >
                 {creating ? (
                   <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />

@@ -23,12 +23,12 @@ export default function PagePlaceholder({ titleKey }: PagePlaceholderProps) {
       className="flex min-h-full flex-col items-center justify-center gap-3 p-10 text-center"
       aria-label={title}
     >
-      <span className="grid size-11 place-items-center rounded-xl bg-slate-100 text-slate-400">
+      <span className="grid size-11 place-items-center rounded-xl bg-surface-muted text-muted-subtle">
         <Hammer className="size-5" aria-hidden="true" />
       </span>
       <div>
-        <p className="text-sm font-semibold text-slate-500">{title}</p>
-        <p className="mt-1 text-xs text-slate-400">{t('nav.pending')}</p>
+        <p className="text-sm font-semibold text-muted">{title}</p>
+        <p className="mt-1 text-xs text-muted-subtle">{t('nav.pending')}</p>
       </div>
     </section>
   );

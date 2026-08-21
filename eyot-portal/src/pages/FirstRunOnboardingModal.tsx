@@ -206,8 +206,8 @@ export default function FirstRunOnboardingModal({
 
   if (!presetReady) {
     return (
-      <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4">
-        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-5 text-sm text-slate-600 shadow-2xl">
+      <div className="fixed inset-0 z-50 grid place-items-center bg-overlay p-4">
+        <div className="flex items-center gap-3 rounded-xl border border-line bg-surface px-6 py-5 text-sm text-muted shadow-2xl">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -222,34 +222,34 @@ export default function FirstRunOnboardingModal({
         aria-modal="true"
         aria-labelledby="onboarding-success-title"
         data-testid="onboarding-success"
-        className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4"
+        className="fixed inset-0 z-50 grid place-items-center bg-overlay p-4"
       >
-        <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <div className="w-full max-w-md rounded-xl border border-line bg-surface p-6 shadow-2xl">
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center rounded-lg bg-emerald-50 text-emerald-700">
               <Sparkles className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 id="onboarding-success-title" className="text-base font-semibold text-slate-950">
+              <h2 id="onboarding-success-title" className="text-base font-semibold text-ink">
                 {t('onboarding.step3.successTitle')}
               </h2>
-              <p className="text-xs text-slate-500">{t('onboarding.step3.successDetail')}</p>
+              <p className="text-xs text-muted">{t('onboarding.step3.successDetail')}</p>
             </div>
           </div>
           <dl className="mt-5 space-y-2 text-sm">
             <div className="flex justify-between gap-3">
-              <dt className="text-slate-500">Display name</dt>
-              <dd className="text-slate-900">{completedEmployee.display_name ?? '—'}</dd>
+              <dt className="text-muted">Display name</dt>
+              <dd className="text-ink">{completedEmployee.display_name ?? '—'}</dd>
             </div>
             <div className="flex justify-between gap-3">
-              <dt className="text-slate-500">Slug</dt>
-              <dd className="font-mono text-slate-900">{completedEmployee.slug}</dd>
+              <dt className="text-muted">Slug</dt>
+              <dd className="font-mono text-ink">{completedEmployee.slug}</dd>
             </div>
           </dl>
           <button
             type="button"
             onClick={() => onClose('completed')}
-            className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             {t('common.confirm')}
           </button>
@@ -260,7 +260,7 @@ export default function FirstRunOnboardingModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 md:items-center md:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-0 md:items-center md:p-4"
       data-testid="onboarding-modal"
     >
       <button
@@ -274,20 +274,20 @@ export default function FirstRunOnboardingModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="onboarding-modal-title"
-        className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl md:rounded-2xl"
+        className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-line bg-surface shadow-2xl md:rounded-2xl"
       >
-        <header className="flex items-start justify-between gap-3 border-b border-slate-200 p-4 sm:p-6">
+        <header className="flex items-start justify-between gap-3 border-b border-line p-4 sm:p-6">
           <div className="flex items-start gap-3">
-            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-blue-600 text-white">
+            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand text-brand-fg">
               <Sparkles className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-blue-700">
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
                 {t('common.appName')}
               </p>
               <h2
                 id="onboarding-modal-title"
-                className="mt-0.5 text-base font-semibold text-slate-950 sm:text-lg"
+                className="mt-0.5 text-base font-semibold text-ink sm:text-lg"
               >
                 {stepTitle}
               </h2>
@@ -298,8 +298,8 @@ export default function FirstRunOnboardingModal({
               className={cn(
                 'inline-flex items-center rounded-full px-2.5 py-1 font-mono text-[11px] font-medium',
                 step === TOTAL_ONBOARDING_STEPS
-                  ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-500/30'
-                  : 'bg-slate-100 text-slate-600',
+                  ? 'bg-brand-soft text-brand ring-2 ring-brand/30'
+                  : 'bg-surface-muted text-muted',
               )}
               data-testid="step-indicator"
             >
@@ -313,7 +313,7 @@ export default function FirstRunOnboardingModal({
               onClick={handleClose}
               aria-label={t('onboarding.close')}
               disabled={isSubmitting}
-              className="grid size-8 place-items-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
@@ -334,7 +334,7 @@ export default function FirstRunOnboardingModal({
           ) : null}
         </div>
 
-        <footer className="flex flex-col-reverse gap-2 border-t border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <footer className="flex flex-col-reverse gap-2 border-t border-line bg-surface-muted p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="flex items-center gap-2">
             {step > 1 ? (
               <button
@@ -342,7 +342,7 @@ export default function FirstRunOnboardingModal({
                 onClick={back}
                 disabled={isSubmitting}
                 data-testid="onboarding-back"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ArrowLeft className="size-4" aria-hidden="true" />
                 {t('onboarding.back')}
@@ -352,7 +352,7 @@ export default function FirstRunOnboardingModal({
                 type="button"
                 onClick={handleSkip}
                 disabled={isSubmitting}
-                className="text-sm font-medium text-slate-500 underline-offset-4 hover:underline"
+                className="text-sm font-medium text-muted underline-offset-4 hover:underline"
               >
                 {t('onboarding.dismiss')}
               </button>
@@ -362,7 +362,7 @@ export default function FirstRunOnboardingModal({
                 type="button"
                 onClick={() => onClose('skipped')}
                 disabled={isSubmitting}
-                className="text-sm font-medium text-slate-500 underline-offset-4 hover:underline"
+                className="text-sm font-medium text-muted underline-offset-4 hover:underline"
               >
                 {t('onboarding.skipNextTime')}
               </button>
@@ -375,10 +375,10 @@ export default function FirstRunOnboardingModal({
             disabled={!canGoNext || isSubmitting}
             data-testid="onboarding-next"
             className={cn(
-              'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+              'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
               canGoNext && !isSubmitting
-                ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-                : 'cursor-not-allowed bg-slate-200 text-slate-500',
+                ? 'bg-brand text-brand-fg hover:bg-brand-hover active:bg-brand-active'
+                : 'cursor-not-allowed bg-surface-muted text-muted',
             )}
           >
             {isSubmitting ? (

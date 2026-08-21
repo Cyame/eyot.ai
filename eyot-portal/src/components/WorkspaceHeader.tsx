@@ -47,27 +47,27 @@ const HEALTH_BADGE: Readonly<
 > = {
   healthy: {
     labelKey: 'workspaceHeader.health.healthy',
-    className: 'bg-emerald-100 text-emerald-800',
+    className: 'bg-success-soft text-success',
   },
   warning: {
     labelKey: 'workspaceHeader.health.warning',
-    className: 'bg-amber-100 text-amber-800',
+    className: 'bg-warning-soft text-warning',
   },
   failed: {
     labelKey: 'workspaceHeader.health.failed',
-    className: 'bg-red-100 text-red-800',
+    className: 'bg-danger-soft text-danger',
   },
   unknown: {
     labelKey: 'workspaceHeader.health.unknown',
-    className: 'bg-slate-100 text-slate-600',
+    className: 'bg-surface-muted text-muted',
   },
 };
 
 const HEALTH_DOT: Readonly<Record<WorkspaceHealth, string>> = {
-  healthy: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  failed: 'bg-red-500',
-  unknown: 'bg-slate-400',
+  healthy: 'bg-success',
+  warning: 'bg-warning',
+  failed: 'bg-danger',
+  unknown: 'bg-muted-subtle',
 };
 
 function formatCentralHubSize(bytes: number): string {
@@ -118,25 +118,25 @@ export default function WorkspaceHeader({
 
   return (
     <header
-      className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+      className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80"
       data-testid="workspace-header"
     >
       <div className="mx-auto flex max-w-6xl items-start gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
           <Building2 className="size-6" aria-hidden="true" />
         </span>
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="font-mono text-xs text-slate-500">{workspace.slug}</p>
-            <span className="text-xs text-slate-400">·</span>
-            <p className="text-xs text-slate-500" data-testid="workspace-header-created">
+            <p className="font-mono text-xs text-muted">{workspace.slug}</p>
+            <span className="text-xs text-muted-subtle">·</span>
+            <p className="text-xs text-muted" data-testid="workspace-header-created">
               {daysSince(workspace.created_at, t)}
             </p>
           </div>
           <div className="mt-0.5 flex items-center gap-3">
             <h1
-              className="truncate text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl"
+              className="truncate text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
               data-testid="workspace-header-title"
             >
               {workspace.name}
@@ -161,7 +161,7 @@ export default function WorkspaceHeader({
             onClick={onSummonEntity}
             disabled={isLoading}
             data-testid="workspace-header-summon"
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg shadow-sm transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand active:bg-brand-active disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Sparkles className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">{t('workspaceHeader.summonEntity')}</span>
@@ -189,7 +189,7 @@ export default function WorkspaceHeader({
           suffix={
             outdatedInstanceCount > 0 ? (
               <span
-                className="ml-1 inline-flex items-center rounded-full bg-amber-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-amber-800"
+                className="ml-1 inline-flex items-center rounded-full bg-warning-soft px-1.5 py-0.5 font-mono text-[10px] font-semibold text-warning"
                 data-testid="workspace-header-outdated-badge"
               >
                 {t('workspaceHeader.menuBatchRestartBadge', {
@@ -216,7 +216,7 @@ export default function WorkspaceHeader({
 
       {isLoading ? (
         <div
-          className="flex items-center justify-center gap-2 border-t border-slate-100 bg-slate-50 py-1.5 text-xs text-slate-500"
+          className="flex items-center justify-center gap-2 border-t border-line-subtle bg-surface-muted py-1.5 text-xs text-muted"
           aria-live="polite"
         >
           <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
@@ -250,17 +250,17 @@ function StatCard({
 }: StatCardProps): ReactElement {
   return (
     <div
-      className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5"
+      className="flex items-center gap-3 rounded-lg border border-line bg-surface-muted px-3 py-2.5"
       data-testid={testId}
     >
-      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-white text-slate-600 shadow-sm">
+      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface text-muted shadow-sm">
         <Icon className="size-4" aria-hidden="true" />
       </span>
       <div className="min-w-0">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">{label}</p>
+        <p className="text-[10px] font-medium uppercase tracking-wider text-muted">{label}</p>
         <p
           className={cn(
-            'mt-0.5 inline-flex items-baseline font-semibold text-slate-900',
+            'mt-0.5 inline-flex items-baseline font-semibold text-ink',
             isText ? 'text-sm font-mono' : 'text-lg tabular-nums',
           )}
         >

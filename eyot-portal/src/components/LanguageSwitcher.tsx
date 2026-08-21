@@ -71,11 +71,11 @@ export default function LanguageSwitcher({
         data-testid="language-switcher"
         data-current={current}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+          'inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
           variant === 'sidebar'
-            ? 'text-slate-300 hover:bg-slate-800 hover:text-white'
-            : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900',
+            ? 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink'
+            : 'border border-line bg-surface text-ink hover:bg-surface-muted',
         )}
       >
         <Languages className="size-4 shrink-0" aria-hidden="true" />
@@ -98,8 +98,8 @@ export default function LanguageSwitcher({
             'absolute left-0 z-50 min-w-[9rem] overflow-hidden rounded-lg border py-1 shadow-lg',
             placement === 'up' ? 'bottom-full mb-1.5' : 'top-full mt-1.5',
             variant === 'sidebar'
-              ? 'border-slate-700 bg-slate-900 text-slate-100'
-              : 'border-slate-200 bg-white text-slate-900',
+              ? 'border-nav-line bg-nav text-nav-ink'
+              : 'border-line bg-surface text-ink',
           )}
         >
           {LOCALES.map((locale) => {
@@ -115,11 +115,11 @@ export default function LanguageSwitcher({
                     'flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition-colors',
                     variant === 'sidebar'
                       ? selected
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-brand text-brand-fg'
+                        : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink'
                       : selected
-                        ? 'bg-blue-50 text-blue-800'
-                        : 'text-slate-700 hover:bg-slate-50',
+                        ? 'bg-brand-soft text-brand'
+                        : 'text-ink hover:bg-surface-muted',
                   )}
                 >
                   <span>{t(locale.labelKey)}</span>

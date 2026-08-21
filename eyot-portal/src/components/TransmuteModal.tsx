@@ -68,26 +68,26 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
       aria-modal="true"
       aria-labelledby="transmute-modal-title"
       data-testid="transmute-modal"
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/50 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
     >
-      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-xl border border-slate-200 bg-white shadow-2xl sm:rounded-xl">
-        <header className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
+      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
+        <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
           <div className="flex items-start gap-3">
             <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-purple-50 text-purple-700">
               <FlaskConical className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 id="transmute-modal-title" className="text-base font-semibold text-slate-950">
+              <h2 id="transmute-modal-title" className="text-base font-semibold text-ink">
                 {t('transmuteModal.title')}
               </h2>
-              <p className="mt-1 text-xs text-slate-500">{entity.display_name ?? entity.name}</p>
+              <p className="mt-1 text-xs text-muted">{entity.display_name ?? entity.name}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('transmuteModal.close')}
-            className="grid size-8 place-items-center rounded-md text-slate-500 hover:bg-slate-100"
+            className="grid size-8 place-items-center rounded-md text-muted hover:bg-surface-muted"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -105,7 +105,7 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
             <div>
               <label
                 htmlFor="transmute-modal-slug"
-                className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                className="block text-xs font-semibold uppercase tracking-wide text-muted"
               >
                 {t('entityModal.distillTab.transmute.targetSlug')}
               </label>
@@ -115,13 +115,13 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
                 value={targetSlug}
                 onChange={(e) => setTargetSlug(e.target.value)}
                 data-testid="transmute-modal-slug"
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
               />
             </div>
             <div>
               <label
                 htmlFor="transmute-modal-name"
-                className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                className="block text-xs font-semibold uppercase tracking-wide text-muted"
               >
                 {t('entityModal.distillTab.transmute.targetName')}
               </label>
@@ -131,13 +131,13 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
                 value={targetName}
                 onChange={(e) => setTargetName(e.target.value)}
                 data-testid="transmute-modal-name"
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
               />
             </div>
           </div>
 
           <fieldset>
-            <legend className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <legend className="text-xs font-semibold uppercase tracking-wide text-muted">
               {t('entityModal.distillTab.transmute.kinds')}
             </legend>
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -148,7 +148,7 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
                     'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm',
                     transmuteKinds.has(kind)
                       ? 'border-purple-500 bg-purple-50 text-purple-900'
-                      : 'border-slate-200 bg-white text-slate-700',
+                      : 'border-line bg-surface text-ink',
                   )}
                 >
                   <input
@@ -167,7 +167,7 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
           {errorMessage !== null ? (
             <div
               role="alert"
-              className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+              className="flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
             >
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <p>{errorMessage}</p>
@@ -175,12 +175,12 @@ export default function TransmuteModal({ entity, onClose, onSubmit }: TransmuteM
           ) : null}
         </div>
 
-        <footer className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
           >
             {t('transmuteModal.cancel')}
           </button>

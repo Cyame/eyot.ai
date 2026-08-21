@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Lion">
+  <defs>
+    <clipPath id="lion-clip"><circle cx="64" cy="64" r="64"/></clipPath>
+  </defs>
+  <g clip-path="url(#lion-clip)">
+    <rect width="128" height="128" fill="#B8860B"/>
+    <circle cx="64" cy="64" r="60" fill="#C49212"/>
+    <path d="M64 8 C84 10 108 28 118 52 C122 70 114 92 96 108 C80 122 48 122 32 108 C14 92 6 70 10 52 C20 28 44 10 64 8 Z" fill="#A06C0A"/>
+    <path d="M64 18 C78 20 98 34 106 52 C110 66 104 84 90 96 C78 108 50 108 38 96 C24 84 18 66 22 52 C30 34 50 20 64 18 Z" fill="#D4A017"/>
+    <circle cx="64" cy="70" r="28" fill="#E8C04A"/>
+    <ellipse cx="48" cy="42" rx="8" ry="7" fill="#E8C04A"/>
+    <ellipse cx="80" cy="42" rx="8" ry="7" fill="#E8C04A"/>
+    <ellipse cx="52" cy="66" rx="6" ry="5" fill="#1C211E"/>
+    <ellipse cx="76" cy="66" rx="6" ry="5" fill="#1C211E"/>
+    <circle cx="54" cy="64.5" r="1.6" fill="#F7E6D4"/>
+    <circle cx="78" cy="64.5" r="1.6" fill="#F7E6D4"/>
+    <ellipse cx="64" cy="80" rx="9" ry="7" fill="#5C3B10"/>
+    <path d="M64 86 L64 94" stroke="#5C3B10" stroke-width="2" stroke-linecap="round"/>
+    <path d="M56 96 Q64 102 72 96" fill="none" stroke="#5C3B10" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <circle cx="64" cy="64" r="61" fill="none" stroke="#F7E6D4" stroke-opacity="0.3" stroke-width="4"/>
+</svg>

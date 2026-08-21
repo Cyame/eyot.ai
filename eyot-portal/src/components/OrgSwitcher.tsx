@@ -100,11 +100,11 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
         aria-controls={listId}
         data-testid="org-switcher"
         className={cn(
-          'inline-flex min-w-0 max-w-52 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+          'inline-flex min-w-0 max-w-52 items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
           variant === 'header'
-            ? 'border border-slate-200 bg-white text-slate-800 hover:bg-slate-100'
-            : 'w-full text-slate-200 hover:bg-slate-800',
+            ? 'border border-line bg-surface text-ink hover:bg-surface-muted'
+            : 'w-full text-nav-ink hover:bg-nav-hover',
         )}
       >
         <Globe2 className="size-4 shrink-0" aria-hidden="true" />
@@ -128,22 +128,22 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
           className={cn(
             'absolute z-50 mt-1.5 min-w-[13rem] max-w-72 overflow-hidden rounded-lg border py-1 shadow-lg',
             variant === 'header'
-              ? 'right-0 border-slate-200 bg-white text-slate-900'
-              : 'left-0 border-slate-700 bg-slate-900 text-slate-100',
+              ? 'right-0 border-line bg-surface text-ink'
+              : 'left-0 border-nav-line bg-nav text-nav-ink',
           )}
         >
           {loading ? (
-            <div className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-muted">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('orgPicker.loading')}
             </div>
           ) : error !== null ? (
-            <div className="flex items-center gap-2 px-3 py-2 text-sm text-red-600">
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-danger">
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
               <span className="truncate">{error}</span>
             </div>
           ) : (orgs ?? []).length === 0 ? (
-            <div className="px-3 py-2 text-sm text-slate-500">{t('orgPicker.switcherEmpty')}</div>
+            <div className="px-3 py-2 text-sm text-muted">{t('orgPicker.switcherEmpty')}</div>
           ) : (
             (orgs ?? []).map((org) => {
               const selected = org.id === currentOrgId;
@@ -158,11 +158,11 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
                     'flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition-colors',
                     variant === 'header'
                       ? selected
-                        ? 'bg-blue-50 font-medium text-blue-800'
-                        : 'text-slate-700 hover:bg-slate-50'
+                        ? 'bg-brand-soft font-medium text-brand'
+                        : 'text-ink hover:bg-surface-muted'
                       : selected
-                        ? 'bg-blue-600 font-medium text-white'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                        ? 'bg-brand font-medium text-brand-fg'
+                        : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
                   )}
                 >
                   <span className="min-w-0">
@@ -179,7 +179,7 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
           <div
             className={cn(
               'my-1 border-t',
-              variant === 'header' ? 'border-slate-200' : 'border-slate-700',
+              variant === 'header' ? 'border-line' : 'border-nav-line',
             )}
           />
           <button
@@ -192,8 +192,8 @@ export default function OrgSwitcher({ variant = 'header' }: OrgSwitcherProps) {
             className={cn(
               'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors',
               variant === 'header'
-                ? 'text-slate-600 hover:bg-slate-50'
-                : 'text-slate-400 hover:bg-slate-800 hover:text-white',
+                ? 'text-muted hover:bg-surface-muted'
+                : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
             )}
           >
             <LogOut className="size-3.5 shrink-0" aria-hidden="true" />

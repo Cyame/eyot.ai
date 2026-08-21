@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight, Trash2, Wand2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import EmptyState from '@/components/EmptyState';
 import type { EntityDetail } from '@/lib/api/entities';
 import type { Capability, CapabilityType } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -39,7 +40,7 @@ export default function CapabilitiesTab({ entity, onGoToGenes, onRemove }: Capab
   return (
     <section aria-labelledby="capabilities-tab-heading" className="space-y-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="capabilities-tab-heading" className="text-sm font-semibold text-slate-900">
+        <h2 id="capabilities-tab-heading" className="text-sm font-semibold text-ink">
           {t('entityModal.tabs.capabilities')}
         </h2>
         <div className="flex items-center gap-2">
@@ -47,7 +48,7 @@ export default function CapabilitiesTab({ entity, onGoToGenes, onRemove }: Capab
             type="button"
             onClick={onGoToGenes}
             data-testid="capabilities-manage-genes"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-800 transition-colors hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand-soft px-3 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <Wand2 className="size-3.5" aria-hidden="true" />
             {t('entityModal.capabilitiesTab.manageGenes')}
@@ -58,7 +59,7 @@ export default function CapabilitiesTab({ entity, onGoToGenes, onRemove }: Capab
       <div
         role="radiogroup"
         aria-label={t('entityModal.capabilitiesTab.viewModeAria')}
-        className="flex flex-wrap gap-2 rounded-lg border border-slate-200 bg-slate-50 p-1"
+        className="flex flex-wrap gap-2 rounded-lg border border-line bg-surface-muted p-1"
       >
         {(['by_type', 'by_source', 'flat'] as const).map((mode) => {
           const labelKey =
@@ -73,9 +74,7 @@ export default function CapabilitiesTab({ entity, onGoToGenes, onRemove }: Capab
               key={mode}
               className={cn(
                 'cursor-pointer rounded-md px-3 py-1 text-xs font-medium transition-colors',
-                checked
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900',
+                checked ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink',
               )}
             >
               <input
@@ -94,14 +93,10 @@ export default function CapabilitiesTab({ entity, onGoToGenes, onRemove }: Capab
       </div>
 
       {capabilities.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
-          <p className="text-sm font-semibold text-slate-900">
-            {t('entityModal.capabilitiesTab.emptyTitle')}
-          </p>
-          <p className="mt-2 text-xs text-slate-500">
-            {t('entityModal.capabilitiesTab.emptyDetail')}
-          </p>
-        </div>
+        <EmptyState
+          title={t('entityModal.capabilitiesTab.emptyTitle')}
+          description={t('entityModal.capabilitiesTab.emptyDetail')}
+        />
       ) : view === 'by_type' ? (
         <CapabilityListByType
           groups={byType}
@@ -177,20 +172,20 @@ function CapabilityListByType({
   return (
     <ul className="space-y-2" data-testid="capabilities-by-type">
       {groups.map((group) => (
-        <li key={group.key} className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <li key={group.key} className="overflow-hidden rounded-lg border border-line bg-surface">
           <button
             type="button"
             onClick={() => onToggle(group.key)}
-            className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-slate-900 hover:bg-slate-50"
+            className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-ink hover:bg-surface-muted"
           >
             <span className="inline-flex items-center gap-2">
               {collapsed.has(group.key) ? (
-                <ChevronRight className="size-4 text-slate-500" aria-hidden="true" />
+                <ChevronRight className="size-4 text-muted" aria-hidden="true" />
               ) : (
-                <ChevronDown className="size-4 text-slate-500" aria-hidden="true" />
+                <ChevronDown className="size-4 text-muted" aria-hidden="true" />
               )}
               {group.label}
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs tabular-nums text-slate-600">
+              <span className="rounded-full bg-surface-muted px-2 py-0.5 text-xs tabular-nums text-muted">
                 {group.items.length}
               </span>
             </span>
@@ -222,23 +217,20 @@ function CapabilityListBySource({
         const labelKey =
           group.label === 'from_base_class' ? 'sourceFromBaseClass' : 'sourceExtraAdded';
         return (
-          <li
-            key={group.key}
-            className="overflow-hidden rounded-lg border border-slate-200 bg-white"
-          >
+          <li key={group.key} className="overflow-hidden rounded-lg border border-line bg-surface">
             <button
               type="button"
               onClick={() => onToggle(group.key)}
-              className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-slate-900 hover:bg-slate-50"
+              className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-ink hover:bg-surface-muted"
             >
               <span className="inline-flex items-center gap-2">
                 {collapsed.has(group.key) ? (
-                  <ChevronRight className="size-4 text-slate-500" aria-hidden="true" />
+                  <ChevronRight className="size-4 text-muted" aria-hidden="true" />
                 ) : (
-                  <ChevronDown className="size-4 text-slate-500" aria-hidden="true" />
+                  <ChevronDown className="size-4 text-muted" aria-hidden="true" />
                 )}
                 {t(`entityModal.capabilitiesTab.${labelKey}`)}
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs tabular-nums text-slate-600">
+                <span className="rounded-full bg-surface-muted px-2 py-0.5 text-xs tabular-nums text-muted">
                   {group.items.length}
                 </span>
               </span>
@@ -261,12 +253,9 @@ function CapabilityFlatList({
   readonly onRemove: (cap: Capability) => void;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-      <table
-        className="min-w-full divide-y divide-slate-200 text-sm"
-        data-testid="capabilities-flat"
-      >
-        <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+    <div className="overflow-hidden rounded-lg border border-line bg-surface">
+      <table className="min-w-full divide-y divide-line text-sm" data-testid="capabilities-flat">
+        <thead className="bg-surface-muted text-left text-xs font-semibold uppercase tracking-wide text-muted">
           <tr>
             <th className="px-3 py-2">name</th>
             <th className="px-3 py-2">type</th>
@@ -275,18 +264,18 @@ function CapabilityFlatList({
             <th className="px-3 py-2 text-right">operation</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-line-subtle">
           {capabilities.map((cap) => (
             <tr key={cap.name}>
-              <td className="px-3 py-2 font-mono text-xs text-slate-900">{cap.name}</td>
-              <td className="px-3 py-2 text-xs text-slate-700">{cap.type}</td>
-              <td className="px-3 py-2 font-mono text-xs text-slate-500">{cap.version ?? '—'}</td>
-              <td className="px-3 py-2 text-xs text-slate-700">{cap.source}</td>
+              <td className="px-3 py-2 font-mono text-xs text-ink">{cap.name}</td>
+              <td className="px-3 py-2 text-xs text-ink">{cap.type}</td>
+              <td className="px-3 py-2 font-mono text-xs text-muted">{cap.version ?? '—'}</td>
+              <td className="px-3 py-2 text-xs text-ink">{cap.source}</td>
               <td className="px-3 py-2 text-right">
                 {cap.source === 'extra_added' ? (
                   <RemoveButton onClick={() => onRemove(cap)} />
                 ) : (
-                  <span className="text-xs text-slate-400">—</span>
+                  <span className="text-xs text-muted-subtle">—</span>
                 )}
               </td>
             </tr>
@@ -305,7 +294,7 @@ function CapabilityRows({
   readonly onRemove: (cap: Capability) => void;
 }) {
   return (
-    <ul className="divide-y divide-slate-100 border-t border-slate-100">
+    <ul className="divide-y divide-line-subtle border-t border-line-subtle">
       {items.map((cap) => (
         <li
           key={cap.name}
@@ -313,17 +302,17 @@ function CapabilityRows({
           data-testid={`capability-row-${cap.name}`}
         >
           <div className="min-w-0 flex-1">
-            <p className="truncate font-mono text-xs text-slate-900">{cap.name}</p>
-            <p className="text-xs text-slate-500">
+            <p className="truncate font-mono text-xs text-ink">{cap.name}</p>
+            <p className="text-xs text-muted">
               <span className="font-mono">{cap.version ?? '—'}</span>
-              <span className="mx-1.5 text-slate-300">·</span>
+              <span className="mx-1.5 text-nav-muted">·</span>
               <SourceChip source={cap.source} />
             </p>
           </div>
           {cap.source === 'extra_added' ? (
             <RemoveButton onClick={() => onRemove(cap)} />
           ) : (
-            <span className="text-xs text-slate-400">—</span>
+            <span className="text-xs text-muted-subtle">—</span>
           )}
         </li>
       ))}
@@ -341,7 +330,7 @@ function SourceChip({ source }: { readonly source: Capability['source'] }) {
         'inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium',
         isBase
           ? 'border-orange-200 bg-orange-50 text-orange-800'
-          : 'border-blue-200 bg-blue-50 text-blue-800',
+          : 'border-brand/30 bg-brand-soft text-brand',
       )}
     >
       {t(`entityModal.capabilitiesTab.${labelKey}`)}
@@ -356,7 +345,7 @@ function RemoveButton({ onClick }: { readonly onClick: () => void }) {
       type="button"
       onClick={onClick}
       data-testid="capability-remove"
-      className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-red-700 transition-colors hover:border-red-200 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+      className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-danger transition-colors hover:border-danger/30 hover:bg-danger-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
     >
       <Trash2 className="size-3.5" aria-hidden="true" />
       {t('entityModal.capabilitiesTab.remove')}

@@ -33,36 +33,36 @@ export function NodeTooltip({
     >
       {/* biome-ignore lint/a11y/noStaticElementInteractions: hover bridge into SVG foreignObject */}
       <div
-        className="mx-auto min-w-40 max-w-80 rounded-lg border border-slate-200 bg-white p-3 text-left text-xs text-slate-700 shadow-xl"
+        className="mx-auto min-w-40 max-w-80 rounded-lg border border-line bg-surface p-3 text-left text-xs text-ink shadow-xl"
         style={{ pointerEvents: 'auto' }}
         onMouseEnter={onPointerEnter}
         onMouseLeave={onPointerLeave}
       >
         <div className="flex items-center justify-between gap-3">
-          <strong className="truncate text-sm text-slate-950">{node.label}</strong>
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 font-medium">{node.status}</span>
+          <strong className="truncate text-sm text-ink">{node.label}</strong>
+          <span className="rounded-full bg-surface-muted px-2 py-0.5 font-medium">
+            {node.status}
+          </span>
         </div>
-        <p className="mt-1 truncate font-mono text-slate-500">{node.slug}</p>
+        <p className="mt-1 truncate font-mono text-muted">{node.slug}</p>
         {isInstance ? (
-          <div className="mt-2 grid grid-cols-2 gap-1 border-t border-slate-100 pt-2">
+          <div className="mt-2 grid grid-cols-2 gap-1 border-t border-line-subtle pt-2">
             <span>{t('topology.continuationCount')}</span>
             <span className="text-right">—</span>
             <span>{t('topology.lastCheckpoint')}</span>
             <span className="text-right">—</span>
             <span>{t('topology.outdated')}</span>
-            <span
-              className={node.outdated ? 'text-right font-semibold text-red-600' : 'text-right'}
-            >
+            <span className={node.outdated ? 'text-right font-semibold text-danger' : 'text-right'}>
               {node.outdated ? t('topology.yes') : t('topology.no')}
             </span>
           </div>
         ) : null}
         {isInstance ? (
-          <div className="mt-2 flex flex-wrap gap-1 border-t border-slate-100 pt-2">
+          <div className="mt-2 flex flex-wrap gap-1 border-t border-line-subtle pt-2">
             <button
               type="button"
               onClick={onOpen}
-              className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-1 hover:bg-slate-200"
+              className="inline-flex items-center gap-1 rounded bg-surface-muted px-2 py-1 hover:bg-surface-muted"
             >
               <Search className="size-3" />
               {t('topology.viewDetails')}
@@ -80,8 +80,8 @@ export function NodeTooltip({
               }
               className={`inline-flex items-center gap-1 rounded px-2 py-1 ${
                 node.mentionable
-                  ? 'bg-slate-100 hover:bg-slate-200'
-                  : 'cursor-not-allowed bg-slate-50 text-slate-400'
+                  ? 'bg-surface-muted hover:bg-surface-muted'
+                  : 'cursor-not-allowed bg-surface-muted text-muted-subtle'
               }`}
             >
               <MessageSquare className="size-3" />

@@ -152,24 +152,24 @@ export default function WorldSettingsPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-5xl p-6 lg:p-8" aria-labelledby="settings-title">
+    <section className="mx-auto w-full max-w-5xl p-6" aria-labelledby="settings-title">
       <header className="mb-6 flex items-start gap-4">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
           <Settings className="size-6" aria-hidden="true" />
         </span>
         <div className="min-w-0">
           {isLoading && org === null ? (
-            <div className="flex items-center gap-3 text-sm text-slate-500">
+            <div className="flex items-center gap-3 text-sm text-muted">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('common.loading')}
             </div>
           ) : (
             <>
-              <h1 id="settings-title" className="truncate text-2xl font-semibold text-slate-950">
+              <h1 id="settings-title" className="truncate text-2xl font-semibold text-ink">
                 {t('nav.settings')}
               </h1>
               {org !== null ? (
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-muted">
                   {org.name} <span className="font-mono text-xs">({org.slug})</span>
                 </p>
               ) : null}
@@ -177,7 +177,7 @@ export default function WorldSettingsPage() {
           )}
         </div>
         {!canManageWorld ? (
-          <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+          <p className="rounded-lg border border-line bg-surface-muted px-3 py-2 text-xs text-muted">
             {t('organization.readOnlyHint')}
           </p>
         ) : null}
@@ -186,7 +186,7 @@ export default function WorldSettingsPage() {
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -197,12 +197,12 @@ export default function WorldSettingsPage() {
         <OrganizationWorldPanel canWrite={canManageWorld} orgId={orgId} />
 
         {org !== null ? (
-          <section className="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-900">
+          <section className="max-w-xl space-y-4 rounded-xl border border-line bg-surface p-5 shadow-sm">
+            <h2 className="text-base font-semibold text-ink">
               {t('organization.world.nameTitle')}
             </h2>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('organization.world.nameLabel')}
               </span>
               <input
@@ -211,7 +211,7 @@ export default function WorldSettingsPage() {
                 disabled={!canManageWorld || busy}
                 onChange={(e) => setOrgName(e.target.value)}
                 data-testid="org-name-input"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm disabled:bg-slate-50"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm disabled:bg-surface-muted"
               />
             </label>
             {notice !== null ? (
@@ -227,7 +227,7 @@ export default function WorldSettingsPage() {
                   onClick={() => void handleSaveName()}
                   data-testid="org-name-save"
                   className={cn(
-                    'rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white',
+                    'rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg',
                     'disabled:opacity-60',
                   )}
                 >
@@ -239,34 +239,34 @@ export default function WorldSettingsPage() {
         ) : null}
 
         {org !== null ? (
-          <section className="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-900">
+          <section className="max-w-xl space-y-4 rounded-xl border border-line bg-surface p-5 shadow-sm">
+            <h2 className="text-base font-semibold text-ink">
               {t('settings.proxyTitle', { defaultValue: 'Egress proxy' })}
             </h2>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
+            <label className="flex items-center gap-2 text-sm text-ink">
               <input
                 type="checkbox"
                 checked={useProxy}
                 disabled={!canManageWorld}
                 onChange={(e) => setUseProxy(e.target.checked)}
-                className="size-4 accent-blue-600"
+                className="size-4 accent-brand"
               />
               {t('settings.useProxy', { defaultValue: 'Route outbound requests through a proxy' })}
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('settings.proxyHost', { defaultValue: 'Host' })}
                 </span>
                 <input
                   value={proxyHost}
                   disabled={!canManageWorld || !useProxy}
                   onChange={(e) => setProxyHost(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm disabled:bg-slate-50"
+                  className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm disabled:bg-surface-muted"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('settings.proxyPort', { defaultValue: 'Port' })}
                 </span>
                 <input
@@ -274,22 +274,22 @@ export default function WorldSettingsPage() {
                   disabled={!canManageWorld || !useProxy}
                   onChange={(e) => setProxyPort(e.target.value)}
                   inputMode="numeric"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm disabled:bg-slate-50"
+                  className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm disabled:bg-surface-muted"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('settings.proxyUsername', { defaultValue: 'Username' })}
                 </span>
                 <input
                   value={proxyUsername}
                   disabled={!canManageWorld || !useProxy}
                   onChange={(e) => setProxyUsername(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm disabled:bg-slate-50"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm disabled:bg-surface-muted"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('settings.proxyPassword', { defaultValue: 'Password' })}
                 </span>
                 <input
@@ -298,7 +298,7 @@ export default function WorldSettingsPage() {
                   disabled={!canManageWorld || !useProxy}
                   onChange={(e) => setProxyPassword(e.target.value)}
                   autoComplete="off"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm disabled:bg-slate-50"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm disabled:bg-surface-muted"
                 />
               </label>
             </div>
@@ -314,7 +314,7 @@ export default function WorldSettingsPage() {
                   disabled={busy || (useProxy && proxyHost.trim().length === 0)}
                   onClick={() => void handleSaveProxy()}
                   className={cn(
-                    'rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white',
+                    'rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg',
                     'disabled:opacity-60',
                   )}
                 >
@@ -328,9 +328,9 @@ export default function WorldSettingsPage() {
         <OrganizationProvidersPanel canWrite={canManageWorld} orgId={orgId} />
 
         {canCloneWorld && org !== null ? (
-          <section className="max-w-xl space-y-3 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-900">{t('clone.organization')}</h2>
-            <p className="text-sm text-slate-500">{t('clone.instancesNotCopied')}</p>
+          <section className="max-w-xl space-y-3 rounded-xl border border-line bg-surface p-5 shadow-sm">
+            <h2 className="text-base font-semibold text-ink">{t('clone.organization')}</h2>
+            <p className="text-sm text-muted">{t('clone.instancesNotCopied')}</p>
             <div className="flex justify-end">
               <button
                 type="button"
@@ -338,8 +338,8 @@ export default function WorldSettingsPage() {
                 onClick={() => setCloneTarget(true)}
                 data-testid="clone-organization"
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white',
-                  'px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50',
+                  'inline-flex items-center gap-2 rounded-lg border border-line bg-surface',
+                  'px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted',
                   'disabled:opacity-60',
                 )}
               >

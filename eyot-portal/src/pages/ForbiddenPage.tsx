@@ -11,26 +11,26 @@ export default function ForbiddenPage() {
   const from = searchParams.get('from') ?? '';
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-slate-950 px-4 py-10 text-slate-100">
-      <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl">
-        <ShieldAlert className="mx-auto size-12 text-red-400" aria-hidden="true" />
+    <main className="grid min-h-dvh place-items-center bg-canvas px-4 py-10 text-ink">
+      <section className="w-full max-w-md rounded-2xl border border-line bg-surface p-8 text-center shadow-lg">
+        <ShieldAlert className="mx-auto size-12 text-danger" aria-hidden="true" />
         <h1 className="mt-6 text-2xl font-semibold tracking-tight">{t('forbidden.title')}</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-400">{t('forbidden.detail')}</p>
+        <p className="mt-3 text-sm leading-6 text-muted-subtle">{t('forbidden.detail')}</p>
 
         {gene.length > 0 ? (
-          <p className="mt-4 text-sm text-slate-300">
+          <p className="mt-4 text-sm text-nav-muted">
             {t('forbidden.currentGene')}: <span className="font-mono">{gene}</span>
           </p>
         ) : null}
 
         {missing.length > 0 ? (
-          <p className="mt-2 text-sm text-slate-300">
+          <p className="mt-2 text-sm text-nav-muted">
             {t('forbidden.missing')}: <span className="font-mono">{missing}</span>
           </p>
         ) : null}
 
         {from.length > 0 ? (
-          <p className="mt-2 truncate text-xs text-slate-500">
+          <p className="mt-2 truncate text-xs text-muted">
             {t('forbidden.from')}: {decodeURIComponent(from)}
           </p>
         ) : null}
@@ -39,14 +39,14 @@ export default function ForbiddenPage() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-line px-4 py-2.5 text-sm font-medium text-ink hover:bg-surface-muted"
           >
             <ArrowLeft className="size-4" aria-hidden="true" />
             {t('forbidden.goBack')}
           </button>
           <Link
             to="/namespaces"
-            className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="inline-flex items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           >
             {t('forbidden.goNamespaces')}
           </Link>

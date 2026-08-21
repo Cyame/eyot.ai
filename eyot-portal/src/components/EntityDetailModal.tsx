@@ -19,6 +19,7 @@ import BasicTab from '@/components/entity-tabs/BasicTab';
 import CapabilitiesTab from '@/components/entity-tabs/CapabilitiesTab';
 import DistillTab from '@/components/entity-tabs/DistillTab';
 import InstancesTab from '@/components/entity-tabs/InstancesTab';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import PromoteModal from '@/components/PromoteModal';
 import {
   deleteEntity,
@@ -398,42 +399,51 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
       aria-modal="true"
       aria-labelledby="entity-modal-title"
       data-testid="entity-detail-modal"
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 md:items-center md:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-0 md:items-center md:p-4"
     >
       <div
         className={cn(
-          'flex w-full flex-col overflow-hidden bg-white shadow-2xl',
+          'flex w-full flex-col overflow-hidden bg-surface shadow-2xl',
           'h-[100dvh] rounded-t-2xl md:h-auto md:max-h-[80vh] md:w-[920px] md:rounded-2xl',
         )}
       >
-        <header className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-widest text-blue-700">
-              {t('entityModal.title')}
-            </p>
-            <h2
-              id="entity-modal-title"
-              data-testid="entity-modal-title"
-              className="mt-1 truncate text-xl font-semibold tracking-tight text-slate-950"
-            >
-              {headerTitle}
-            </h2>
+        <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
             {entity !== null ? (
-              <p
-                className="mt-0.5 flex items-center gap-1 font-mono text-xs text-slate-500"
-                data-testid="entity-modal-slug"
-              >
-                <Hash className="size-3" aria-hidden="true" />
-                {entity.slug}
-              </p>
+              <ProgenitorAvatar
+                slug={entity.preset_slug ?? entity.base_class_slug}
+                label={headerTitle}
+                size="lg"
+              />
             ) : null}
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+                {t('entityModal.title')}
+              </p>
+              <h2
+                id="entity-modal-title"
+                data-testid="entity-modal-title"
+                className="mt-1 truncate text-xl font-semibold tracking-tight text-ink"
+              >
+                {headerTitle}
+              </h2>
+              {entity !== null ? (
+                <p
+                  className="mt-0.5 flex items-center gap-1 font-mono text-xs text-muted"
+                  data-testid="entity-modal-slug"
+                >
+                  <Hash className="size-3" aria-hidden="true" />
+                  {entity.slug}
+                </p>
+              ) : null}
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('entityModal.close')}
             data-testid="entity-modal-close"
-            className="grid size-8 place-items-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -443,7 +453,7 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
           ref={tabListRef}
           role="tablist"
           aria-label={t('entityModal.tablist')}
-          className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 px-3 py-2"
+          className="flex flex-wrap items-center gap-1 border-b border-line bg-surface-muted px-3 py-2"
           data-testid="entity-modal-tabs"
         >
           {TAB_ORDER.map((id) => {
@@ -459,10 +469,10 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
                 onKeyDown={handleTabKeyDown}
                 data-testid={`entity-tab-${id}`}
                 className={cn(
-                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
                   active
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-600 hover:bg-white hover:text-slate-900',
+                    ? 'bg-surface text-ink shadow-sm'
+                    : 'text-muted hover:bg-surface hover:text-ink',
                 )}
               >
                 {t(`entityModal.tabs.${id}`)}
@@ -478,7 +488,7 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
             className={cn(
               'mx-5 mt-3 flex items-center gap-2 rounded-lg border px-4 py-2 text-sm',
               toast.kind === 'error'
-                ? 'border-red-200 bg-red-50 text-red-800'
+                ? 'border-danger/30 bg-danger-soft text-red-800'
                 : 'border-emerald-200 bg-emerald-50 text-emerald-800',
             )}
           >
@@ -498,13 +508,13 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
           {loadError !== null ? (
             <div
               role="alert"
-              className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+              className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
             >
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
               <p>{loadError}</p>
             </div>
           ) : entity === null ? (
-            <div className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-8 text-sm text-slate-500">
+            <div className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-line-strong p-8 text-sm text-muted">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('entityModal.loading')}
             </div>
@@ -549,13 +559,13 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
           )}
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-surface-muted px-5 py-3">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleFindInWorkspace}
               data-testid="entity-footer-memory"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             >
               <Database className="size-3.5" aria-hidden="true" />
               {t('entityModal.footer.viewWorkspaceMemory')}
@@ -564,7 +574,7 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
               type="button"
               onClick={handleFindInWorkspace}
               data-testid="entity-footer-topology"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             >
               <MapPin className="size-3.5" aria-hidden="true" />
               {t('entityModal.footer.findInTopology')}
@@ -579,7 +589,7 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
                   void handleDeleteEntity();
                 }}
                 data-testid="entity-footer-delete"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-danger/30 bg-surface px-3 py-1.5 text-xs font-medium text-danger transition-colors hover:bg-danger-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:opacity-60"
               >
                 {deletingEntity ? (
                   <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
@@ -589,7 +599,7 @@ export default function EntityDetailModal({ onClose }: EntityDetailModalProps) {
                 {t('entityModal.footer.deleteEntity')}
               </button>
             ) : null}
-            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+            <div className="flex items-center gap-1.5 text-xs text-muted-subtle">
               <Network className="size-3.5" aria-hidden="true" />
               <ArrowUp className="size-3.5" aria-hidden="true" />
               <Wand2 className="size-3.5" aria-hidden="true" />

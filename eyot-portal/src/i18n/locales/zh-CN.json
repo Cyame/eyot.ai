@@ -1463,6 +1463,13 @@
     "switchTo": "EN",
     "current": "中文"
   },
+  "theme": {
+    "label": "主题",
+    "system": "跟随系统",
+    "light": "浅色",
+    "dark": "深色",
+    "toggle": "切换到{{next}}"
+  },
   "identity": {
     "system": "超管",
     "org": "大陆管",

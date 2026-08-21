@@ -2,6 +2,7 @@ import { AlertCircle, Cpu, LoaderCircle, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useParams } from 'react-router';
+import EmptyState from '@/components/EmptyState';
 import PromoteModal from '@/components/PromoteModal';
 import { ApiError, api } from '@/lib/api';
 import { type EntityDetail, fetchEntity, promoteEntity } from '@/lib/api/entities';
@@ -70,23 +71,23 @@ export default function NamespaceInstancesPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl p-6 lg:p-8" aria-labelledby="ns-instances-title">
+    <section className="mx-auto w-full max-w-6xl p-6" aria-labelledby="ns-instances-title">
       <header className="mb-6 flex items-start gap-4">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
           <Cpu className="size-6" aria-hidden="true" />
         </span>
         <div>
-          <h1 id="ns-instances-title" className="text-2xl font-semibold text-slate-950">
+          <h1 id="ns-instances-title" className="text-2xl font-semibold text-ink">
             {t('namespaces.instancesTitle')}
           </h1>
-          <p className="mt-1 max-w-2xl text-sm text-slate-600">{t('namespaces.instancesDetail')}</p>
+          <p className="mt-1 max-w-2xl text-sm text-muted">{t('namespaces.instancesDetail')}</p>
         </div>
       </header>
 
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -94,7 +95,7 @@ export default function NamespaceInstancesPage() {
       ) : null}
 
       {isLoading ? (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-16 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-line bg-surface px-6 py-16 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -167,26 +168,26 @@ function InstancesList({
 
   if (instances.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <Cpu className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-        <h2 className="mt-4 text-base font-semibold text-slate-900">
-          {t('namespaces.instancesTitle')}
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">{t('namespaces.instancesEmpty')}</p>
-        <Link
-          to={`/orgs/${orgId}/namespaces/${nsId}/workspaces`}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
-        >
-          {t('namespaces.goIntroduceInWorkspace')}
-        </Link>
-      </div>
+      <EmptyState
+        icon={Cpu}
+        title={t('namespaces.instancesTitle')}
+        description={t('namespaces.instancesEmpty')}
+        action={
+          <Link
+            to={`/orgs/${orgId}/namespaces/${nsId}/workspaces`}
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
+          >
+            {t('namespaces.goIntroduceInWorkspace')}
+          </Link>
+        }
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-line bg-surface">
       <table className="min-w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3">{t('namespaces.instanceEntity')}</th>
             <th className="px-4 py-3">{t('namespaces.instanceId')}</th>
@@ -199,18 +200,16 @@ function InstancesList({
             const entity = entityById.get(inst.entity_id);
             const label = entity?.display_name ?? entity?.name ?? inst.entity_id;
             return (
-              <tr key={inst.id} className="border-b border-slate-100 last:border-0">
-                <td className="px-4 py-3 font-medium text-slate-900">{label}</td>
-                <td className="px-4 py-3 font-mono text-xs text-slate-500">
-                  {inst.id.slice(0, 8)}
-                </td>
-                <td className="px-4 py-3 capitalize text-slate-600">{inst.status}</td>
+              <tr key={inst.id} className="border-b border-line-subtle last:border-0">
+                <td className="px-4 py-3 font-medium text-ink">{label}</td>
+                <td className="px-4 py-3 font-mono text-xs text-muted">{inst.id.slice(0, 8)}</td>
+                <td className="px-4 py-3 capitalize text-muted">{inst.status}</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
                       onClick={() => onOpenEntity(inst.entity_id)}
-                      className="text-blue-600 hover:text-blue-700"
+                      className="text-brand hover:text-brand-hover"
                     >
                       {t('namespaces.viewDetail')}
                     </button>

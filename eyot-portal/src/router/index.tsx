@@ -138,7 +138,7 @@ export function LegacyWorkspaceRedirect() {
 function RedirectingNote() {
   const { t } = useTranslation();
   return (
-    <div className="grid min-h-dvh place-items-center bg-slate-100 text-sm text-slate-500">
+    <div className="grid min-h-dvh place-items-center bg-surface-muted text-sm text-muted">
       {t('legacyRedirect.redirecting')}
     </div>
   );

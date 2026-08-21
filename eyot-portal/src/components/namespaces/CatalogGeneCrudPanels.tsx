@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import { ArrowDown, ArrowUp, LoaderCircle, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import EmptyState from '@/components/EmptyState';
 import {
   type AiGeneCatalogItem,
   type CapabilityInline,
@@ -172,7 +173,7 @@ function manifestRequiredKnowledge(manifest: Record<string, unknown> | null): re
 
 function ScopeBadge({ scope, t }: { readonly scope: string; readonly t: TFn }) {
   return (
-    <span className="rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs text-blue-700">
+    <span className="rounded-md bg-brand-soft px-2 py-0.5 font-mono text-xs text-brand">
       {t(`namespaces.scope.${scope}`, { defaultValue: scope })}
     </span>
   );
@@ -180,7 +181,7 @@ function ScopeBadge({ scope, t }: { readonly scope: string; readonly t: TFn }) {
 
 function ReadonlyBadge({ t }: { readonly t: TFn }) {
   return (
-    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+    <span className="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
       {t('namespaces.readonly')}
     </span>
   );
@@ -508,16 +509,16 @@ function CatalogFormModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/40 p-4"
+      className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4"
       data-testid="catalog-form-modal"
     >
-      <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-slate-200 bg-white p-5 shadow-lg">
+      <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-line bg-surface p-5 shadow-lg">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-base font-semibold text-slate-950">{title}</h2>
+          <h2 className="text-base font-semibold text-ink">{title}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-md p-1 text-muted-subtle hover:bg-surface-muted hover:text-ink"
             aria-label={t('namespaces.cancel')}
           >
             <X className="size-4" aria-hidden="true" />
@@ -526,18 +527,16 @@ function CatalogFormModal({
         <div className="mt-4 space-y-3">
           {showSlug && mode === 'create' ? (
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
-                {t('namespaces.genesSlug')}
-              </span>
+              <span className="mb-1 block font-medium text-ink">{t('namespaces.genesSlug')}</span>
               <input
                 value={values.slug}
                 onChange={(e) => setValues((v) => ({ ...v, slug: toSlug(e.target.value, 64) }))}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
             </label>
           ) : null}
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">{t('namespaces.name')}</span>
+            <span className="mb-1 block font-medium text-ink">{t('namespaces.name')}</span>
             <input
               value={values.name}
               onChange={(e) => {
@@ -551,16 +550,16 @@ function CatalogFormModal({
                       : v.slug,
                 }));
               }}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
           {showType ? (
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">{t('namespaces.type')}</span>
+              <span className="mb-1 block font-medium text-ink">{t('namespaces.type')}</span>
               <select
                 value={values.type}
                 onChange={(e) => handleTypeChange(e.target.value as CapabilityType)}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               >
                 {CAPABILITY_TYPES.map((capType) => (
                   <option key={capType} value={capType}>
@@ -572,9 +571,7 @@ function CatalogFormModal({
           ) : null}
           {showScope ? (
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
-                {t('namespaces.scopeLabel')}
-              </span>
+              <span className="mb-1 block font-medium text-ink">{t('namespaces.scopeLabel')}</span>
               <select
                 value={useEffectScope ? values.effectScope : values.scope}
                 onChange={(e) => {
@@ -592,7 +589,7 @@ function CatalogFormModal({
                   }
                 }}
                 disabled={mode === 'edit'}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft disabled:bg-surface-muted"
               >
                 {useEffectScope ? (
                   <>
@@ -612,58 +609,58 @@ function CatalogFormModal({
             </label>
           ) : null}
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
+            <span className="mb-1 block font-medium text-ink">
               {t('namespaces.genesDescription')}
             </span>
             <textarea
               value={values.description}
               onChange={(e) => setValues((v) => ({ ...v, description: e.target.value }))}
               rows={3}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
           {showTags ? (
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('namespaces.genesTagsLabel')}
               </span>
               <input
                 value={values.tagsText}
                 onChange={(e) => setValues((v) => ({ ...v, tagsText: e.target.value }))}
                 placeholder={t('namespaces.genesTagsPlaceholder')}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
             </label>
           ) : null}
           {structuredMode ? (
-            <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <div className="space-y-3 rounded-lg border border-line bg-surface-muted p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('namespaces.capabilityStructuredLabel')}
               </p>
               {values.type === 'skill' ? (
                 <>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilitySkillNameLabel')}
                     </span>
                     <input
                       value={values.structured.skillName}
                       onChange={(e) => setStructuredField('skillName', e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilitySkillDescriptionLabel')}
                     </span>
                     <input
                       value={values.structured.skillDescription}
                       onChange={(e) => setStructuredField('skillDescription', e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilitySkillBodyLabel')}
                     </span>
                     <textarea
@@ -672,36 +669,36 @@ function CatalogFormModal({
                       rows={5}
                       spellCheck={false}
                       placeholder={t('namespaces.capabilitySkillBodyPlaceholder')}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                 </>
               ) : values.type === 'mcp' ? (
                 <>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilityMcpCommandLabel')}
                     </span>
                     <input
                       value={values.structured.mcpCommand}
                       onChange={(e) => setStructuredField('mcpCommand', e.target.value)}
                       placeholder="npx"
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilityMcpArgsLabel')}
                     </span>
                     <input
                       value={values.structured.mcpArgsText}
                       onChange={(e) => setStructuredField('mcpArgsText', e.target.value)}
                       placeholder="-y @modelcontextprotocol/server-foo"
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilityMcpEnvLabel')}
                     </span>
                     <textarea
@@ -710,17 +707,17 @@ function CatalogFormModal({
                       rows={3}
                       spellCheck={false}
                       placeholder="API_KEY=xxx&#10;BASE_URL=https://example.com"
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('namespaces.capabilityMcpTransportLabel')}
                     </span>
                     <select
                       value={values.structured.mcpTransport}
                       onChange={(e) => setStructuredField('mcpTransport', e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     >
                       <option value="stdio">stdio</option>
                       <option value="sse">sse</option>
@@ -730,7 +727,7 @@ function CatalogFormModal({
                 </>
               ) : (
                 <label className="block text-sm">
-                  <span className="mb-1 block font-medium text-slate-700">
+                  <span className="mb-1 block font-medium text-ink">
                     {t('namespaces.capabilityParamsLabel')}
                   </span>
                   <textarea
@@ -739,7 +736,7 @@ function CatalogFormModal({
                     rows={5}
                     spellCheck={false}
                     placeholder={t('namespaces.capabilityParamsPlaceholder')}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                   />
                 </label>
               )}
@@ -748,51 +745,47 @@ function CatalogFormModal({
           {jsonField !== null ? (
             <div className="space-y-1">
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">{t(jsonLabelKey)}</span>
+                <span className="mb-1 block font-medium text-ink">{t(jsonLabelKey)}</span>
                 <textarea
                   value={values.jsonText}
                   onChange={(e) => handleRawJsonChange(e.target.value)}
                   placeholder={t(jsonPlaceholderKey)}
                   rows={4}
                   spellCheck={false}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 />
               </label>
               {structuredMode ? (
-                <p className="text-xs text-slate-500">
-                  {t('namespaces.capabilityJsonAdvancedHint')}
-                </p>
+                <p className="text-xs text-muted">{t('namespaces.capabilityJsonAdvancedHint')}</p>
               ) : null}
             </div>
           ) : null}
           {showCapabilities ? (
             <fieldset className="block text-sm" data-testid="gene-capabilities-picker">
-              <legend className="mb-1 font-medium text-slate-700">
+              <legend className="mb-1 font-medium text-ink">
                 {t('namespaces.geneCapabilitiesLabel')}
               </legend>
-              <p className="mb-2 text-xs text-slate-500">{t('namespaces.geneCapabilitiesHint')}</p>
+              <p className="mb-2 text-xs text-muted">{t('namespaces.geneCapabilitiesHint')}</p>
               {dedupedOptions.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500">
-                  {t('namespaces.geneCapabilitiesEmpty')}
-                </p>
+                <EmptyState compact title={t('namespaces.geneCapabilitiesEmpty')} />
               ) : (
-                <ul className="max-h-44 space-y-1 overflow-y-auto rounded-lg border border-slate-200 p-2">
+                <ul className="max-h-44 space-y-1 overflow-y-auto rounded-lg border border-line p-2">
                   {dedupedOptions.map((option) => {
                     const checked = effectiveCapabilities.some((c) => c.name === option.name);
                     return (
                       <li key={option.name}>
-                        <label className="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50">
+                        <label className="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-surface-muted">
                           <input
                             type="checkbox"
                             checked={checked}
                             onChange={() => toggleCapability(option.name)}
-                            className="mt-0.5 rounded border-slate-300"
+                            className="mt-0.5 rounded border-line-strong"
                           />
                           <span className="min-w-0">
-                            <span className="block truncate font-medium text-slate-800">
+                            <span className="block truncate font-medium text-ink">
                               {option.name}
                             </span>
-                            <span className="block text-xs text-slate-500">
+                            <span className="block text-xs text-muted">
                               <span className="font-mono">{option.type}</span>
                               {option.description ? ` — ${option.description}` : ''}
                             </span>
@@ -804,14 +797,14 @@ function CatalogFormModal({
                 </ul>
               )}
               <div
-                className="mt-2 rounded-lg bg-slate-50 px-3 py-2"
+                className="mt-2 rounded-lg bg-surface-muted px-3 py-2"
                 data-testid="gene-capabilities-summary"
               >
                 {effectiveCapabilities.length === 0 ? (
-                  <p className="text-xs text-slate-500">{t('namespaces.geneCapabilitiesNone')}</p>
+                  <p className="text-xs text-muted">{t('namespaces.geneCapabilitiesNone')}</p>
                 ) : (
                   <>
-                    <p className="text-xs font-medium text-slate-600">
+                    <p className="text-xs font-medium text-muted">
                       {t('namespaces.geneCapabilitiesSummary', {
                         count: effectiveCapabilities.length,
                       })}
@@ -820,10 +813,10 @@ function CatalogFormModal({
                       {effectiveCapabilities.map((cap) => (
                         <li
                           key={cap.name}
-                          className="inline-flex items-center gap-1 rounded-md bg-white px-2 py-0.5 text-xs text-slate-700 ring-1 ring-slate-200"
+                          className="inline-flex items-center gap-1 rounded-md bg-surface px-2 py-0.5 text-xs text-ink ring-1 ring-line"
                         >
                           {cap.name}
-                          <span className="font-mono text-slate-400">{cap.type}</span>
+                          <span className="font-mono text-muted-subtle">{cap.type}</span>
                         </li>
                       ))}
                     </ul>
@@ -834,34 +827,28 @@ function CatalogFormModal({
           ) : null}
           {showRequiredKnowledge ? (
             <fieldset className="block text-sm" data-testid="required-knowledge-picker">
-              <legend className="mb-1 font-medium text-slate-700">
+              <legend className="mb-1 font-medium text-ink">
                 {t('namespaces.requiredKnowledgeLabel')}
               </legend>
-              <p className="mb-2 text-xs text-slate-500">{t('namespaces.requiredKnowledgeHint')}</p>
+              <p className="mb-2 text-xs text-muted">{t('namespaces.requiredKnowledgeHint')}</p>
               {knowledgeOptions.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500">
-                  {t('namespaces.requiredKnowledgeEmpty')}
-                </p>
+                <EmptyState compact title={t('namespaces.requiredKnowledgeEmpty')} />
               ) : (
-                <ul className="max-h-44 space-y-1 overflow-y-auto rounded-lg border border-slate-200 p-2">
+                <ul className="max-h-44 space-y-1 overflow-y-auto rounded-lg border border-line p-2">
                   {knowledgeOptions.map((entry) => {
                     const checked = values.requiredKnowledge.includes(entry.key);
                     return (
                       <li key={entry.key}>
-                        <label className="flex cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50">
+                        <label className="flex cursor-pointer items-start gap-2 rounded-md px-2 py-1.5 hover:bg-surface-muted">
                           <input
                             type="checkbox"
                             checked={checked}
                             onChange={() => toggleKnowledge(entry.key)}
-                            className="mt-0.5 rounded border-slate-300"
+                            className="mt-0.5 rounded border-line-strong"
                           />
                           <span className="min-w-0">
-                            <span className="block truncate font-mono text-slate-800">
-                              {entry.key}
-                            </span>
-                            <span className="block truncate text-xs text-slate-500">
-                              {entry.title}
-                            </span>
+                            <span className="block truncate font-mono text-ink">{entry.key}</span>
+                            <span className="block truncate text-xs text-muted">{entry.title}</span>
                           </span>
                         </label>
                       </li>
@@ -871,14 +858,14 @@ function CatalogFormModal({
               )}
               {values.requiredKnowledge.length > 0 ? (
                 <div
-                  className="mt-2 rounded-lg bg-slate-50 px-3 py-2"
+                  className="mt-2 rounded-lg bg-surface-muted px-3 py-2"
                   data-testid="required-knowledge-summary"
                 >
                   <ul className="space-y-1">
                     {values.requiredKnowledge.map((slug, index) => (
                       <li
                         key={slug}
-                        className="flex items-center justify-between gap-2 rounded-md bg-white px-2 py-1 font-mono text-xs text-slate-700 ring-1 ring-slate-200"
+                        className="flex items-center justify-between gap-2 rounded-md bg-surface px-2 py-1 font-mono text-xs text-ink ring-1 ring-line"
                       >
                         <span className="truncate">
                           {index + 1}. {slug}
@@ -889,7 +876,7 @@ function CatalogFormModal({
                             onClick={() => moveKnowledge(slug, -1)}
                             disabled={index === 0}
                             aria-label={t('namespaces.moveUp')}
-                            className="rounded p-0.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
+                            className="rounded p-0.5 text-muted hover:bg-surface-muted hover:text-ink disabled:opacity-30"
                           >
                             <ArrowUp className="size-3.5" aria-hidden="true" />
                           </button>
@@ -898,7 +885,7 @@ function CatalogFormModal({
                             onClick={() => moveKnowledge(slug, 1)}
                             disabled={index === values.requiredKnowledge.length - 1}
                             aria-label={t('namespaces.moveDown')}
-                            className="rounded p-0.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
+                            className="rounded p-0.5 text-muted hover:bg-surface-muted hover:text-ink disabled:opacity-30"
                           >
                             <ArrowDown className="size-3.5" aria-hidden="true" />
                           </button>
@@ -912,12 +899,12 @@ function CatalogFormModal({
           ) : null}
         </div>
         {validationError ? (
-          <p role="alert" className="mt-3 text-sm text-red-600">
+          <p role="alert" className="mt-3 text-sm text-danger">
             {validationError}
           </p>
         ) : null}
         {errorMessage ? (
-          <p role="alert" className="mt-3 text-sm text-red-600">
+          <p role="alert" className="mt-3 text-sm text-danger">
             {errorMessage}
           </p>
         ) : null}
@@ -925,7 +912,7 @@ function CatalogFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
           >
             {t('namespaces.cancel')}
           </button>
@@ -933,7 +920,7 @@ function CatalogFormModal({
             type="button"
             disabled={busy}
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
           >
             {busy ? t('common.loading') : t('namespaces.save')}
           </button>
@@ -1090,7 +1077,7 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -1101,8 +1088,8 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">{t('namespaces.aiGenesTitle')}</h2>
-          <p className="mt-1 text-sm text-slate-500">{t('namespaces.aiGenesDetail')}</p>
+          <h2 className="text-base font-semibold text-ink">{t('namespaces.aiGenesTitle')}</h2>
+          <p className="mt-1 text-sm text-muted">{t('namespaces.aiGenesDetail')}</p>
         </div>
         <button
           type="button"
@@ -1110,25 +1097,23 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
             setFormError(null);
             setModal({ mode: 'create' });
           }}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
         >
           <Plus className="size-4" aria-hidden="true" />
           {t('namespaces.createAiGene')}
         </button>
       </div>
       {errorMessage ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-danger">
           {errorMessage}
         </p>
       ) : null}
       {genes.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
-          {t('namespaces.aiGenesEmpty')}
-        </p>
+        <EmptyState title={t('namespaces.aiGenesEmpty')} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <table className="min-w-full text-sm" data-testid="ai-genes-table">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">{t('namespaces.name')}</th>
                 <th className="px-4 py-3">{t('namespaces.genesSlug')}</th>
@@ -1141,16 +1126,14 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
               {genes.map((gene) => {
                 const readonly = gene.readonly === true || gene.scope === 'system';
                 return (
-                  <tr key={gene.id} className="border-b border-slate-100 last:border-0">
+                  <tr key={gene.id} className="border-b border-line-subtle last:border-0">
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900">{gene.name}</p>
+                      <p className="font-medium text-ink">{gene.name}</p>
                       {gene.description ? (
-                        <p className="mt-0.5 line-clamp-2 text-xs text-slate-500">
-                          {gene.description}
-                        </p>
+                        <p className="mt-0.5 line-clamp-2 text-xs text-muted">{gene.description}</p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">{gene.slug}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted">{gene.slug}</td>
                     <td className="px-4 py-3">
                       <ScopeBadge scope={gene.scope ?? 'org'} t={t} />
                     </td>
@@ -1158,7 +1141,7 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
                       {readonly ? (
                         <ReadonlyBadge t={t} />
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-subtle">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -1170,7 +1153,7 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
                             setFormError(null);
                             setModal({ mode: 'edit', gene });
                           }}
-                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-brand hover:text-brand-hover disabled:opacity-40"
                         >
                           <Pencil className="size-3.5" aria-hidden="true" />
                           {t('namespaces.edit')}
@@ -1179,7 +1162,7 @@ export function DeepSeaGenesPanel({ t }: { readonly t: TFn }) {
                           type="button"
                           disabled={readonly}
                           onClick={() => void handleDelete(gene)}
-                          className="inline-flex items-center gap-1 text-red-700 hover:text-red-800 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-danger hover:text-red-800 disabled:opacity-40"
                         >
                           <Trash2 className="size-3.5" aria-hidden="true" />
                           {t('namespaces.delete')}
@@ -1309,7 +1292,7 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -1320,8 +1303,8 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">{t('namespaces.genesTitle')}</h2>
-          <p className="mt-1 text-sm text-slate-500">{t('namespaces.genesDetail')}</p>
+          <h2 className="text-base font-semibold text-ink">{t('namespaces.genesTitle')}</h2>
+          <p className="mt-1 text-sm text-muted">{t('namespaces.genesDetail')}</p>
         </div>
         <button
           type="button"
@@ -1329,25 +1312,23 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
             setFormError(null);
             setModal({ mode: 'create' });
           }}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
         >
           <Plus className="size-4" aria-hidden="true" />
           {t('namespaces.createUserGene')}
         </button>
       </div>
       {errorMessage ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-danger">
           {errorMessage}
         </p>
       ) : null}
       {genes.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
-          {t('namespaces.genesEmpty')}
-        </p>
+        <EmptyState title={t('namespaces.genesEmpty')} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <table className="min-w-full text-sm" data-testid="user-genes-table">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">{t('namespaces.name')}</th>
                 <th className="px-4 py-3">{t('namespaces.genesSlug')}</th>
@@ -1360,9 +1341,9 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
               {genes.map((gene) => {
                 const readonly = isReadonlyGene(gene);
                 return (
-                  <tr key={gene.id} className="border-b border-slate-100 last:border-0">
-                    <td className="px-4 py-3 font-medium text-slate-900">{gene.name}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-700">{gene.slug}</td>
+                  <tr key={gene.id} className="border-b border-line-subtle last:border-0">
+                    <td className="px-4 py-3 font-medium text-ink">{gene.name}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-ink">{gene.slug}</td>
                     <td className="px-4 py-3">
                       <ScopeBadge scope={gene.effect_scope} t={t} />
                     </td>
@@ -1370,7 +1351,7 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
                       {readonly ? (
                         <ReadonlyBadge t={t} />
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-subtle">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -1382,7 +1363,7 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
                             setFormError(null);
                             setModal({ mode: 'edit', gene });
                           }}
-                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-brand hover:text-brand-hover disabled:opacity-40"
                         >
                           <Pencil className="size-3.5" aria-hidden="true" />
                           {t('namespaces.edit')}
@@ -1391,7 +1372,7 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
                           type="button"
                           disabled={readonly}
                           onClick={() => void handleDelete(gene)}
-                          className="inline-flex items-center gap-1 text-red-700 hover:text-red-800 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-danger hover:text-red-800 disabled:opacity-40"
                         >
                           <Trash2 className="size-3.5" aria-hidden="true" />
                           {t('namespaces.delete')}
@@ -1560,7 +1541,7 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -1571,18 +1552,18 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">
+          <h2 className="text-base font-semibold text-ink">
             {t('namespaces.capabilityMarketTitle')}
           </h2>
-          <p className="mt-1 text-sm text-slate-500">{t('namespaces.capabilityMarketDetail')}</p>
+          <p className="mt-1 text-sm text-muted">{t('namespaces.capabilityMarketDetail')}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <label className="inline-flex items-center gap-2 text-xs font-medium text-slate-600">
+          <label className="inline-flex items-center gap-2 text-xs font-medium text-muted">
             <input
               type="checkbox"
               checked={hideSystem}
               onChange={(e) => setHideSystem(e.target.checked)}
-              className="rounded border-slate-300"
+              className="rounded border-line-strong"
             />
             {t('namespaces.hideSystem')}
           </label>
@@ -1592,7 +1573,7 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
               setFormError(null);
               setModal({ mode: 'create' });
             }}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           >
             <Plus className="size-4" aria-hidden="true" />
             {t('namespaces.createCapability')}
@@ -1600,18 +1581,16 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
         </div>
       </div>
       {errorMessage ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-danger">
           {errorMessage}
         </p>
       ) : null}
       {visible.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
-          {t('namespaces.capabilityMarketEmpty')}
-        </p>
+        <EmptyState title={t('namespaces.capabilityMarketEmpty')} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <table className="min-w-full text-sm" data-testid="capability-market-table">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">{t('namespaces.name')}</th>
                 <th className="px-4 py-3">{t('namespaces.type')}</th>
@@ -1625,30 +1604,30 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
               {visible.map((entry) => {
                 const readonly = isReadonlyEntry(entry);
                 return (
-                  <tr key={entry.id} className="border-b border-slate-100 last:border-0">
+                  <tr key={entry.id} className="border-b border-line-subtle last:border-0">
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900">{entry.name}</p>
+                      <p className="font-medium text-ink">{entry.name}</p>
                       {entry.description ? (
-                        <p className="mt-0.5 line-clamp-2 text-xs text-slate-500">
+                        <p className="mt-0.5 line-clamp-2 text-xs text-muted">
                           {entry.description}
                         </p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600">{entry.type}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted">{entry.type}</td>
                     <td className="px-4 py-3">
                       {entry.required_knowledge !== null && entry.required_knowledge.length > 0 ? (
                         <ul className="flex max-w-56 flex-wrap gap-1">
                           {entry.required_knowledge.map((slug) => (
                             <li
                               key={slug}
-                              className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-xs text-blue-800 ring-1 ring-blue-100"
+                              className="rounded-md bg-brand-soft px-1.5 py-0.5 font-mono text-xs text-brand ring-1 ring-brand/20"
                             >
                               {slug}
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-subtle">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -1658,7 +1637,7 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
                       {readonly ? (
                         <ReadonlyBadge t={t} />
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-subtle">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -1670,7 +1649,7 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
                             setFormError(null);
                             setModal({ mode: 'edit', entry });
                           }}
-                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-brand hover:text-brand-hover disabled:opacity-40"
                         >
                           <Pencil className="size-3.5" aria-hidden="true" />
                           {t('namespaces.edit')}
@@ -1679,7 +1658,7 @@ export function CapabilityMarketTab({ t }: { readonly t: TFn }) {
                           type="button"
                           disabled={readonly}
                           onClick={() => void handleDelete(entry)}
-                          className="inline-flex items-center gap-1 text-red-700 hover:text-red-800 disabled:opacity-40"
+                          className="inline-flex items-center gap-1 text-danger hover:text-red-800 disabled:opacity-40"
                         >
                           <Trash2 className="size-3.5" aria-hidden="true" />
                           {t('namespaces.delete')}

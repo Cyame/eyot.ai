@@ -137,9 +137,9 @@ export default function DeployProgressFloat() {
         type="button"
         onClick={expand}
         data-testid="deploy-progress-minimized"
-        className="fixed bottom-4 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-800 shadow-lg hover:bg-slate-50"
+        className="fixed bottom-4 right-4 z-[70] inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink shadow-lg hover:bg-surface-muted"
       >
-        <LoaderCircle className="size-4 animate-spin text-blue-600" aria-hidden="true" />
+        <LoaderCircle className="size-4 animate-spin text-brand" aria-hidden="true" />
         {t('deploy.runningBackground')}
       </button>
     );
@@ -151,11 +151,11 @@ export default function DeployProgressFloat() {
       aria-modal="true"
       aria-labelledby="deploy-progress-title"
       data-testid="deploy-progress-float"
-      className="fixed inset-0 z-[70] flex items-end justify-center bg-slate-950/40 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[70] flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
     >
-      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-slate-200 bg-white shadow-2xl sm:rounded-xl">
-        <header className="border-b border-slate-200 px-5 py-4">
-          <h2 id="deploy-progress-title" className="text-base font-semibold text-slate-950">
+      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
+        <header className="border-b border-line px-5 py-4">
+          <h2 id="deploy-progress-title" className="text-base font-semibold text-ink">
             {terminal
               ? job.phase === 'success'
                 ? t('deploy.successTitle')
@@ -166,7 +166,7 @@ export default function DeployProgressFloat() {
                     : t('deploy.failedTitle')
               : t('deploy.runningTitle')}
           </h2>
-          <p className="mt-1 text-xs text-slate-500">{t('deploy.subtitle')}</p>
+          <p className="mt-1 text-xs text-muted">{t('deploy.subtitle')}</p>
         </header>
 
         <div className="max-h-[50vh] space-y-2 overflow-y-auto px-5 py-4">
@@ -185,22 +185,22 @@ export default function DeployProgressFloat() {
             return (
               <div
                 key={name}
-                className="flex items-center gap-3 rounded-lg border border-slate-100 px-3 py-2 text-sm"
+                className="flex items-center gap-3 rounded-lg border border-line-subtle px-3 py-2 text-sm"
                 data-testid={`deploy-step-${stepNum}`}
               >
                 {state === 'running' ? (
-                  <LoaderCircle className="size-4 shrink-0 animate-spin text-blue-600" />
+                  <LoaderCircle className="size-4 shrink-0 animate-spin text-brand" />
                 ) : state === 'done' ? (
                   <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
                 ) : state === 'failed' ? (
-                  <XCircle className="size-4 shrink-0 text-red-600" />
+                  <XCircle className="size-4 shrink-0 text-danger" />
                 ) : (
-                  <span className="size-4 shrink-0 rounded-full border border-slate-300" />
+                  <span className="size-4 shrink-0 rounded-full border border-line-strong" />
                 )}
                 <span
                   className={cn(
                     'font-mono text-xs',
-                    state === 'pending' ? 'text-slate-400' : 'text-slate-800',
+                    state === 'pending' ? 'text-muted-subtle' : 'text-ink',
                   )}
                 >
                   {t(`deploy.steps.${name}`, { defaultValue: name })}
@@ -212,7 +212,7 @@ export default function DeployProgressFloat() {
           {job.message && (job.phase === 'failed' || job.phase === 'timeout') ? (
             <div
               role="alert"
-              className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+              className="flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
             >
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <p className="break-all">{job.message}</p>
@@ -220,14 +220,14 @@ export default function DeployProgressFloat() {
           ) : null}
         </div>
 
-        <footer className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
           {!terminal ? (
             <>
               <button
                 type="button"
                 onClick={minimize}
                 data-testid="deploy-run-background"
-                className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink hover:bg-surface-muted"
               >
                 {t('deploy.runBackground')}
               </button>
@@ -244,7 +244,7 @@ export default function DeployProgressFloat() {
                     });
                 }}
                 data-testid="deploy-cancel"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-800 hover:bg-red-100"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-danger/30 bg-danger-soft px-3 py-1.5 text-sm font-semibold text-red-800 hover:bg-red-100"
               >
                 <Square className="size-3.5" aria-hidden="true" />
                 {t('deploy.cancel')}
@@ -259,7 +259,7 @@ export default function DeployProgressFloat() {
                 navigate(`/workspaces/${encodeURIComponent(workspaceId)}`);
               }}
               data-testid="deploy-start-using"
-              className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-blue-700"
+              className="rounded-lg bg-brand px-4 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
             >
               {t('deploy.startUsing')}
             </button>

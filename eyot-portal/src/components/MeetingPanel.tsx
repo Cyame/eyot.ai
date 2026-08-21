@@ -21,10 +21,10 @@ import { resolveError } from '@/lib/apiError';
 import type { Meeting, MeetingStatus, Membership } from '@/lib/types';
 
 const MEETING_STATUS_BADGE: Readonly<Record<MeetingStatus, string>> = {
-  scheduled: 'border-blue-200 bg-blue-50 text-blue-700',
+  scheduled: 'border-brand/30 bg-brand-soft text-brand',
   active: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  ended: 'border-slate-200 bg-slate-50 text-slate-600',
-  cancelled: 'border-red-200 bg-red-50 text-red-600',
+  ended: 'border-line bg-surface-muted text-muted',
+  cancelled: 'border-danger/30 bg-danger-soft text-danger',
 };
 
 const ACTIONABLE_STATUSES: Readonly<Record<MeetingStatus, 'start' | 'end' | 'cancel' | null>> = {
@@ -181,14 +181,14 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
 
   return (
     <div className="h-full space-y-4 overflow-y-auto p-6">
-      <article className="rounded-lg border border-slate-200 bg-white p-4">
+      <article className="rounded-lg border border-line bg-surface p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-slate-900">{t('meetings.title')}</h2>
+          <h2 className="text-sm font-semibold text-ink">{t('meetings.title')}</h2>
           {!createOpen ? (
             <button
               type="button"
               onClick={() => setCreateOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-2.5 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
             >
               <CalendarDays className="size-3.5" aria-hidden="true" />
               {t('meetings.createTitle')}
@@ -205,28 +205,28 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
             }}
           >
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('meetings.fieldTitle')}
                 <input
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder={t('meetings.titlePlaceholder')}
                   disabled={creating}
-                  className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
                 />
               </label>
-              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('meetings.fieldScheduledAt')}
                 <input
                   type="datetime-local"
                   value={scheduledAt}
                   onChange={(event) => setScheduledAt(event.target.value)}
                   disabled={creating}
-                  className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
                 />
               </label>
             </div>
-            <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
               {t('meetings.fieldAgenda')}
               <textarea
                 value={agenda}
@@ -234,33 +234,33 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
                 placeholder={t('meetings.agendaPlaceholder')}
                 disabled={creating}
                 rows={3}
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
               />
             </label>
-            <fieldset className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <fieldset className="block text-xs font-semibold uppercase tracking-wide text-muted">
               <legend>
                 {t('meetings.fieldParticipants')}
-                <span className="ml-2 font-normal normal-case text-slate-500">
+                <span className="ml-2 font-normal normal-case text-muted">
                   {t('meetings.participantsSelected', { count: participantIds.size })}
                 </span>
               </legend>
-              <div className="mt-1.5 max-h-40 space-y-1 overflow-y-auto rounded-lg border border-slate-200 px-3 py-2">
+              <div className="mt-1.5 max-h-40 space-y-1 overflow-y-auto rounded-lg border border-line px-3 py-2">
                 {memberships.length === 0 ? (
-                  <p className="py-1 text-xs font-normal normal-case text-slate-500">
+                  <p className="py-1 text-xs font-normal normal-case text-muted">
                     {t('meetings.noParticipants')}
                   </p>
                 ) : (
                   memberships.map((m) => (
                     <label
                       key={m.id}
-                      className="flex items-center gap-2 py-0.5 text-xs font-normal normal-case text-slate-700"
+                      className="flex items-center gap-2 py-0.5 text-xs font-normal normal-case text-ink"
                     >
                       <input
                         type="checkbox"
                         checked={participantIds.has(m.id)}
                         onChange={() => toggleParticipant(m.id)}
                         disabled={creating}
-                        className="size-3.5 rounded border-slate-300 text-blue-600"
+                        className="size-3.5 rounded border-line-strong text-brand"
                       />
                       <span className="min-w-0 truncate">{membershipLabel(m)}</span>
                     </label>
@@ -269,7 +269,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
               </div>
             </fieldset>
             {formError !== null ? (
-              <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+              <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
                 {formError}
               </p>
             ) : null}
@@ -277,7 +277,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
               <button
                 type="submit"
                 disabled={creating}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
               >
                 {creating ? (
                   <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
@@ -291,7 +291,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
                   setFormError(null);
                 }}
                 disabled={creating}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
               >
                 {t('common.cancel')}
               </button>
@@ -303,7 +303,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
       {error !== null ? (
         <p
           role="alert"
-          className="flex items-center gap-2 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700"
+          className="flex items-center gap-2 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger"
         >
           <AlertCircle className="size-3.5 shrink-0" aria-hidden="true" />
           {error}
@@ -311,39 +311,37 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
       ) : null}
 
       {loading ? (
-        <p className="flex items-center gap-2 text-sm text-slate-500">
+        <p className="flex items-center gap-2 text-sm text-muted">
           <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </p>
       ) : meetings.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-200 bg-white p-6 text-center">
-          <CalendarDays className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-          <h3 className="mt-3 text-sm font-semibold text-slate-900">{t('meetings.empty')}</h3>
-          <p className="mt-1 text-sm text-slate-500">{t('meetings.emptyDetail')}</p>
+        <div className="rounded-lg border border-dashed border-line bg-surface p-6 text-center">
+          <CalendarDays className="mx-auto size-8 text-muted-subtle" aria-hidden="true" />
+          <h3 className="mt-3 text-sm font-semibold text-ink">{t('meetings.empty')}</h3>
+          <p className="mt-1 text-sm text-muted">{t('meetings.emptyDetail')}</p>
         </div>
       ) : (
-        <article className="rounded-lg border border-slate-200 bg-white p-4">
+        <article className="rounded-lg border border-line bg-surface p-4">
           <ul className="space-y-3">
             {meetings.map((meeting) => {
               const primaryAction = ACTIONABLE_STATUSES[meeting.status];
               return (
                 <li
                   key={meeting.id}
-                  className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-3"
+                  className="rounded-lg border border-line-subtle bg-surface-muted px-3 py-3"
                 >
                   <div className="flex flex-wrap items-start gap-2">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate text-sm font-semibold text-slate-900">
-                          {meeting.title}
-                        </p>
+                        <p className="truncate text-sm font-semibold text-ink">{meeting.title}</p>
                         <span
                           className={`inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-xs font-medium ${MEETING_STATUS_BADGE[meeting.status]}`}
                         >
                           {t(`meetings.statuses.${meeting.status}`)}
                         </span>
                       </div>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-muted">
                         {t('meetings.scheduledAtLabel')}:{' '}
                         {new Date(meeting.scheduled_at).toLocaleString()}
                         {meeting.ended_at !== null
@@ -351,11 +349,11 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
                           : ''}
                       </p>
                       {meeting.agenda !== null && meeting.agenda.length > 0 ? (
-                        <p className="mt-1 whitespace-pre-wrap text-xs text-slate-600">
+                        <p className="mt-1 whitespace-pre-wrap text-xs text-muted">
                           {meeting.agenda}
                         </p>
                       ) : null}
-                      <p className="mt-1 flex items-center gap-1 text-xs text-slate-500">
+                      <p className="mt-1 flex items-center gap-1 text-xs text-muted">
                         <Users className="size-3.5 shrink-0" aria-hidden="true" />
                         {(meeting.participants ?? []).length > 0
                           ? t('meetings.participantsCount', {
@@ -385,8 +383,8 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
                           disabled={busyId !== null}
                           className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold disabled:opacity-60 ${
                             primaryAction === 'start'
-                              ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                              : 'bg-blue-600 text-white hover:bg-blue-500'
+                              ? 'bg-emerald-600 text-white hover:bg-success'
+                              : 'bg-brand text-brand-fg hover:bg-brand-hover'
                           }`}
                         >
                           {busyId === meeting.id ? (
@@ -404,7 +402,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
                           type="button"
                           onClick={() => void runAction(meeting, 'cancel')}
                           disabled={busyId !== null}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-danger/30 bg-surface px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-danger-soft disabled:opacity-60"
                         >
                           <XCircle className="size-3.5" aria-hidden="true" />
                           {t('meetings.cancel')}
@@ -416,7 +414,7 @@ export default function MeetingPanel({ workspaceId }: { readonly workspaceId: st
               );
             })}
           </ul>
-          <p className="mt-3 text-xs text-slate-400">{t('meetings.count', { total })}</p>
+          <p className="mt-3 text-xs text-muted-subtle">{t('meetings.count', { total })}</p>
         </article>
       )}
     </div>

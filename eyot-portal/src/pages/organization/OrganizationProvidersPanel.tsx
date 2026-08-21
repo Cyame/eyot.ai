@@ -231,7 +231,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-3 py-10 text-sm text-slate-500">
+      <div className="flex items-center gap-3 py-10 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -254,27 +254,27 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
         {actionError !== null ? (
           <div
             role="alert"
-            className="flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+            className="flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
           >
             <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
             <p>{actionError}</p>
           </div>
         ) : null}
 
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+        <section className="rounded-xl border border-line bg-surface shadow-sm">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
             <div>
-              <h2 className="text-base font-semibold text-slate-900">
+              <h2 className="text-base font-semibold text-ink">
                 {t('organization.providers.title')}
               </h2>
-              <p className="mt-1 text-xs text-slate-500">{t('organization.providers.subtitle')}</p>
+              <p className="mt-1 text-xs text-muted">{t('organization.providers.subtitle')}</p>
             </div>
             {canWrite ? (
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setCatalogOpen(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-muted"
                 >
                   <Plus className="size-3.5" aria-hidden="true" />
                   {t('organization.providers.enableCatalog')}
@@ -282,7 +282,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                 <button
                   type="button"
                   onClick={() => setCustomOpen(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
                 >
                   <Plus className="size-3.5" aria-hidden="true" />
                   {t('organization.providers.addCustom')}
@@ -292,11 +292,11 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
           </header>
 
           {providers.length === 0 ? (
-            <p className="px-5 py-8 text-sm text-slate-500">{t('organization.providers.empty')}</p>
+            <p className="px-5 py-8 text-sm text-muted">{t('organization.providers.empty')}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm" data-testid="organization-providers-table">
-                <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-4 py-3">{t('organization.providers.columns.name')}</th>
                     <th className="px-4 py-3">{t('organization.providers.columns.origin')}</th>
@@ -310,19 +310,19 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                 </thead>
                 <tbody>
                   {providers.map((provider) => (
-                    <tr key={provider.id} className="border-b border-slate-100 last:border-0">
+                    <tr key={provider.id} className="border-b border-line-subtle last:border-0">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-slate-900">{provider.name}</p>
-                        <p className="font-mono text-xs text-slate-500">{provider.slug}</p>
+                        <p className="font-medium text-ink">{provider.name}</p>
+                        <p className="font-mono text-xs text-muted">{provider.slug}</p>
                       </td>
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-muted">
                         {provider.origin === 'catalog'
                           ? t('organization.providers.originCatalog')
                           : provider.origin === 'custom'
                             ? t('organization.providers.originCustom')
                             : provider.origin}
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-slate-700">
+                      <td className="px-4 py-3 font-mono text-xs text-ink">
                         {provider.default_model}
                       </td>
                       <td className="px-4 py-3">
@@ -331,7 +331,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                             'inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
                             provider.enabled
                               ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-slate-100 text-slate-600',
+                              : 'bg-surface-muted text-muted',
                           )}
                         >
                           {provider.enabled
@@ -346,12 +346,12 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                             {t('organization.providers.testOk')}
                           </span>
                         ) : provider.last_test_status === 'error' ? (
-                          <span className="inline-flex items-center gap-1 text-xs text-red-700">
+                          <span className="inline-flex items-center gap-1 text-xs text-danger">
                             <CircleAlert className="size-3.5" aria-hidden="true" />
                             {t('organization.providers.testFailed')}
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-400">
+                          <span className="text-xs text-muted-subtle">
                             {t('organization.providers.notTested')}
                           </span>
                         )}
@@ -364,7 +364,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                               onClick={() => void handleTest(provider.id)}
                               disabled={testingId === provider.id}
                               data-testid={`provider-test-${provider.id}`}
-                              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                              className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-xs text-ink hover:bg-surface-muted"
                             >
                               {testingId === provider.id ? (
                                 <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
@@ -376,14 +376,14 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                             <button
                               type="button"
                               onClick={() => setSetDefaultOpen(provider.id)}
-                              className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                              className="rounded-md border border-line px-2 py-1 text-xs text-ink hover:bg-surface-muted"
                             >
                               {t('organization.providers.setDefault')}
                             </button>
                             <button
                               type="button"
                               onClick={() => void handleToggleEnabled(provider)}
-                              className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                              className="rounded-md border border-line px-2 py-1 text-xs text-ink hover:bg-surface-muted"
                             >
                               {provider.enabled
                                 ? t('organization.providers.disable')
@@ -392,7 +392,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                             <button
                               type="button"
                               onClick={() => void handleDelete(provider.id)}
-                              className="inline-flex items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
+                              className="inline-flex items-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-xs text-danger hover:bg-danger-soft"
                             >
                               <Trash2 className="size-3" aria-hidden="true" />
                               {t('organization.providers.delete')}
@@ -403,8 +403,8 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
                               className={cn(
                                 'rounded-md border px-2 py-1 text-xs',
                                 expandedProviderId === provider.id
-                                  ? 'border-blue-200 bg-blue-50 text-blue-700'
-                                  : 'border-slate-200 text-slate-700 hover:bg-slate-50',
+                                  ? 'border-brand/30 bg-brand-soft text-brand'
+                                  : 'border-line text-ink hover:bg-surface-muted',
                               )}
                             >
                               {t('organization.models.capabilities')}
@@ -509,7 +509,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
           type="button"
           disabled={hubSaving || cerebellumSaving}
           onClick={() => void saveAll()}
-          className="fixed bottom-4 right-4 z-[70] inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-blue-500 disabled:opacity-60"
+          className="fixed bottom-4 right-4 z-[70] inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-brand-fg shadow-lg hover:bg-brand-hover disabled:opacity-60"
         >
           {hubSaving || cerebellumSaving ? (
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -525,7 +525,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
             'fixed bottom-4 left-1/2 z-[80] -translate-x-1/2 rounded-lg border px-4 py-2.5 text-sm font-medium shadow-lg',
             saveToast === 'success'
               ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-              : 'border-red-200 bg-red-50 text-red-800',
+              : 'border-danger/30 bg-danger-soft text-red-800',
           )}
         >
           {saveToast === 'success'
@@ -593,11 +593,11 @@ function HubSettingsPanel({
   }, [providerId, providers]);
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-      <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+    <section className="rounded-xl border border-line bg-surface p-5 shadow-sm">
+      <h2 className="text-base font-semibold text-ink">{title}</h2>
+      <p className="mt-1 text-xs text-muted">{subtitle}</p>
       <div className="mt-4 space-y-3">
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.fields.provider')}
           <select
             value={providerId}
@@ -606,7 +606,7 @@ function HubSettingsPanel({
               onProviderChange(e.target.value);
               onModelChange('');
             }}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm disabled:bg-slate-50"
+            className="mt-1.5 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm disabled:bg-surface-muted"
           >
             <option value="">{t('organization.fields.none')}</option>
             {providers.map((p) => (
@@ -616,7 +616,7 @@ function HubSettingsPanel({
             ))}
           </select>
         </label>
-        <div className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <div className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.fields.model')}
           <ModelInputCombobox
             aria-label={t('organization.fields.model')}
@@ -628,12 +628,12 @@ function HubSettingsPanel({
           />
         </div>
         {error !== null ? (
-          <p role="alert" className="text-xs text-red-700">
+          <p role="alert" className="text-xs text-danger">
             {error}
           </p>
         ) : null}
         {saving ? (
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-muted">
             <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
             {t('organization.saving')}
           </div>
@@ -754,7 +754,7 @@ function EnableCatalogModal({
       testId="enable-catalog-modal"
     >
       {loading ? (
-        <LoaderCircle className="size-5 animate-spin text-slate-400" aria-hidden="true" />
+        <LoaderCircle className="size-5 animate-spin text-muted-subtle" aria-hidden="true" />
       ) : (
         <div className="space-y-3">
           {degraded ? (
@@ -762,12 +762,12 @@ function EnableCatalogModal({
               {t('organization.catalogModal.degraded')}
             </p>
           ) : null}
-          <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
             {t('organization.catalogModal.catalogProvider')}
             <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
             >
               <option value="">{t('organization.catalogModal.select')}</option>
               {entries.map((entry) => (
@@ -781,7 +781,7 @@ function EnableCatalogModal({
             </select>
           </label>
           <Field label={t('organization.fields.baseUrl')} value={baseUrl} onChange={setBaseUrl} />
-          <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
             {t('organization.fields.apiKey')}
             <input
               type="password"
@@ -789,26 +789,26 @@ function EnableCatalogModal({
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="sk-..."
               autoComplete="off"
-              className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
+              className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-sm"
             />
           </label>
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex items-center gap-2 text-sm text-ink">
             <input
               type="checkbox"
               checked={verifySsl}
               onChange={(e) => setVerifySsl(e.target.checked)}
-              className="size-4 accent-blue-600"
+              className="size-4 accent-brand"
             />
             {t('organization.fields.verifySsl')}
           </label>
-          <div className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <div className="block text-xs font-semibold uppercase tracking-wide text-muted">
             <div className="flex items-center justify-between gap-2">
               <span>{t('organization.fields.model')}</span>
               <button
                 type="button"
                 disabled={!selectedId || !apiKey.trim() || fetchingModels}
                 onClick={() => void handleFetchModels()}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-[11px] font-medium normal-case tracking-normal text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-[11px] font-medium normal-case tracking-normal text-ink hover:bg-surface-muted disabled:opacity-50"
               >
                 {fetchingModels ? (
                   <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
@@ -826,14 +826,14 @@ function EnableCatalogModal({
           </div>
           {error !== null ? (
             <div className="flex items-start gap-2">
-              <p role="alert" className="flex-1 text-xs text-red-700">
+              <p role="alert" className="flex-1 text-xs text-danger">
                 {error}
               </p>
               <button
                 type="button"
                 disabled={!selectedId || !apiKey.trim() || fetchingModels}
                 onClick={() => void handleFetchModels()}
-                className="inline shrink-0 items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-[11px] font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+                className="inline shrink-0 items-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-[11px] font-medium text-danger hover:bg-danger-soft disabled:opacity-50"
               >
                 <RefreshCw className="size-3" aria-hidden="true" />
                 {t('organization.models.retry')}
@@ -844,7 +844,7 @@ function EnableCatalogModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700"
+              className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink"
             >
               {t('organization.cancel')}
             </button>
@@ -852,7 +852,7 @@ function EnableCatalogModal({
               type="button"
               disabled={submitting || !selectedId || !apiKey.trim() || !defaultModel.trim()}
               onClick={() => void handleSubmit()}
-              className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg disabled:opacity-60"
             >
               {submitting ? t('organization.saving') : t('organization.catalogModal.enable')}
             </button>
@@ -952,12 +952,12 @@ function CustomProviderModal({
           onChange={setBaseUrl}
           className="sm:col-span-2"
         />
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600 sm:col-span-2">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2">
           {t('organization.customModal.requestFormat')}
           <select
             value={requestFormat}
             onChange={(e) => setRequestFormat(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           >
             <option value="completion">OpenAI / compatible</option>
             <option value="response">OpenAI Responses</option>
@@ -965,7 +965,7 @@ function CustomProviderModal({
             <option value="gemini">Gemini</option>
           </select>
         </label>
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600 sm:col-span-2">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2">
           {t('organization.fields.apiKey')}
           <input
             type="password"
@@ -973,26 +973,26 @@ function CustomProviderModal({
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-..."
             autoComplete="off"
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-sm"
           />
         </label>
-        <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2">
+        <label className="flex items-center gap-2 text-sm text-ink sm:col-span-2">
           <input
             type="checkbox"
             checked={verifySsl}
             onChange={(e) => setVerifySsl(e.target.checked)}
-            className="size-4 accent-blue-600"
+            className="size-4 accent-brand"
           />
           {t('organization.fields.verifySsl')}
         </label>
-        <div className="block text-xs font-semibold uppercase tracking-wide text-slate-600 sm:col-span-2">
+        <div className="block text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2">
           <div className="flex items-center justify-between gap-2">
             <span>{t('organization.fields.model')}</span>
             <button
               type="button"
               disabled={!baseUrl.trim() || !apiKey.trim() || fetchingModels}
               onClick={() => void handleFetchModels()}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-[11px] font-medium normal-case tracking-normal text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-[11px] font-medium normal-case tracking-normal text-ink hover:bg-surface-muted disabled:opacity-50"
             >
               {fetchingModels ? (
                 <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
@@ -1011,14 +1011,14 @@ function CustomProviderModal({
       </div>
       {error !== null ? (
         <div className="mt-3 flex items-start gap-2">
-          <p role="alert" className="flex-1 text-xs text-red-700">
+          <p role="alert" className="flex-1 text-xs text-danger">
             {error}
           </p>
           <button
             type="button"
             disabled={!baseUrl.trim() || !apiKey.trim() || fetchingModels}
             onClick={() => void handleFetchModels()}
-            className="inline shrink-0 items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-[11px] font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+            className="inline shrink-0 items-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-[11px] font-medium text-danger hover:bg-danger-soft disabled:opacity-50"
           >
             <RefreshCw className="size-3" aria-hidden="true" />
             {t('organization.models.retry')}
@@ -1029,7 +1029,7 @@ function CustomProviderModal({
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink"
         >
           {t('organization.cancel')}
         </button>
@@ -1039,7 +1039,7 @@ function CustomProviderModal({
             submitting || !name.trim() || !baseUrl.trim() || !defaultModel.trim() || !apiKey.trim()
           }
           onClick={() => void handleSubmit()}
-          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg disabled:opacity-60"
         >
           {submitting ? t('organization.saving') : t('organization.customModal.create')}
         </button>
@@ -1164,7 +1164,7 @@ function SetDefaultModal({
       testId="set-default-modal"
     >
       <fieldset className="space-y-2">
-        <legend className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <legend className="text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.setDefaultModal.target')}
         </legend>
         {(['base_class', 'system_hub', 'cerebellum'] as const).map((value) => (
@@ -1178,7 +1178,7 @@ function SetDefaultModal({
                 setTarget(value);
                 setModel(computeModelForTarget(value));
               }}
-              className="size-4 accent-blue-600"
+              className="size-4 accent-brand"
             />
             {t(`organization.setDefaultModal.targets.${value}`)}
           </label>
@@ -1186,14 +1186,14 @@ function SetDefaultModal({
       </fieldset>
 
       {target === 'base_class' ? (
-        <div className="mt-3 max-h-40 space-y-1 overflow-y-auto rounded-lg border border-slate-200 p-2">
+        <div className="mt-3 max-h-40 space-y-1 overflow-y-auto rounded-lg border border-line p-2">
           {baseClasses.map((bc) => (
             <label key={bc.id} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 checked={selectedBaseClassIds.has(bc.id)}
                 onChange={() => toggleBaseClass(bc.id)}
-                className="size-4 accent-blue-600"
+                className="size-4 accent-brand"
               />
               {t(bc.display_name ?? bc.name, { defaultValue: bc.name })}
             </label>
@@ -1201,7 +1201,7 @@ function SetDefaultModal({
         </div>
       ) : null}
 
-      <div className="mt-3 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+      <div className="mt-3 block text-xs font-semibold uppercase tracking-wide text-muted">
         <span>{t('organization.fields.model')}</span>
         <ModelInputCombobox
           aria-label={t('organization.fields.model')}
@@ -1213,7 +1213,7 @@ function SetDefaultModal({
       </div>
 
       {error !== null ? (
-        <p role="alert" className="mt-3 text-xs text-red-700">
+        <p role="alert" className="mt-3 text-xs text-danger">
           {error}
         </p>
       ) : null}
@@ -1222,7 +1222,7 @@ function SetDefaultModal({
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink"
         >
           {t('organization.cancel')}
         </button>
@@ -1234,7 +1234,7 @@ function SetDefaultModal({
             (target === 'base_class' && selectedBaseClassIds.size === 0)
           }
           onClick={() => void handleSubmit()}
-          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg disabled:opacity-60"
         >
           {submitting ? t('organization.saving') : t('organization.setDefaultModal.confirm')}
         </button>
@@ -1260,16 +1260,16 @@ function ModalShell({
       role="dialog"
       aria-modal="true"
       data-testid={testId}
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
     >
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-xl border border-slate-200 bg-white p-5 shadow-2xl sm:rounded-xl">
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-xl border border-line bg-surface p-5 shadow-2xl sm:rounded-xl">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 className="text-base font-semibold text-slate-950">{title}</h2>
+          <h2 className="text-base font-semibold text-ink">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('organization.cancel')}
-            className="grid size-8 place-items-center rounded-md text-slate-500 hover:bg-slate-100"
+            className="grid size-8 place-items-center rounded-md text-muted hover:bg-surface-muted"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -1295,10 +1295,7 @@ function Field({
 }) {
   return (
     <label
-      className={cn(
-        'block text-xs font-semibold uppercase tracking-wide text-slate-600',
-        className,
-      )}
+      className={cn('block text-xs font-semibold uppercase tracking-wide text-muted', className)}
     >
       {label}
       <input
@@ -1306,7 +1303,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm',
+          'mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm',
           mono && 'font-mono',
         )}
       />
@@ -1337,13 +1334,13 @@ function ToggleField({
   readonly disabled?: boolean;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm text-slate-700">
+    <label className="flex items-center gap-2 text-sm text-ink">
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled}
-        className="size-4 accent-blue-600"
+        className="size-4 accent-brand"
       />
       {label}
     </label>
@@ -1426,7 +1423,7 @@ function ModelCapabilityModal({
         <div>
           <label
             htmlFor="model-capability-id"
-            className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+            className="block text-xs font-semibold uppercase tracking-wide text-muted"
           >
             {t('organization.models.modelId')}
           </label>
@@ -1435,9 +1432,11 @@ function ModelCapabilityModal({
             type="text"
             value={modelId}
             disabled
-            className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-500"
+            className="mt-1.5 w-full rounded-lg border border-line bg-surface-muted px-3 py-2 font-mono text-sm text-muted"
           />
-          <p className="mt-1 text-xs text-slate-400">{t('organization.models.modelIdReadonly')}</p>
+          <p className="mt-1 text-xs text-muted-subtle">
+            {t('organization.models.modelIdReadonly')}
+          </p>
         </div>
         <Field
           label={t('organization.models.displayName')}
@@ -1456,12 +1455,12 @@ function ModelCapabilityModal({
           onChange={setExtendedParams}
           mono
         />
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.models.modelType')}
           <select
             value={modelType}
             onChange={(e) => setModelType(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           >
             {MODEL_TYPES.map((mt) => (
               <option key={mt} value={mt}>
@@ -1470,7 +1469,7 @@ function ModelCapabilityModal({
             ))}
           </select>
         </label>
-        <div className="space-y-2 rounded-lg border border-slate-200 p-3">
+        <div className="space-y-2 rounded-lg border border-line p-3">
           <ToggleField
             label={t('organization.models.toolUse')}
             checked={toolUse}
@@ -1507,14 +1506,14 @@ function ModelCapabilityModal({
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink"
         >
           {t('organization.models.cancel')}
         </button>
         <button
           type="button"
           onClick={handleSave}
-          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+          className="rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
         >
           {t('organization.models.saveCapabilities')}
         </button>
@@ -1597,11 +1596,11 @@ function AllowlistPanel({
   }
 
   return (
-    <div className="mt-3 rounded-lg border border-slate-200 p-3">
+    <div className="mt-3 rounded-lg border border-line p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.models.capabilities')}
-          <span className="ml-1 font-normal normal-case tracking-normal text-slate-400">
+          <span className="ml-1 font-normal normal-case tracking-normal text-muted-subtle">
             ({allowlist.length})
           </span>
         </h4>
@@ -1610,7 +1609,7 @@ function AllowlistPanel({
             type="button"
             disabled={saving}
             onClick={() => setAddingCustom(true)}
-            className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-[11px] font-medium text-ink hover:bg-surface-muted"
           >
             <Plus className="size-3" aria-hidden="true" />
             {t('organization.models.addCustomModel')}
@@ -1619,19 +1618,19 @@ function AllowlistPanel({
       </div>
 
       {allowlist.length === 0 ? (
-        <p className="text-xs text-slate-500">{t('organization.models.allowlistEmpty')}</p>
+        <p className="text-xs text-muted">{t('organization.models.allowlistEmpty')}</p>
       ) : (
         <div className="space-y-1">
           {modelsWithOverrides.map(({ id, catalog, override }) => (
             <div
               key={id}
-              className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-slate-50"
+              className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-surface-muted"
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate font-mono text-xs text-slate-900">{id}</p>
+                <p className="truncate font-mono text-xs text-ink">{id}</p>
                 {(override?.display_name ?? catalog?.name) &&
                 (override?.display_name ?? catalog?.name) !== id ? (
-                  <p className="truncate text-xs text-slate-500">
+                  <p className="truncate text-xs text-muted">
                     {override?.display_name ?? catalog?.name}
                   </p>
                 ) : null}
@@ -1641,7 +1640,7 @@ function AllowlistPanel({
                   <button
                     type="button"
                     onClick={() => setEditingModelId(id)}
-                    className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                    className="rounded p-1 text-muted-subtle hover:bg-surface-muted hover:text-muted"
                     aria-label={t('organization.models.editModel')}
                   >
                     <Edit className="size-3" aria-hidden="true" />
@@ -1649,7 +1648,7 @@ function AllowlistPanel({
                   <button
                     type="button"
                     onClick={() => handleRemoveModel(id)}
-                    className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                    className="rounded p-1 text-muted-subtle hover:bg-danger-soft hover:text-danger"
                     aria-label={t('organization.models.removeModel')}
                   >
                     <Trash2 className="size-3" aria-hidden="true" />
@@ -1668,7 +1667,7 @@ function AllowlistPanel({
             value={customModelId}
             onChange={(e) => setCustomModelId(e.target.value)}
             placeholder="model-id"
-            className="flex-1 rounded-md border border-slate-300 px-2 py-1 font-mono text-xs"
+            className="flex-1 rounded-md border border-line-strong px-2 py-1 font-mono text-xs"
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleAddCustomModel();
               if (e.key === 'Escape') setAddingCustom(false);
@@ -1677,14 +1676,14 @@ function AllowlistPanel({
           <button
             type="button"
             onClick={handleAddCustomModel}
-            className="rounded-md bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-500"
+            className="rounded-md bg-brand px-2 py-1 text-xs font-medium text-brand-fg hover:bg-brand-hover"
           >
             {t('organization.models.saveCapabilities')}
           </button>
           <button
             type="button"
             onClick={() => setAddingCustom(false)}
-            className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700"
+            className="rounded-md border border-line px-2 py-1 text-xs text-ink"
           >
             {t('organization.models.cancel')}
           </button>
@@ -1692,7 +1691,7 @@ function AllowlistPanel({
       ) : null}
 
       {error !== null ? (
-        <p role="alert" className="mt-2 text-xs text-red-700">
+        <p role="alert" className="mt-2 text-xs text-danger">
           {error}
         </p>
       ) : null}

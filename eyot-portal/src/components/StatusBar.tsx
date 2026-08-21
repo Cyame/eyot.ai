@@ -44,10 +44,10 @@ export default function StatusBar() {
   return (
     <div
       data-testid="status-bar"
-      className="hidden min-w-0 max-w-xs items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 lg:flex"
+      className="hidden min-w-0 max-w-xs items-center gap-2 rounded-full border border-line bg-surface-muted px-2.5 py-1.5 lg:flex"
     >
-      <BadgeCheck className="size-3.5 shrink-0 text-emerald-600" aria-hidden="true" />
-      <span className="shrink-0 truncate text-xs font-semibold text-slate-800" title={roleLabel}>
+      <BadgeCheck className="size-3.5 shrink-0 text-success" aria-hidden="true" />
+      <span className="shrink-0 truncate text-xs font-semibold text-ink" title={roleLabel}>
         {roleLabel}
       </span>
       <span className="sr-only">{t('statusBar.atomsLabel')}</span>
@@ -56,13 +56,13 @@ export default function StatusBar() {
           <span
             key={atom}
             title={atom}
-            className="truncate rounded bg-white px-1.5 py-0.5 font-mono text-[10px] text-slate-500 ring-1 ring-slate-200"
+            className="truncate rounded bg-surface px-1.5 py-0.5 font-mono text-[10px] text-muted ring-1 ring-line"
           >
             {atom}
           </span>
         ))}
         {orgIdentity.atoms.length > 3 ? (
-          <span className="shrink-0 font-mono text-[10px] text-slate-400">
+          <span className="shrink-0 font-mono text-[10px] text-muted-subtle">
             +{orgIdentity.atoms.length - 3}
           </span>
         ) : null}

@@ -2,6 +2,7 @@ import { AlertCircle, Check, LoaderCircle, Plus, Search, UserRound, X } from 'lu
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
+import EmptyState from '@/components/EmptyState';
 import { ApiError } from '@/lib/api';
 import {
   addOrganizationMember,
@@ -194,18 +195,18 @@ export default function WorldMembersPage() {
   const canSubmitAdd = selectedUser !== null || searchText.trim().length > 0;
 
   return (
-    <section className="mx-auto w-full max-w-4xl p-6 lg:p-8" aria-labelledby="world-members-title">
+    <section className="mx-auto w-full max-w-4xl p-6" aria-labelledby="world-members-title">
       <header className="mb-6 flex items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <span className="grid size-11 place-items-center rounded-xl bg-blue-600 text-white">
+          <span className="grid size-11 place-items-center rounded-xl bg-brand text-brand-fg">
             <UserRound className="size-6" aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <h1 id="world-members-title" className="truncate text-2xl font-semibold text-slate-950">
+            <h1 id="world-members-title" className="truncate text-2xl font-semibold text-ink">
               {t('worldMembers.title')}
             </h1>
             {members !== null ? (
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted">
                 {t('worldMembers.memberCount', { count: members.length })}
               </p>
             ) : null}
@@ -215,7 +216,7 @@ export default function WorldMembersPage() {
           type="button"
           onClick={() => setShowAdd((prev) => !prev)}
           data-testid="world-members-add-toggle"
-          className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+          className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover"
         >
           <Plus className="size-4" aria-hidden="true" />
           {t('worldMembers.addMember')}
@@ -225,14 +226,14 @@ export default function WorldMembersPage() {
       {loadError !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p className="flex-1">{loadError}</p>
           <button
             type="button"
             onClick={() => void load()}
-            className="rounded-md px-2 py-0.5 text-xs font-semibold text-red-700 hover:bg-red-100"
+            className="rounded-md px-2 py-0.5 text-xs font-semibold text-danger hover:bg-red-100"
           >
             {t('common.retry')}
           </button>
@@ -242,14 +243,14 @@ export default function WorldMembersPage() {
       {actionError !== null ? (
         <div
           role="alert"
-          className="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex items-center gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p className="flex-1">{actionError}</p>
           <button
             type="button"
             onClick={() => setActionError(null)}
-            className="rounded-md px-2 py-0.5 text-xs font-semibold text-red-700 hover:bg-red-100"
+            className="rounded-md px-2 py-0.5 text-xs font-semibold text-danger hover:bg-red-100"
           >
             {t('common.dismiss')}
           </button>
@@ -259,22 +260,20 @@ export default function WorldMembersPage() {
       {showAdd ? (
         <form
           onSubmit={(event) => void handleAddMember(event)}
-          className="mb-8 space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="mb-8 space-y-4 rounded-xl border border-line bg-surface p-5 shadow-sm"
         >
-          <h2 className="text-sm font-semibold text-slate-900">
-            {t('worldMembers.addMemberTitle')}
-          </h2>
+          <h2 className="text-sm font-semibold text-ink">{t('worldMembers.addMemberTitle')}</h2>
 
           <div>
             <label
               htmlFor="world-members-search"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block text-sm font-medium text-ink"
             >
               {t('worldMembers.searchPlaceholder')}
             </label>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-subtle"
                 aria-hidden="true"
               />
               <input
@@ -287,33 +286,33 @@ export default function WorldMembersPage() {
                 }}
                 placeholder={t('worldMembers.searchPlaceholder')}
                 autoComplete="off"
-                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                className="w-full rounded-lg border border-line-strong bg-surface py-2 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             {selectedUser !== null ? (
-              <div className="mt-2 flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm">
-                <span className="font-medium text-blue-900">{selectedUser.username}</span>
-                <span className="text-blue-600">{selectedUser.email}</span>
+              <div className="mt-2 flex items-center gap-2 rounded-lg border border-brand/30 bg-brand-soft px-3 py-2 text-sm">
+                <span className="font-medium text-brand">{selectedUser.username}</span>
+                <span className="text-brand">{selectedUser.email}</span>
                 <button
                   type="button"
                   onClick={() => setSelectedUser(null)}
                   aria-label={t('common.dismiss')}
-                  className="ml-auto rounded p-0.5 text-blue-500 hover:text-blue-700"
+                  className="ml-auto rounded p-0.5 text-brand hover:text-brand-hover"
                 >
                   <X className="size-4" aria-hidden="true" />
                 </button>
               </div>
             ) : isSearching ? (
-              <p className="mt-2 flex items-center gap-2 text-sm text-slate-400">
+              <p className="mt-2 flex items-center gap-2 text-sm text-muted-subtle">
                 <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
                 {t('common.loading')}
               </p>
             ) : searchText.trim().length === 0 ? (
-              <p className="mt-2 text-sm text-slate-400">{t('worldMembers.searchEmpty')}</p>
+              <p className="mt-2 text-sm text-muted-subtle">{t('worldMembers.searchEmpty')}</p>
             ) : searchResults !== null && searchResults.length === 0 ? (
-              <p className="mt-2 text-sm text-slate-400">{t('worldMembers.noResults')}</p>
+              <p className="mt-2 text-sm text-muted-subtle">{t('worldMembers.noResults')}</p>
             ) : searchResults !== null ? (
-              <ul className="mt-2 max-h-48 divide-y divide-slate-100 overflow-y-auto rounded-lg border border-slate-200">
+              <ul className="mt-2 max-h-48 divide-y divide-line-subtle overflow-y-auto rounded-lg border border-line">
                 {searchResults.map((user) => (
                   <li key={user.id}>
                     <button
@@ -323,10 +322,10 @@ export default function WorldMembersPage() {
                         setSearchText('');
                         setSearchResults(null);
                       }}
-                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors hover:bg-blue-50"
+                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors hover:bg-brand-soft"
                     >
-                      <span className="font-medium text-slate-800">{user.username}</span>
-                      <span className="text-xs text-slate-500">{user.email}</span>
+                      <span className="font-medium text-ink">{user.username}</span>
+                      <span className="text-xs text-muted">{user.email}</span>
                     </button>
                   </li>
                 ))}
@@ -335,7 +334,7 @@ export default function WorldMembersPage() {
           </div>
 
           <div>
-            <span className="mb-1.5 block text-sm font-medium text-slate-700">
+            <span className="mb-1.5 block text-sm font-medium text-ink">
               {t('worldMembers.atomSelect')}
             </span>
             <div className="flex flex-wrap gap-2">
@@ -349,15 +348,15 @@ export default function WorldMembersPage() {
                     className={cn(
                       'flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm transition-colors',
                       checked
-                        ? 'border-blue-500 bg-blue-50 text-blue-800'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50',
+                        ? 'border-brand bg-brand-soft text-brand'
+                        : 'border-line bg-surface text-muted hover:bg-surface-muted',
                     )}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleCatalogAtom(atom.slug)}
-                      className="size-4 accent-blue-600"
+                      className="size-4 accent-brand"
                     />
                     {displayName}
                   </label>
@@ -370,7 +369,7 @@ export default function WorldMembersPage() {
             <button
               type="button"
               onClick={() => setShowAdd(false)}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-muted hover:bg-surface-muted"
             >
               {t('common.cancel')}
             </button>
@@ -379,7 +378,7 @@ export default function WorldMembersPage() {
               data-testid="world-members-submit"
               disabled={!canSubmitAdd || submitting}
               aria-busy={submitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting ? (
                 <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -393,23 +392,25 @@ export default function WorldMembersPage() {
       ) : null}
 
       {isLoading && members === null ? (
-        <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('worldMembers.loading')}
         </div>
       ) : members !== null && members.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
-          <UserRound className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-          <h2 className="mt-3 text-sm font-semibold text-slate-900">{t('worldMembers.empty')}</h2>
-          <button
-            type="button"
-            onClick={() => setShowAdd(true)}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            {t('worldMembers.addMember')}
-          </button>
-        </div>
+        <EmptyState
+          icon={UserRound}
+          title={t('worldMembers.empty')}
+          action={
+            <button
+              type="button"
+              onClick={() => setShowAdd(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover"
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              {t('worldMembers.addMember')}
+            </button>
+          }
+        />
       ) : members !== null ? (
         <ul className="space-y-3">
           {members.map((member) => {
@@ -417,23 +418,23 @@ export default function WorldMembersPage() {
             return (
               <li
                 key={member.id}
-                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+                className="rounded-xl border border-line bg-surface p-4 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900">
+                    <p className="truncate text-sm font-semibold text-ink">
                       {member.user.nickname?.trim() || member.user.username}
                     </p>
-                    <p className="mt-0.5 truncate text-xs text-slate-500">
+                    <p className="mt-0.5 truncate text-xs text-muted">
                       {member.user.username} · {member.user.email}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-xs text-slate-400">{formatDate(member.created_at)}</p>
+                    <p className="text-xs text-muted-subtle">{formatDate(member.created_at)}</p>
                     <button
                       type="button"
                       onClick={() => void handleRemoveMember(member)}
-                      className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700"
+                      className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-danger hover:text-danger"
                     >
                       <X className="size-3" aria-hidden="true" />
                       {t('worldMembers.removeMember')}
@@ -456,8 +457,8 @@ export default function WorldMembersPage() {
                         className={cn(
                           'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors',
                           has
-                            ? 'border-blue-500 bg-blue-600 text-white hover:bg-blue-500'
-                            : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50',
+                            ? 'border-brand bg-brand text-brand-fg hover:bg-brand-hover'
+                            : 'border-line bg-surface text-muted hover:bg-surface-muted',
                           pending && 'cursor-wait opacity-60',
                         )}
                       >

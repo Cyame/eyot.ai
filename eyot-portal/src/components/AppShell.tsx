@@ -18,11 +18,13 @@ import {
 import { useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, NavLink, Outlet, useLocation, useParams } from 'react-router';
+import BrandMark from '@/components/BrandMark';
 import GlobalModals from '@/components/GlobalModals';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import NamespaceSwitcher from '@/components/NamespaceSwitcher';
 import OrgSwitcher from '@/components/OrgSwitcher';
 import StatusBar from '@/components/StatusBar';
+import ThemeToggle from '@/components/ThemeToggle';
 import { api } from '@/lib/api';
 import type { AuthUserPayload } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -30,7 +32,7 @@ import { APP_VERSION } from '@/lib/version';
 import { useSessionStore } from '@/stores/session';
 
 const DESKTOP_LINK_CLASS =
-  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
+  'flex items-center gap-3 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand';
 
 const IDENTITY_LABEL_KEYS: Record<string, string> = {
   system: 'identity.system',
@@ -182,22 +184,22 @@ export default function AppShell() {
       : [];
 
   return (
-    <div className="flex min-h-dvh bg-slate-100 text-slate-950 md:h-dvh md:overflow-hidden">
-      <aside className="hidden w-56 shrink-0 flex-col border-r border-slate-800 bg-slate-950 text-slate-100 md:flex">
-        <div className="flex h-16 items-center gap-3 border-b border-slate-800 px-5">
-          <span className="grid size-9 place-items-center rounded-lg bg-blue-600 text-white">
-            <Building2 className="size-5" aria-hidden="true" />
+    <div className="flex min-h-dvh bg-canvas text-ink md:h-dvh md:overflow-hidden">
+      <aside className="nav-shell hidden w-56 shrink-0 flex-col border-r border-nav-line text-nav-ink md:flex">
+        <div className="flex h-14 items-center gap-3 border-b border-nav-line px-4">
+          <span className="grid size-9 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
+            <BrandMark className="size-5" />
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold tracking-tight">{t('common.appName')}</p>
-            <p className="truncate text-xs text-slate-400">{t('common.controlStudio')}</p>
+            <p className="truncate text-xs text-nav-muted">{t('common.controlStudio')}</p>
           </div>
         </div>
 
         <nav className="flex flex-1 flex-col gap-4 overflow-y-auto p-3" aria-label="Primary">
           {activeOrgId !== null && activeNamespaceId === null ? (
             <section aria-label={t('nav.world')}>
-              <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-nav-muted">
                 {t('nav.world')}
               </p>
               <div className="flex flex-col gap-1">
@@ -209,8 +211,8 @@ export default function AppShell() {
                       cn(
                         DESKTOP_LINK_CLASS,
                         navActive(item, location.pathname)
-                          ? 'bg-blue-600 text-white'
-                          : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                          ? 'bg-brand text-brand-fg shadow-sm'
+                          : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
                       )
                     }
                   >
@@ -228,14 +230,14 @@ export default function AppShell() {
                 to={`/orgs/${activeOrgId}`}
                 end
                 className={() =>
-                  cn(DESKTOP_LINK_CLASS, 'text-slate-300 hover:bg-slate-800 hover:text-white')
+                  cn(DESKTOP_LINK_CLASS, 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink')
                 }
               >
                 <LayoutDashboard className="size-4 shrink-0" aria-hidden="true" />
                 <span className="truncate">{t('nav.backToWorldDashboard')}</span>
               </NavLink>
               <section aria-label={t('nav.currentNamespace')}>
-                <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-nav-muted">
                   {t('nav.currentNamespace')}
                 </p>
                 <div className="mb-2 px-1">
@@ -250,8 +252,8 @@ export default function AppShell() {
                         cn(
                           DESKTOP_LINK_CLASS,
                           navActive(item, location.pathname)
-                            ? 'bg-blue-600 text-white'
-                            : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                            ? 'bg-brand text-brand-fg shadow-sm'
+                            : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
                         )
                       }
                     >
@@ -265,7 +267,7 @@ export default function AppShell() {
           ) : null}
 
           <section aria-label={t('nav.account')}>
-            <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-nav-muted">
               {t('nav.account')}
             </p>
             <div className="flex flex-col gap-1">
@@ -278,8 +280,8 @@ export default function AppShell() {
                       { to: '/account', labelKey: 'nav.account', Icon: User },
                       location.pathname,
                     )
-                      ? 'bg-blue-600 text-white'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                      ? 'bg-brand text-brand-fg shadow-sm'
+                      : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
                   )
                 }
               >
@@ -290,19 +292,20 @@ export default function AppShell() {
           </section>
         </nav>
 
-        <div className="border-t border-slate-800 p-3">
+        <div className="border-t border-nav-line p-3">
           <div className="mb-3 flex items-center justify-between gap-2 px-1">
             <LanguageSwitcher variant="sidebar" placement="up" />
-            <span className="font-mono text-[11px] text-slate-500">v{APP_VERSION}</span>
+            <ThemeToggle variant="sidebar" />
           </div>
+          <p className="px-1 font-mono text-[11px] text-nav-muted">v{APP_VERSION}</p>
         </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col md:min-h-0">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 sm:px-6">
+        <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-line bg-surface/80 px-4 backdrop-blur-md sm:px-6">
           <div className="hidden min-w-0 sm:block">
-            <p className="truncate text-sm font-semibold text-slate-900">{t('common.appName')}</p>
-            <p className="truncate text-xs text-slate-500">{t('common.controlStudio')}</p>
+            <p className="truncate text-sm font-semibold text-ink">{t('common.appName')}</p>
+            <p className="truncate text-xs text-muted">{t('common.controlStudio')}</p>
           </div>
 
           {activeOrgId !== null ? (
@@ -313,27 +316,28 @@ export default function AppShell() {
           ) : null}
 
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <ThemeToggle variant="surface" />
             <Link
               to="/account"
-              className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-50"
+              className="flex min-w-0 items-center gap-2 rounded-full px-2 py-1.5 hover:bg-surface-muted"
             >
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-600">
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-muted text-muted">
                 <User className="size-4" aria-hidden="true" />
               </span>
               <div className="hidden min-w-0 md:block">
-                <p className="max-w-40 truncate text-sm font-medium text-slate-800">
+                <p className="max-w-40 truncate text-sm font-medium text-ink">
                   {user?.nickname?.trim() ||
                     user?.username ||
                     user?.user_id ||
                     t('common.authenticatedUser')}
                 </p>
-                <p className="text-xs text-slate-500">{t(identityLabelKey)}</p>
+                <p className="text-xs text-muted">{t(identityLabelKey)}</p>
               </div>
             </Link>
             <button
               type="button"
               onClick={clearToken}
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:bg-slate-200"
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand active:bg-surface-muted"
               aria-label={t('common.logOut')}
               title={t('common.logOut')}
             >
@@ -343,7 +347,7 @@ export default function AppShell() {
         </header>
 
         <nav
-          className="flex shrink-0 gap-1 overflow-x-auto border-b border-slate-200 bg-white px-3 pt-2 md:hidden"
+          className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-surface px-3 pt-2 md:hidden"
           aria-label="Primary mobile"
         >
           {activeNamespaceId === null
@@ -355,8 +359,8 @@ export default function AppShell() {
                     cn(
                       'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
                       navActive(item, location.pathname)
-                        ? 'border-blue-600 bg-blue-50 text-blue-700'
-                        : 'border-transparent text-slate-500 hover:bg-slate-50',
+                        ? 'border-brand bg-brand-soft text-brand'
+                        : 'border-transparent text-muted hover:bg-surface-muted',
                     )
                   }
                 >
@@ -372,7 +376,7 @@ export default function AppShell() {
                     className={() =>
                       cn(
                         'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
-                        'border-transparent text-slate-500 hover:bg-slate-50',
+                        'border-transparent text-muted hover:bg-surface-muted',
                       )
                     }
                   >
@@ -387,8 +391,8 @@ export default function AppShell() {
                       cn(
                         'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
                         navActive(item, location.pathname)
-                          ? 'border-blue-600 bg-blue-50 text-blue-700'
-                          : 'border-transparent text-slate-500 hover:bg-slate-50',
+                          ? 'border-brand bg-brand-soft text-brand'
+                          : 'border-transparent text-muted hover:bg-surface-muted',
                       )
                     }
                   >
@@ -402,8 +406,8 @@ export default function AppShell() {
               cn(
                 'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
                 location.pathname === '/account'
-                  ? 'border-blue-600 bg-blue-50 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:bg-slate-50',
+                  ? 'border-brand bg-brand-soft text-brand'
+                  : 'border-transparent text-muted hover:bg-surface-muted',
               )
             }
           >

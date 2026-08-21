@@ -61,7 +61,7 @@ const STATUS_BADGE: Readonly<
   },
   paused: {
     labelKey: 'instance.loopStatus.paused',
-    className: 'bg-slate-100 text-slate-700 border-slate-200',
+    className: 'bg-surface-muted text-ink border-line',
   },
   interrupted: {
     labelKey: 'instance.loopStatus.interrupted',
@@ -69,15 +69,15 @@ const STATUS_BADGE: Readonly<
   },
   completed: {
     labelKey: 'instance.loopStatus.completed',
-    className: 'bg-blue-50 text-blue-700 border-blue-200',
+    className: 'bg-brand-soft text-brand border-brand/30',
   },
   failed: {
     labelKey: 'instance.loopStatus.failed',
-    className: 'bg-red-50 text-red-700 border-red-200',
+    className: 'bg-danger-soft text-danger border-danger/30',
   },
   unknown: {
     labelKey: 'batchRestart.outdatedLabel',
-    className: 'bg-slate-100 text-slate-600 border-slate-200',
+    className: 'bg-surface-muted text-muted border-line',
   },
 };
 
@@ -219,11 +219,11 @@ export default function BatchRestartModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="batch-restart-modal-title"
-      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
       data-testid="batch-restart-modal"
     >
-      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-xl border border-slate-200 bg-white shadow-2xl sm:rounded-xl">
-        <header className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-6">
+      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
+        <header className="flex items-start justify-between gap-4 border-b border-line px-5 py-4 sm:px-6">
           <div className="flex items-start gap-3">
             <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-amber-50 text-amber-700">
               <RefreshCw className="size-5" aria-hidden="true" />
@@ -231,11 +231,11 @@ export default function BatchRestartModal({
             <div className="min-w-0">
               <h2
                 id="batch-restart-modal-title"
-                className="text-base font-semibold text-slate-950 sm:text-lg"
+                className="text-base font-semibold text-ink sm:text-lg"
               >
                 {t('batchRestart.title')}
               </h2>
-              <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+              <p className="mt-1 text-xs text-muted sm:text-sm">
                 {t(subtitleKey, { outdated: outdatedCount, total: totalInstanceCount })}
               </p>
             </div>
@@ -246,7 +246,7 @@ export default function BatchRestartModal({
             aria-label={t('batchRestart.close')}
             disabled={isSubmitting}
             data-testid="batch-restart-close"
-            className="grid size-8 shrink-0 place-items-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="grid size-8 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -263,15 +263,15 @@ export default function BatchRestartModal({
           ) : null}
           {outdatedCount === 0 ? (
             <div
-              className="grid place-items-center rounded-lg border border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center text-sm text-slate-500"
+              className="grid place-items-center rounded-lg border border-dashed border-line bg-surface-muted px-6 py-12 text-center text-sm text-muted"
               data-testid="batch-restart-empty"
             >
               <CheckCircle2 className="mx-auto size-8 text-emerald-500" aria-hidden="true" />
-              <p className="mt-3 font-medium text-slate-700">{t('batchRestart.empty')}</p>
+              <p className="mt-3 font-medium text-ink">{t('batchRestart.empty')}</p>
             </div>
           ) : (
             <>
-              <p className="mb-3 flex items-center gap-2 text-xs text-slate-500">
+              <p className="mb-3 flex items-center gap-2 text-xs text-muted">
                 <ArrowDownUp className="size-3.5" aria-hidden="true" />
                 {t('batchRestart.outdatedLabel')} (sorted oldest first)
               </p>
@@ -287,14 +287,14 @@ export default function BatchRestartModal({
                     <li
                       key={row.instance_id}
                       className={cn(
-                        'flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2.5 transition-colors',
-                        isSelectable ? 'hover:border-slate-300' : 'bg-slate-50 opacity-70',
+                        'flex items-center gap-3 rounded-lg border border-line bg-surface px-3 py-2.5 transition-colors',
+                        isSelectable ? 'hover:border-line-strong' : 'bg-surface-muted opacity-70',
                       )}
                       data-testid={`batch-restart-row-${row.instance_id}`}
                     >
                       <input
                         type="checkbox"
-                        className="size-4 shrink-0 cursor-pointer accent-blue-600 disabled:cursor-not-allowed"
+                        className="size-4 shrink-0 cursor-pointer accent-brand disabled:cursor-not-allowed"
                         checked={isChecked}
                         disabled={!isSelectable}
                         onChange={() => toggleRow(row.instance_id)}
@@ -302,13 +302,13 @@ export default function BatchRestartModal({
                         data-testid={`batch-restart-checkbox-${row.instance_id}`}
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-slate-900">
+                        <p className="truncate text-sm font-semibold text-ink">
                           {row.employee_label}
-                          <span className="ml-2 font-mono text-xs text-slate-500">
+                          <span className="ml-2 font-mono text-xs text-muted">
                             #{shortHash(row.active_hash)}
                           </span>
                         </p>
-                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted">
                           <span
                             className={cn(
                               'inline-flex items-center rounded-full border px-2 py-0.5 font-semibold',
@@ -317,13 +317,13 @@ export default function BatchRestartModal({
                           >
                             {statusLabel}
                           </span>
-                          <span className="font-mono text-slate-400">
+                          <span className="font-mono text-muted-subtle">
                             {t('batchRestart.outdatedLabel')} {duration} {suffix}
                           </span>
                         </div>
                       </div>
                       {row.is_running ? (
-                        <span className="shrink-0 rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-600">
+                        <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
                           {t('batchRestart.runningLabel')}
                         </span>
                       ) : null}
@@ -333,7 +333,7 @@ export default function BatchRestartModal({
               </ul>
               {selectableCount < outdatedCount ? (
                 <p
-                  className="mt-3 flex items-start gap-2 rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-500"
+                  className="mt-3 flex items-start gap-2 rounded-md bg-surface-muted px-3 py-2 text-xs text-muted"
                   data-testid="batch-restart-running-hint"
                 >
                   <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
@@ -347,7 +347,7 @@ export default function BatchRestartModal({
         {errorMessage !== null ? (
           <div
             role="alert"
-            className="mx-5 mb-3 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800 sm:mx-6"
+            className="mx-5 mb-3 flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-4 py-2.5 text-sm text-red-800 sm:mx-6"
             data-testid="batch-restart-error"
           >
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -355,14 +355,14 @@ export default function BatchRestartModal({
           </div>
         ) : null}
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-5 py-3 sm:px-6">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface-muted px-5 py-3 sm:px-6">
+          <div className="flex items-center gap-2 text-xs text-muted">
             <button
               type="button"
               onClick={allSelectableSelected ? clearAll : selectAll}
               disabled={isSubmitting || selectableCount === 0}
               data-testid="batch-restart-toggle-all"
-              className="rounded-md border border-slate-200 bg-white px-2.5 py-1 font-medium text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-md border border-line bg-surface px-2.5 py-1 font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50"
             >
               {allSelectableSelected ? t('batchRestart.clearAll') : t('batchRestart.selectAll')}
             </button>
@@ -377,7 +377,7 @@ export default function BatchRestartModal({
               onClick={onClose}
               disabled={isSubmitting}
               data-testid="batch-restart-cancel"
-              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('batchRestart.cancel')}
             </button>
@@ -393,10 +393,10 @@ export default function BatchRestartModal({
               disabled={isSubmitting || selectedIds.size === 0}
               data-testid="batch-restart-submit"
               className={cn(
-                'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
                 selectedIds.size > 0
-                  ? 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-                  : 'cursor-not-allowed bg-slate-200 text-slate-500',
+                  ? 'bg-brand text-brand-fg hover:bg-brand-hover active:bg-brand-active'
+                  : 'cursor-not-allowed bg-surface-muted text-muted',
               )}
             >
               {isSubmitting ? (

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Sparrow">
+  <defs>
+    <clipPath id="sparrow-clip"><circle cx="64" cy="64" r="64"/></clipPath>
+  </defs>
+  <g clip-path="url(#sparrow-clip)">
+    <rect width="128" height="128" fill="#A88858"/>
+    <circle cx="64" cy="72" r="48" fill="#C4A574"/>
+    <ellipse cx="64" cy="58" rx="32" ry="28" fill="#D9C49A"/>
+    <path d="M32 52 Q64 18 96 52 Q80 44 64 44 Q48 44 32 52 Z" fill="#6B5340"/>
+    <path d="M64 68 L92 78 L64 90 Z" fill="#E07A45"/>
+    <path d="M64 72 L84 78 L64 84 Z" fill="#C45C2A"/>
+    <circle cx="50" cy="62" r="6.5" fill="#1C211E"/>
+    <circle cx="52" cy="60" r="2" fill="#F7E6D4"/>
+    <path d="M28 86 Q50 70 64 86 Q78 102 104 92" fill="#8B6A42"/>
+    <ellipse cx="40" cy="96" rx="18" ry="10" fill="#6B5340"/>
+  </g>
+  <circle cx="64" cy="64" r="61" fill="none" stroke="#F7E6D4" stroke-opacity="0.28" stroke-width="4"/>
+</svg>

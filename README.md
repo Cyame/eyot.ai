@@ -6,7 +6,7 @@
     collaborate through explicit links, and run as inspectable pods.
   </p>
   <p>
-    <a href="https://github.com/Cyame/eyot.ai"><img src="https://img.shields.io/badge/status-0.5.2--dev4-0f766e?style=flat-square" alt="Eyot version 0.5.2.dev4"></a>
+    <a href="https://github.com/Cyame/eyot.ai"><img src="https://img.shields.io/badge/status-0.5.3-0f766e?style=flat-square" alt="Eyot version 0.5.3"></a>
     <a href="https://github.com/Cyame/eyot.ai/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-1f2937?style=flat-square" alt="Apache 2.0 license"></a>
     <img src="https://img.shields.io/badge/python-3.12-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python 3.12">
     <img src="https://img.shields.io/badge/react-19-149eca?style=flat-square&logo=react&logoColor=white" alt="React 19">
@@ -74,8 +74,7 @@ choose a role  ->  shape an identity  ->  run an instance  ->  keep the lesson
 
 ## What is here now
 
-Eyot is pre-1.0. The current application version is `0.5.2.dev4`; the next
-implementation slice is the `0.5.3` visual wave.
+Eyot is pre-1.0. The current application version is `0.5.3`.
 
 | Surface | Current state |
 |---|---|
@@ -86,7 +85,7 @@ implementation slice is the `0.5.3` visual wave.
 | Provider configuration and model catalog | Shipped |
 | Harness controls, event stream, deployment records, and Tunnel | Shipped |
 | Learning write-back and capability market | Shipped |
-| Portal visual refresh, themes, avatars, density, and empty states | Active in `0.5.3` |
+| Portal visual refresh, themes, avatars, density, and empty states | Shipped in `0.5.3` (user visual review) |
 | Session-engine v2 multimodal protocol, Voice, and external channels | Later |
 
 The project is deliberately narrower than a general agent platform. The

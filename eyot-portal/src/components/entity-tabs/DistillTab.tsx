@@ -57,28 +57,26 @@ export default function DistillTab({
   return (
     <section aria-labelledby="distill-tab-heading" className="space-y-5">
       <header>
-        <h2 id="distill-tab-heading" className="text-sm font-semibold text-slate-900">
+        <h2 id="distill-tab-heading" className="text-sm font-semibold text-ink">
           {t('entityModal.tabs.distill')}
         </h2>
-        <p className="mt-1 text-xs text-slate-500">{t('entityModal.distillTab.intro')}</p>
-        <p className="mt-2 text-xs text-slate-500">
-          {t('entityModal.distillTab.promoteMovedHint')}
-        </p>
+        <p className="mt-1 text-xs text-muted">{t('entityModal.distillTab.intro')}</p>
+        <p className="mt-2 text-xs text-muted">{t('entityModal.distillTab.promoteMovedHint')}</p>
       </header>
 
       <article
-        className="rounded-xl border border-blue-200 bg-blue-50/40 p-4"
+        className="rounded-xl border border-brand/30 bg-brand-soft/40 p-4"
         data-testid="distill-distill-section"
       >
         <div className="flex items-start gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-blue-100 text-blue-800">
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">
             <Wand2 className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <h3 className="text-sm font-semibold text-blue-900">
+            <h3 className="text-sm font-semibold text-brand">
               {t('entityModal.distillTab.distill.title')}
             </h3>
-            <p className="mt-1 text-xs text-blue-900/80">
+            <p className="mt-1 text-xs text-brand/80">
               {t('entityModal.distillTab.distill.intro')}
             </p>
 
@@ -86,7 +84,7 @@ export default function DistillTab({
               <div>
                 <label
                   htmlFor="distill-skill-slug"
-                  className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                  className="block text-xs font-semibold uppercase tracking-wide text-muted"
                 >
                   {t('entityModal.distillTab.distill.skillSlugLabel')}
                 </label>
@@ -97,16 +95,16 @@ export default function DistillTab({
                   onChange={(e) => setTargetSlug(e.target.value)}
                   placeholder={t('entityModal.distillTab.distill.skillSlugPlaceholder')}
                   data-testid="distill-skill-slug"
-                  className="mt-1.5 h-[38px] w-full rounded-lg border border-slate-300 px-3 font-mono text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="mt-1.5 h-[38px] w-full rounded-lg border border-line-strong px-3 font-mono text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 />
                 {!slugValid && targetSlug.length > 0 ? (
-                  <p className="mt-1 text-xs text-red-700">
+                  <p className="mt-1 text-xs text-danger">
                     {t('entityModal.distillTab.distill.skillSlugPattern')}
                   </p>
                 ) : null}
               </div>
               <fieldset>
-                <legend className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <legend className="text-xs font-semibold uppercase tracking-wide text-muted">
                   {t('entityModal.distillTab.distill.engineLabel')}
                 </legend>
                 <div className="mt-1.5 flex gap-2">
@@ -116,8 +114,8 @@ export default function DistillTab({
                       className={cn(
                         'flex h-[38px] cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm',
                         engine === value
-                          ? 'border-blue-500 bg-blue-50 text-blue-900'
-                          : 'border-slate-200 bg-white text-slate-700',
+                          ? 'border-brand bg-brand-soft text-brand'
+                          : 'border-line bg-surface text-ink',
                       )}
                     >
                       <input
@@ -126,7 +124,7 @@ export default function DistillTab({
                         value={value}
                         checked={engine === value}
                         onChange={() => setEngine(value)}
-                        className="size-4 accent-blue-600"
+                        className="size-4 accent-brand"
                         data-testid={`distill-engine-${value}`}
                       />
                       {t(`entityModal.distillTab.distill.engine.${value}`)}
@@ -142,10 +140,10 @@ export default function DistillTab({
               disabled={!ready || submitting}
               data-testid="distill-submit"
               className={cn(
-                'mt-3 inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold text-white',
+                'mt-3 inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold text-brand-fg',
                 ready && !submitting
-                  ? 'bg-blue-600 hover:bg-blue-700'
-                  : 'cursor-not-allowed bg-blue-200',
+                  ? 'bg-brand hover:bg-brand-hover'
+                  : 'cursor-not-allowed bg-brand-soft',
               )}
             >
               {submitting ? (
@@ -163,7 +161,7 @@ export default function DistillTab({
         {errorMessage !== null ? (
           <div
             role="alert"
-            className="mt-3 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+            className="mt-3 flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
           >
             <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p>{errorMessage}</p>
@@ -173,11 +171,11 @@ export default function DistillTab({
         {result !== null ? (
           <div className="mt-4 space-y-3" data-testid="distill-result-view">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-100 px-2 py-0.5 font-mono text-xs text-blue-900">
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-soft px-2 py-0.5 font-mono text-xs text-brand">
                 <Sparkles className="size-3" aria-hidden="true" />
                 {t('entityModal.distillTab.distill.engineUsed', { engine: result.engine_used })}
               </span>
-              <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs text-slate-700">
+              <span className="rounded-md bg-surface-muted px-2 py-0.5 text-xs text-ink">
                 {t('entityModal.distillTab.distill.createdCount', {
                   count: result.capability_market_created,
                 })}
@@ -206,7 +204,7 @@ export default function DistillTab({
                 {result.warnings.map((warning) => (
                   <li
                     key={warning}
-                    className="flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700"
+                    className="flex items-start gap-2 rounded-lg border border-line bg-surface-muted px-3 py-2 text-xs text-ink"
                   >
                     <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                     <span>{warning}</span>
@@ -216,7 +214,7 @@ export default function DistillTab({
             ) : null}
 
             {result.capability_candidates.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-slate-300 px-3 py-3 text-xs text-slate-500">
+              <p className="rounded-lg border border-dashed border-line-strong px-3 py-3 text-xs text-muted">
                 {t('entityModal.distillTab.distill.noCandidates')}
               </p>
             ) : (
@@ -224,29 +222,29 @@ export default function DistillTab({
                 {result.capability_candidates.map((candidate) => (
                   <li
                     key={candidate.name}
-                    className="rounded-lg border border-slate-200 bg-white p-3"
+                    className="rounded-lg border border-line bg-surface p-3"
                     data-testid="distill-candidate"
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-sm font-semibold text-slate-900">
+                      <span className="font-mono text-sm font-semibold text-ink">
                         {candidate.name}
                       </span>
-                      <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-600">
+                      <span className="rounded-md bg-surface-muted px-1.5 py-0.5 font-mono text-xs text-muted">
                         {candidate.type}
                       </span>
                     </div>
                     {candidate.description ? (
-                      <p className="mt-1 text-xs text-slate-600">{candidate.description}</p>
+                      <p className="mt-1 text-xs text-muted">{candidate.description}</p>
                     ) : null}
                     {candidate.required_knowledge.length > 0 ? (
                       <p className="mt-2 flex flex-wrap items-center gap-1 text-xs">
-                        <span className="text-slate-500">
+                        <span className="text-muted">
                           {t('entityModal.distillTab.distill.requiredKnowledge')}:
                         </span>
                         {candidate.required_knowledge.map((slug) => (
                           <span
                             key={slug}
-                            className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-blue-800 ring-1 ring-blue-100"
+                            className="rounded-md bg-brand-soft px-1.5 py-0.5 font-mono text-brand ring-1 ring-brand/20"
                           >
                             {slug}
                           </span>
@@ -262,22 +260,22 @@ export default function DistillTab({
       </article>
 
       <article
-        className={`rounded-xl border p-4 ${canTransmute ? 'border-purple-200 bg-purple-50/40' : 'border-slate-200 bg-slate-50'}`}
+        className={`rounded-xl border p-4 ${canTransmute ? 'border-purple-200 bg-purple-50/40' : 'border-line bg-surface-muted'}`}
         data-testid="distill-transmute-section"
       >
         <div className="flex items-start gap-3">
           <span
-            className={`grid size-9 place-items-center rounded-lg ${canTransmute ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-500'}`}
+            className={`grid size-9 place-items-center rounded-lg ${canTransmute ? 'bg-purple-100 text-purple-800' : 'bg-surface-muted text-muted'}`}
           >
             <FlaskConical className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
             <h3
-              className={`text-sm font-semibold ${canTransmute ? 'text-purple-900' : 'text-slate-700'}`}
+              className={`text-sm font-semibold ${canTransmute ? 'text-purple-900' : 'text-ink'}`}
             >
               {t('transmuteModal.title')}
             </h3>
-            <p className={`mt-1 text-xs ${canTransmute ? 'text-purple-900/80' : 'text-slate-500'}`}>
+            <p className={`mt-1 text-xs ${canTransmute ? 'text-purple-900/80' : 'text-muted'}`}>
               {canTransmute
                 ? t('transmuteModal.summary')
                 : t('entityModal.errors.permission', { cap: 'can_transmute_entity' })}
@@ -299,14 +297,14 @@ export default function DistillTab({
       {!canTransmute ? (
         <div
           role="note"
-          className="flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600"
+          className="flex items-start gap-2 rounded-lg border border-line bg-surface-muted px-3 py-2 text-xs text-muted"
         >
           <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
           <span>{t('entityModal.errors.permission', { cap: 'can_transmute_entity' })}</span>
         </div>
       ) : null}
 
-      <p className="text-xs text-slate-500" data-testid="distill-entity-id">
+      <p className="text-xs text-muted" data-testid="distill-entity-id">
         {entity.slug}
       </p>
 

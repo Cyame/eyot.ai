@@ -65,7 +65,7 @@ export function ModeToolbar({
   return (
     <div className="absolute left-4 top-4 z-20 flex items-center gap-2">
       <div
-        className="flex rounded-full border border-slate-200 bg-white/95 p-1 shadow-lg backdrop-blur"
+        className="flex rounded-full border border-line bg-surface/95 p-1 shadow-lg backdrop-blur"
         role="radiogroup"
         aria-label={t('topology.toolbarAria')}
         data-testid="topology-toolbar"
@@ -82,10 +82,10 @@ export function ModeToolbar({
               data-testid={`topology-toolbar-${id}`}
               data-active={isActive ? 'true' : 'false'}
               className={cn(
-                'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
                 isActive
-                  ? 'bg-blue-600 text-white disabled:opacity-100'
-                  : 'text-slate-600 hover:bg-slate-100',
+                  ? 'bg-brand text-brand-fg disabled:opacity-100'
+                  : 'text-muted hover:bg-surface-muted',
               )}
             >
               <Icon className="size-4" aria-hidden="true" />
@@ -93,7 +93,7 @@ export function ModeToolbar({
               <kbd
                 className={cn(
                   'font-mono text-[10px]',
-                  isActive ? 'text-blue-100' : 'text-slate-400',
+                  isActive ? 'text-brand-fg' : 'text-muted-subtle',
                 )}
               >
                 {shortcut}
@@ -108,11 +108,11 @@ export function ModeToolbar({
           onClick={onFit}
           title={t('topology.fitView')}
           data-testid="topology-fit"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-2 text-sm font-medium text-slate-600 shadow-lg backdrop-blur hover:bg-slate-100"
+          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/95 px-3 py-2 text-sm font-medium text-muted shadow-lg backdrop-blur hover:bg-surface-muted"
         >
           <Maximize2 className="size-4" aria-hidden="true" />
           <span className="hidden sm:inline">{t('topology.fitView')}</span>
-          <kbd className="font-mono text-[10px] text-slate-400">F</kbd>
+          <kbd className="font-mono text-[10px] text-muted-subtle">F</kbd>
         </button>
       ) : null}
       {onDeleteSelected !== undefined ? (
@@ -122,11 +122,11 @@ export function ModeToolbar({
           disabled={canDelete !== true}
           title={t('topology.deleteSelection')}
           data-testid="topology-delete-selection"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-2 text-sm font-medium text-slate-600 shadow-lg backdrop-blur transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/95 px-3 py-2 text-sm font-medium text-muted shadow-lg backdrop-blur transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Trash2 className="size-4" aria-hidden="true" />
           <span className="hidden sm:inline">{t('topology.deleteSelection')}</span>
-          <kbd className="font-mono text-[10px] text-slate-400">Del</kbd>
+          <kbd className="font-mono text-[10px] text-muted-subtle">Del</kbd>
         </button>
       ) : null}
     </div>

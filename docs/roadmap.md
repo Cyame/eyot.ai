@@ -25,7 +25,7 @@
 
 当前版本轨 **0.x**（pre-1.0，正式 tag 从 1.0 起）。已交付切片：**0.4.x ≈ v4 功能收口**（v4.0–v4.10，已归档）、**0.5.0 = v5.0 命名**、**0.5.1 = v5.1 定义**、**0.5.2 = v5.2 UIUX**（均已实现落地）。
 
-**当前唯一 active 切片 = 0.5.3（v5.3 视觉波）**：
+**0.5.3（v5.3 视觉波）代码已落地**（2026-08-21）；验收闸门为用户视觉审阅（G7）：
 
 | Slice | Plan | Goal |
 |---|---|---|
@@ -187,7 +187,7 @@ Eyot no longer plans primarily as open-ended "P-N feature waves". After foundati
 | **v1–v3.4.1** | Historical product slices | **Archived** → `docs/archive/` |
 | **v3.5.x design correction** | audit-review + D1–D11 → `audit-product-design.md` | **Done** (docs) |
 | **v4** | Functional closure (schema, tenant, knowledge, clone, harness collab, …) | **Done**（v4.0–v4.10 + v4.9.5 closeout 质量审查通过 2026-08-08）— `.omo/plans/v4-*.md` |
-| **v5** | 完整世代：更名（山海+生物世界观）+ 定义（5 始祖/6 subagent/镜像体系）+ UIUX + 视觉（原 3.6） | **Done（v5.0 命名 / v5.1 定义 / v5.2 UIUX 已实现落地，等价 0.5.0–0.5.2）**；唯一剩余 **v5.3 视觉波 = 0.5.3**（当前 active，待实施）— `.omo/evidence/v5-rename-decisions.md` + `.omo/plans/0x-roadmap.md` |
+| **v5** | 完整世代：更名（山海+生物世界观）+ 定义（5 始祖/6 subagent/镜像体系）+ UIUX + 视觉（原 3.6） | **Done（v5.0–v5.3 已实现落地，等价 0.5.0–0.5.3）**；0.5.3 视觉波待用户审阅（G7）— `.omo/evidence/v5-rename-decisions.md` + `.omo/plans/0x-roadmap.md` |
 | **Later** | Session-engine-v2 multimodal, Voice, … | §7 far queue |
 
 Code identifiers follow 15d names (`Workspace`, `Entity`, `Passage`, `BaseClass`) — **v5 世代只改 UI 显示名与 5 动物 slug，代码名/DB/API 仍保持 15d**（见 `.omo/evidence/v5-rename-decisions.md`）。Pre-v2 names remain only in alembic history.
@@ -277,7 +277,7 @@ Full history: `.omo/plans/archive/` + `.omo/plans/archive/eyot-v2-roadmap.md` (p
 | **3.5.x / 3.6** | 主流程闭环 + 纯视觉 UI 大重构（历史轨，已被 v4/v5 取代）| `.omo/plans/archive/product-version-track-3-5-3-6.md` |
 | **4.x** | v4 功能收口（已完成 v4.0–v4.10 + v4.9.5 closeout，等价 0.4.x 前置）| `.omo/plans/v4-roadmap.md`（已归档） |
 | **5.x** | v5 完整世代：更名 → 定义 → UIUX → 视觉（已交付到 0.5.2；等价 0.5.x 前身）| `.omo/plans/0x-roadmap.md`（已归档） |
-| **0.x (Eyot)** | **2026-08-17 Cocoa → Eyot 重置后唯一 active 版本轨**：pre-1.0 **0.x**，正式 tag 从 **1.0** 起；MINOR 每完成一个切片 +1。已交付切片等价映射：**0.4.x ≈ v4 功能收口 / 0.5.0=v5.0 命名 / 0.5.1=v5.1 定义 / 0.5.2=v5.2 UIUX**；**当前 active = 0.5.3（v5.3 视觉波）**。alembic 压平为单一 schema 基线，默认数据由 app 层 idempotent seeder 注入 | `.omo/plans/0x-roadmap.md`（0.x 总图） |
+| **0.x (Eyot)** | **2026-08-17 Cocoa → Eyot 重置后唯一 active 版本轨**：pre-1.0 **0.x**，正式 tag 从 **1.0** 起；MINOR 每完成一个切片 +1。已交付切片等价映射：**0.4.x ≈ v4 功能收口 / 0.5.0=v5.0 命名 / 0.5.1=v5.1 定义 / 0.5.2=v5.2 UIUX / 0.5.3=v5.3 视觉**（0.5.3 待用户审阅）。alembic 压平为单一 schema 基线，默认数据由 app 层 idempotent seeder 注入 | `.omo/plans/0x-roadmap.md`（0.x 总图） |
 
 **Working agreement:** 主功能仍有不通处与未修正项，随产品迭代逐步设计与变更；**不做**「先大改 UI 再通主流程」（v4 已闭环主流程；v5 视觉波在命名/定义/UIUX 之后）。
 
@@ -297,7 +297,7 @@ Full history: `.omo/plans/archive/` + `.omo/plans/archive/eyot-v2-roadmap.md` (p
 |---|---|---|
 | **PRD-v3.4.2** | 全神职基础 gene + capability（空间会话 / 拓扑邻接说话） | 建在 3.5 tunnel/pi 上；仍属 3.5.x 行为闭环 |
 | Cerebellum business | 未连线 `@` 转小脑的真实业务 | Stub exists; design in later 3.5.x slice |
-| **0.5.3 视觉波**（= v5.3，原 3.6/5.3）| Portal / Composer / Topology visual overhaul（`@theme` token + dark/light + 壳层现代化 + 5 始祖头像资产 + Avatar 体系 + 密度/空态） | **当前 active 切片**（0.5.2 已交付后唯一未实施波）→ `.omo/plans/0-5-3-visual.md` |
+| **0.5.3 视觉波**（= v5.3，原 3.6/5.3）| Portal / Composer / Topology visual overhaul（`@theme` token + dark/light + 壳层现代化 + 5 始祖头像资产 + Avatar 体系 + 密度/空态） | **已实现**（2026-08-21）；验收闸门为用户视觉审阅（G7）→ `.omo/plans/0-5-3-visual.md` |
 | Avatar presets UI | 用户/血脉预设头像切换 | → **0.5.3**（原 Later-A，并入 v5.3 Avatar 体系） |
 | Visual + 始祖图 | 主视觉换皮、候选图挂卡片 | → **0.5.3**（原 Later-B） |
 | Empty 生境 IDE polish | 空生境 IDE 深打磨、始祖预选 | → **0.5.3** unless blocking introduce |

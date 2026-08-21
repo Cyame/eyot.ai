@@ -39,20 +39,20 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
       role="dialog"
       aria-modal="true"
       aria-labelledby="distill-result-title"
-      className="fixed inset-0 z-[60] grid place-items-center bg-slate-950/60 p-4"
+      className="fixed inset-0 z-[60] grid place-items-center bg-overlay p-4"
       data-testid="distill-result-modal"
     >
-      <div className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-purple-200 bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-purple-200 bg-surface shadow-2xl">
+        <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center rounded-lg bg-purple-100 text-purple-800">
               <FlaskConical className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 id="distill-result-title" className="text-base font-semibold text-slate-950">
+              <h2 id="distill-result-title" className="text-base font-semibold text-ink">
                 {t('entityModal.distillResult.title')}
               </h2>
-              <p className="text-xs text-slate-500">{t('entityModal.distillResult.subtitle')}</p>
+              <p className="text-xs text-muted">{t('entityModal.distillResult.subtitle')}</p>
             </div>
           </div>
           <button
@@ -60,7 +60,7 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
             onClick={onClose}
             aria-label={t('entityModal.distillResult.close')}
             data-testid="distill-result-close"
-            className="grid size-8 place-items-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -69,24 +69,18 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
         <div className="space-y-5 overflow-y-auto px-5 py-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('entityModal.distillResult.newBaseClass')}
               </p>
-              <p
-                className="mt-1 font-mono text-lg text-slate-950"
-                data-testid="distill-result-slug"
-              >
+              <p className="mt-1 font-mono text-lg text-ink" data-testid="distill-result-slug">
                 {result.new_base_class_slug}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('entityModal.distillResult.newBaseClassName')}
               </p>
-              <p
-                className="mt-1 text-sm font-medium text-slate-900"
-                data-testid="distill-result-name"
-              >
+              <p className="mt-1 text-sm font-medium text-ink" data-testid="distill-result-name">
                 {result.new_base_class_name}
               </p>
             </div>
@@ -94,11 +88,11 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
 
           <section
             aria-labelledby="distill-result-manifest-heading"
-            className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+            className="rounded-lg border border-line bg-surface-muted p-4"
           >
             <h3
               id="distill-result-manifest-heading"
-              className="text-xs font-semibold uppercase tracking-wide text-slate-500"
+              className="text-xs font-semibold uppercase tracking-wide text-muted"
             >
               {t('entityModal.distillResult.manifestHeading')}
             </h3>
@@ -141,8 +135,8 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-lg border border-line bg-surface-muted p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('entityModal.distillResult.genesWritten')}
               </p>
               <ChipList
@@ -150,8 +144,8 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
                 emptyText={t('entityModal.distillResult.none')}
               />
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-lg border border-line bg-surface-muted p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('entityModal.distillResult.knowledgeMounted')}
               </p>
               <ChipList
@@ -162,12 +156,12 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
           </div>
         </div>
 
-        <footer className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex flex-wrap items-center justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
           <button
             type="button"
             onClick={onClose}
             data-testid="distill-result-close-2"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             {t('entityModal.distillResult.close')}
           </button>
@@ -175,7 +169,7 @@ export default function DistillResultModal({ result, onClose }: DistillResultMod
             to={`/namespaces?tab=base-classes&focus=${encodeURIComponent(result.new_base_class_slug)}`}
             data-testid="distill-result-summon"
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-800 transition-colors hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+              'inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand-soft px-3 py-1.5 text-sm font-medium text-brand transition-colors hover:bg-brand-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
             )}
           >
             <Sparkles className="size-4" aria-hidden="true" />
@@ -205,8 +199,8 @@ function Row({
 }) {
   return (
     <>
-      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</dt>
-      <dd className={cn('text-sm text-slate-900', mono ? 'font-mono break-words' : 'break-words')}>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</dt>
+      <dd className={cn('text-sm text-ink', mono ? 'font-mono break-words' : 'break-words')}>
         {value}
       </dd>
     </>
@@ -221,14 +215,14 @@ function ChipList({
   readonly emptyText: string;
 }) {
   if (values.length === 0) {
-    return <p className="mt-1.5 text-xs text-slate-500">{emptyText}</p>;
+    return <p className="mt-1.5 text-xs text-muted">{emptyText}</p>;
   }
   return (
     <ul className="mt-1.5 flex flex-wrap gap-1">
       {values.map((value) => (
         <li
           key={value}
-          className="inline-flex items-center rounded-md bg-white px-2 py-0.5 font-mono text-xs text-slate-700 ring-1 ring-slate-200"
+          className="inline-flex items-center rounded-md bg-surface px-2 py-0.5 font-mono text-xs text-ink ring-1 ring-line"
         >
           {value}
         </li>

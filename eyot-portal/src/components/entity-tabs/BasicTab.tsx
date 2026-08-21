@@ -136,7 +136,7 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
   return (
     <section aria-labelledby="basic-tab-heading" className="space-y-5">
       <header className="flex items-center justify-between">
-        <h2 id="basic-tab-heading" className="text-sm font-semibold text-slate-900">
+        <h2 id="basic-tab-heading" className="text-sm font-semibold text-ink">
           {t('entityModal.tabs.basic')}
         </h2>
         {dirty && canEdit && !readOnly ? (
@@ -156,7 +156,7 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
           className={cn(
             'flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm',
             toast.kind === 'error'
-              ? 'border-red-200 bg-red-50 text-red-800'
+              ? 'border-danger/30 bg-danger-soft text-red-800'
               : 'border-emerald-200 bg-emerald-50 text-emerald-800',
           )}
           data-testid="basic-toast"
@@ -174,7 +174,7 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
         <div className="space-y-2">
           <label
             htmlFor="basic-display-name"
-            className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+            className="block text-xs font-semibold uppercase tracking-wide text-muted"
           >
             {t('entityModal.basicTab.displayName')}
           </label>
@@ -191,27 +191,27 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
             placeholder={t('entityModal.basicTab.displayNamePlaceholder')}
             data-testid="basic-display-name"
             className={cn(
-              'w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2',
+              'w-full rounded-lg border bg-surface px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2',
               displayNameEmpty || displayNameTooLong || displayNameConflict
-                ? 'border-red-300 focus-visible:ring-red-500'
-                : 'border-slate-300 focus-visible:ring-blue-500',
-              (readOnly || !canEdit) && 'cursor-not-allowed bg-slate-50 text-slate-500',
+                ? 'border-danger/40 focus-visible:ring-red-500'
+                : 'border-line-strong focus-visible:ring-brand',
+              (readOnly || !canEdit) && 'cursor-not-allowed bg-surface-muted text-muted',
             )}
           />
           {displayNameEmpty ? (
-            <p role="alert" className="text-xs text-red-700">
+            <p role="alert" className="text-xs text-danger">
               {t('entityModal.basicTab.displayNameRequired')}
             </p>
           ) : displayNameTooLong ? (
-            <p role="alert" className="text-xs text-red-700">
+            <p role="alert" className="text-xs text-danger">
               {t('entityModal.basicTab.displayNameTooLong')}
             </p>
           ) : displayNameConflict ? (
-            <p role="alert" className="text-xs text-red-700">
+            <p role="alert" className="text-xs text-danger">
               {t('entityModal.basicTab.displayNameDuplicate')}
             </p>
           ) : (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted">
               {displayNameLen} / {DISPLAY_NAME_MAX}
             </p>
           )}
@@ -220,13 +220,13 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
         <div className="space-y-2">
           <label
             htmlFor="basic-slug"
-            className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+            className="block text-xs font-semibold uppercase tracking-wide text-muted"
           >
             {t('entityModal.basicTab.slug')}
           </label>
           <div className="relative">
             <Hash
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-subtle"
               aria-hidden="true"
             />
             <input
@@ -237,17 +237,17 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
               disabled
               title={t('entityModal.basicTab.slugImmutable')}
               data-testid="basic-slug"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 py-2 font-mono text-sm text-slate-700 shadow-sm"
+              className="w-full rounded-lg border border-line bg-surface-muted pl-9 pr-3 py-2 font-mono text-sm text-ink shadow-sm"
             />
           </div>
-          <p className="text-xs text-slate-500">{t('entityModal.basicTab.slugImmutable')}</p>
+          <p className="text-xs text-muted">{t('entityModal.basicTab.slugImmutable')}</p>
         </div>
       </div>
 
       <div className="space-y-2">
         <label
           htmlFor="basic-description"
-          className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+          className="block text-xs font-semibold uppercase tracking-wide text-muted"
         >
           {t('entityModal.basicTab.description')}
         </label>
@@ -260,17 +260,17 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
           placeholder={t('entityModal.basicTab.descriptionPlaceholder')}
           data-testid="basic-description"
           className={cn(
-            'w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2',
+            'w-full rounded-lg border bg-surface px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2',
             descriptionOverflow
-              ? 'border-red-300 focus-visible:ring-red-500'
-              : 'border-slate-300 focus-visible:ring-blue-500',
-            (readOnly || !canEdit) && 'cursor-not-allowed bg-slate-50 text-slate-500',
+              ? 'border-danger/40 focus-visible:ring-red-500'
+              : 'border-line-strong focus-visible:ring-brand',
+            (readOnly || !canEdit) && 'cursor-not-allowed bg-surface-muted text-muted',
           )}
         />
         <p
           className={cn(
             'text-right text-xs tabular-nums',
-            descriptionOverflow ? 'text-red-700' : 'text-slate-500',
+            descriptionOverflow ? 'text-danger' : 'text-muted',
           )}
         >
           {t('entityModal.basicTab.descriptionCounter', { count: descriptionCount })}
@@ -285,13 +285,13 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
               <button
                 type="button"
                 onClick={onFindInWorkspace}
-                className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 font-mono text-xs text-blue-800 transition-colors hover:bg-blue-100"
+                className="inline-flex items-center gap-1 rounded-md border border-brand/30 bg-brand-soft px-2 py-0.5 font-mono text-xs text-brand transition-colors hover:bg-brand-soft"
                 title={t('entityModal.basicTab.baseClassTooltip')}
               >
                 {entity.base_class_slug}
               </button>
             ) : (
-              <span className="text-xs text-slate-400">—</span>
+              <span className="text-xs text-muted-subtle">—</span>
             )
           }
         />
@@ -301,12 +301,12 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
             entity.creator_email ? (
               <span
                 title={t('entityModal.basicTab.creatorTooltip', { email: entity.creator_email })}
-                className="text-xs text-slate-700"
+                className="text-xs text-ink"
               >
                 {entity.creator_email}
               </span>
             ) : (
-              <span className="text-xs text-slate-400">—</span>
+              <span className="text-xs text-muted-subtle">—</span>
             )
           }
         />
@@ -317,24 +317,24 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
               <button
                 type="button"
                 onClick={onFindInWorkspace}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 font-mono text-xs text-slate-700 transition-colors hover:bg-slate-50"
+                className="inline-flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-0.5 font-mono text-xs text-ink transition-colors hover:bg-surface-muted"
               >
                 {entity.workspace_id}
               </button>
             ) : (
-              <span className="text-xs text-slate-400">—</span>
+              <span className="text-xs text-muted-subtle">—</span>
             )
           }
         />
         <MetaItem
           label={t('entityModal.basicTab.createdAt')}
-          value={<span className="font-mono text-xs text-slate-700">{entity.created_at}</span>}
+          value={<span className="font-mono text-xs text-ink">{entity.created_at}</span>}
         />
       </dl>
 
       <SubagentChips capabilities={extractSubagentCapabilities(baseClassManifest)} />
 
-      <div className="flex items-center justify-end gap-3 border-t border-slate-200 pt-4">
+      <div className="flex items-center justify-end gap-3 border-t border-line pt-4">
         {readOnly ? (
           <button
             type="button"
@@ -349,13 +349,13 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
           <button
             type="button"
             onClick={reload}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm font-medium text-danger transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             {t('entityModal.basicTab.revertSlug')}
           </button>
         ) : null}
         {readOnly ? (
-          <span className="text-xs text-slate-500">{t('entityModal.basicTab.formReadOnly')}</span>
+          <span className="text-xs text-muted">{t('entityModal.basicTab.formReadOnly')}</span>
         ) : (
           <button
             type="button"
@@ -363,10 +363,10 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
             onClick={handleSave}
             data-testid="basic-save"
             className={cn(
-              'inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+              'inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
               !canEdit || !dirty || formInvalid || saving
-                ? 'cursor-not-allowed bg-slate-200 text-slate-500'
-                : 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
+                ? 'cursor-not-allowed bg-surface-muted text-muted'
+                : 'bg-brand text-brand-fg hover:bg-brand-hover active:bg-brand-active',
             )}
           >
             {saving ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
@@ -380,8 +380,8 @@ export default function BasicTab({ entity, canEdit, onUpdated, onFindInWorkspace
 
 function MetaItem({ label, value }: { readonly label: string; readonly value: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
+    <div className="rounded-lg border border-line bg-surface-muted px-3 py-2.5">
+      <dt className="text-xs font-medium uppercase tracking-wide text-muted">{label}</dt>
       <dd className="mt-1">{value}</dd>
     </div>
   );

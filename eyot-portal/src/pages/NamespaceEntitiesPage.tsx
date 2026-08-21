@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router';
 import CloneDialog from '@/components/CloneDialog';
+import EmptyState from '@/components/EmptyState';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import { ApiError, api } from '@/lib/api';
 import { fetchMe } from '@/lib/api/auth';
 import { type ClonePayload, cloneEntity } from '@/lib/api/clone';
@@ -100,24 +102,24 @@ export default function NamespaceEntitiesPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl p-6 lg:p-8" aria-labelledby="ns-entities-title">
+    <section className="mx-auto w-full max-w-6xl p-6" aria-labelledby="ns-entities-title">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-4">
-          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
             <Building2 className="size-6" aria-hidden="true" />
           </span>
           <div>
-            <h1 id="ns-entities-title" className="text-2xl font-semibold text-slate-950">
+            <h1 id="ns-entities-title" className="text-2xl font-semibold text-ink">
               {t('nav.entities')}
             </h1>
-            <p className="mt-1 max-w-2xl text-sm text-slate-600">{t('namespaces.subtitle')}</p>
+            <p className="mt-1 max-w-2xl text-sm text-muted">{t('namespaces.subtitle')}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => openOnboarding({ namespaceId: nsId })}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           >
             <Sparkles className="size-4" aria-hidden="true" />
             {t('namespaces.summonEntity')}
@@ -128,7 +130,7 @@ export default function NamespaceEntitiesPage() {
             onClick={() => {
               if (selectedEntityId) openEntityModal(selectedEntityId, 'distill');
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted disabled:opacity-50"
           >
             <FlaskConical className="size-4" aria-hidden="true" />
             {t('namespaces.distillTransmute')}
@@ -139,7 +141,7 @@ export default function NamespaceEntitiesPage() {
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -147,7 +149,7 @@ export default function NamespaceEntitiesPage() {
       ) : null}
 
       {isLoading ? (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-16 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-line bg-surface px-6 py-16 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -208,17 +210,13 @@ function EntitiesList({
   readonly t: TFn;
 }) {
   if (entities.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <p className="text-sm text-slate-500">{t('namespaces.noEntities')}</p>
-      </div>
-    );
+    return <EmptyState title={t('namespaces.noEntities')} />;
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-line bg-surface">
       <table className="min-w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3">{t('entityModal.fields.displayName')}</th>
             <th className="px-4 py-3">{t('entityModal.fields.slug')}</th>
@@ -229,15 +227,22 @@ function EntitiesList({
           {entities.map((entity) => (
             <tr
               key={entity.id}
-              className={`border-b border-slate-100 last:border-0 ${
-                selectedId === entity.id ? 'bg-blue-50' : ''
+              className={`border-b border-line-subtle last:border-0 ${
+                selectedId === entity.id ? 'bg-brand-soft' : ''
               }`}
               onClick={() => onSelect(entity.id)}
             >
-              <td className="px-4 py-3 font-medium text-slate-900">
-                {entity.display_name ?? entity.name}
+              <td className="px-4 py-3 font-medium text-ink">
+                <span className="inline-flex items-center gap-2">
+                  <ProgenitorAvatar
+                    slug={entity.preset_slug}
+                    label={entity.display_name ?? entity.name}
+                    size="sm"
+                  />
+                  {entity.display_name ?? entity.name}
+                </span>
               </td>
-              <td className="px-4 py-3 font-mono text-xs text-slate-500">{entity.slug}</td>
+              <td className="px-4 py-3 font-mono text-xs text-muted">{entity.slug}</td>
               <td className="px-4 py-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
@@ -246,7 +251,7 @@ function EntitiesList({
                       e.stopPropagation();
                       onOpen(entity.id);
                     }}
-                    className="text-blue-600 hover:text-blue-700"
+                    className="text-brand hover:text-brand-hover"
                   >
                     {t('namespaces.viewDetail')}
                   </button>
@@ -270,7 +275,7 @@ function EntitiesList({
                         e.stopPropagation();
                         onClone(entity);
                       }}
-                      className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 disabled:opacity-50"
+                      className="inline-flex items-center gap-1 text-muted hover:text-ink disabled:opacity-50"
                       data-testid={`entity-clone-${entity.id}`}
                       title={t('clone.instancesNotCopied')}
                     >

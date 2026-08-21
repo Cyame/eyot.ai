@@ -85,7 +85,7 @@ export default function NamespaceSwitcher({ orgId }: NamespaceSwitcherProps) {
         aria-expanded={open}
         aria-controls={listId}
         data-testid="namespace-switcher"
-        className="flex w-full min-w-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="flex w-full min-w-0 items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-nav-ink transition-colors hover:bg-nav-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
       >
         <Layers className="size-4 shrink-0" aria-hidden="true" />
         <span className="truncate">
@@ -105,20 +105,20 @@ export default function NamespaceSwitcher({ orgId }: NamespaceSwitcherProps) {
         <div
           id={listId}
           data-testid="namespace-switcher-menu"
-          className="absolute left-0 z-50 mt-1.5 max-h-72 min-w-[14rem] overflow-y-auto rounded-lg border border-slate-700 bg-slate-900 py-1 text-slate-100 shadow-lg"
+          className="absolute left-0 z-50 mt-1.5 max-h-72 min-w-[14rem] overflow-y-auto rounded-lg border border-nav-line bg-nav py-1 text-nav-ink shadow-lg"
         >
           {loading ? (
-            <div className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-nav-muted">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('orgPicker.loading')}
             </div>
           ) : error !== null ? (
-            <div className="flex items-center gap-2 px-3 py-2 text-sm text-red-400">
+            <div className="flex items-center gap-2 px-3 py-2 text-sm text-danger">
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
               <span className="truncate">{error}</span>
             </div>
           ) : (namespaces ?? []).length === 0 ? (
-            <div className="px-3 py-2 text-sm text-slate-500">
+            <div className="px-3 py-2 text-sm text-nav-muted">
               {t('dashboard.emptyNamespacesTitle')}
             </div>
           ) : (
@@ -134,8 +134,8 @@ export default function NamespaceSwitcher({ orgId }: NamespaceSwitcherProps) {
                   className={cn(
                     'flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition-colors',
                     selected
-                      ? 'bg-blue-600 font-medium text-white'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white',
+                      ? 'bg-brand font-medium text-brand-fg'
+                      : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
                   )}
                 >
                   <span className="min-w-0">

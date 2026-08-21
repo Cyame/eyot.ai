@@ -138,34 +138,34 @@ export default function AiGenesTab({ entity, onRefresh, onNotify }: AiGenesTabPr
   return (
     <section aria-labelledby="genes-tab-heading" className="space-y-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="genes-tab-heading" className="text-sm font-semibold text-slate-900">
+        <h2 id="genes-tab-heading" className="text-sm font-semibold text-ink">
           {t('entityModal.tabs.ai_genes')}
         </h2>
         <button
           type="button"
           onClick={() => setShowAddModal(true)}
           data-testid="genes-add-extra"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-800 transition-colors hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand-soft px-3 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
           <Plus className="size-3.5" aria-hidden="true" />
           {t('entityModal.aiGenesTab.addExtra')}
         </button>
       </header>
 
-      <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5">
-        <Search className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+      <div className="flex items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 py-1.5">
+        <Search className="size-4 shrink-0 text-muted-subtle" aria-hidden="true" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t('entityModal.aiGenesTab.addExtraSearchPlaceholder')}
-          className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          className="w-full bg-transparent text-sm text-ink placeholder:text-muted-subtle focus:outline-none"
           data-testid="genes-search"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+        <p className="rounded-lg border border-dashed border-line-strong px-4 py-8 text-center text-sm text-muted">
           {t('entityModal.aiGenesTab.addExtraEmpty')}
         </p>
       ) : (
@@ -201,16 +201,16 @@ export default function AiGenesTab({ entity, onRefresh, onNotify }: AiGenesTabPr
           role="dialog"
           aria-modal="true"
           aria-labelledby="genes-add-modal-title"
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-overlay p-4"
           data-testid="genes-add-modal"
         >
-          <div className="flex max-h-[min(80vh,560px)] w-full max-w-lg flex-col rounded-xl border border-slate-200 bg-white shadow-lg">
-            <header className="flex items-start justify-between gap-3 border-b border-slate-200 px-4 py-3">
+          <div className="flex max-h-[min(80vh,560px)] w-full max-w-lg flex-col rounded-xl border border-line bg-surface shadow-lg">
+            <header className="flex items-start justify-between gap-3 border-b border-line px-4 py-3">
               <div>
-                <h3 id="genes-add-modal-title" className="text-sm font-semibold text-slate-900">
+                <h3 id="genes-add-modal-title" className="text-sm font-semibold text-ink">
                   {t('entityModal.aiGenesTab.addExtraTitle')}
                 </h3>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-muted">
                   {t('entityModal.aiGenesTab.attachPick')}
                 </p>
               </div>
@@ -220,15 +220,15 @@ export default function AiGenesTab({ entity, onRefresh, onNotify }: AiGenesTabPr
                   setShowAddModal(false);
                   setPickerQuery('');
                 }}
-                className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="rounded-md p-1 text-muted-subtle hover:bg-surface-muted hover:text-ink"
                 aria-label={t('entityModal.aiGenesTab.cancelPick')}
               >
                 <X className="size-4" aria-hidden="true" />
               </button>
             </header>
-            <div className="border-b border-slate-100 px-4 py-2">
-              <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5">
-                <Search className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+            <div className="border-b border-line-subtle px-4 py-2">
+              <div className="flex items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 py-1.5">
+                <Search className="size-4 shrink-0 text-muted-subtle" aria-hidden="true" />
                 <input
                   type="text"
                   value={pickerQuery}
@@ -240,31 +240,31 @@ export default function AiGenesTab({ entity, onRefresh, onNotify }: AiGenesTabPr
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
               {catalogLoading ? (
-                <div className="flex items-center justify-center gap-2 py-8 text-sm text-slate-500">
+                <div className="flex items-center justify-center gap-2 py-8 text-sm text-muted">
                   <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
                   {t('entityModal.aiGenesTab.loading')}
                 </div>
               ) : catalogError ? (
-                <p role="alert" className="px-2 py-4 text-sm text-red-600">
+                <p role="alert" className="px-2 py-4 text-sm text-danger">
                   {catalogError}
                 </p>
               ) : pickerItems.length === 0 ? (
-                <p className="px-2 py-8 text-center text-sm text-slate-500">
+                <p className="px-2 py-8 text-center text-sm text-muted">
                   {t('entityModal.aiGenesTab.addExtraEmpty')}
                 </p>
               ) : (
-                <ul className="divide-y divide-slate-100">
+                <ul className="divide-y divide-line-subtle">
                   {pickerItems.map((gene) => (
                     <li key={gene.id} className="flex items-center justify-between gap-2 px-2 py-2">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-900">{gene.name}</p>
-                        <p className="truncate font-mono text-xs text-slate-500">{gene.slug}</p>
+                        <p className="truncate text-sm font-medium text-ink">{gene.name}</p>
+                        <p className="truncate font-mono text-xs text-muted">{gene.slug}</p>
                       </div>
                       <button
                         type="button"
                         disabled={attachBusy === gene.id}
                         onClick={() => void handleAttach(gene)}
-                        className="shrink-0 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+                        className="shrink-0 rounded-md bg-brand px-2.5 py-1 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
                       >
                         {attachBusy === gene.id
                           ? t('entityModal.aiGenesTab.loading')
@@ -323,13 +323,13 @@ function GeneGroup({
     <section
       aria-labelledby={`genes-${headingKey}`}
       data-testid={`genes-group-${headingKey}`}
-      className="overflow-hidden rounded-lg border border-slate-200 bg-white"
+      className="overflow-hidden rounded-lg border border-line bg-surface"
     >
-      <header className="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <header className="flex items-center justify-between gap-2 border-b border-line-subtle px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted">
         <span id={`genes-${headingKey}`}>{heading}</span>
         <span className="tabular-nums">{genes.length}</span>
       </header>
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-line-subtle">
         {genes.map((gene) => (
           <li
             key={gene.slug}
@@ -337,14 +337,14 @@ function GeneGroup({
             data-testid={`gene-row-${gene.slug}`}
           >
             <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-1.5 truncate font-mono text-xs text-slate-900">
+              <p className="flex items-center gap-1.5 truncate font-mono text-xs text-ink">
                 {locked ? (
-                  <Lock className="size-3 shrink-0 text-slate-400" aria-hidden="true" />
+                  <Lock className="size-3 shrink-0 text-muted-subtle" aria-hidden="true" />
                 ) : null}
                 {gene.slug}
               </p>
-              <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 font-mono">
+              <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted">
+                <span className="rounded-full bg-surface-muted px-2 py-0.5 font-mono">
                   {KIND_LABEL[gene.kind]}
                 </span>
                 {gene.tags.length > 0 ? (
@@ -352,7 +352,7 @@ function GeneGroup({
                     {gene.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-slate-200 bg-white px-2 py-0.5 font-mono text-xs text-slate-600"
+                        className="rounded-full border border-line bg-surface px-2 py-0.5 font-mono text-xs text-muted"
                       >
                         {tag}
                       </span>
@@ -366,7 +366,7 @@ function GeneGroup({
                 type="button"
                 disabled
                 className={cn(
-                  'inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-500',
+                  'inline-flex items-center gap-1 rounded-md border border-line bg-surface-muted px-2 py-1 text-xs font-medium text-muted',
                   'cursor-not-allowed',
                 )}
                 title={lockedHint}
@@ -378,7 +378,7 @@ function GeneGroup({
                 type="button"
                 onClick={() => onRemove(gene)}
                 data-testid="gene-remove"
-                className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-red-700 transition-colors hover:border-red-200 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-danger transition-colors hover:border-danger/30 hover:bg-danger-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
               >
                 <Trash2 className="size-3.5" aria-hidden="true" />
                 {removeLabel}

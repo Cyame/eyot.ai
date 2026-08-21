@@ -83,26 +83,26 @@ export default function IntroduceInstanceModal({
       aria-modal="true"
       aria-labelledby="introduce-instance-title"
       data-testid="introduce-instance-modal"
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/50 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
     >
-      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-slate-200 bg-white shadow-2xl sm:rounded-xl">
-        <header className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
+      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
+        <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
           <div className="flex items-start gap-3">
-            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-700">
+            <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">
               <Cpu className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 id="introduce-instance-title" className="text-base font-semibold text-slate-950">
+              <h2 id="introduce-instance-title" className="text-base font-semibold text-ink">
                 {t('workspace.introduceTitle')}
               </h2>
-              <p className="mt-1 text-xs text-slate-500">{t('workspace.introduceDetail')}</p>
+              <p className="mt-1 text-xs text-muted">{t('workspace.introduceDetail')}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="grid size-8 place-items-center rounded-md text-slate-500 hover:bg-slate-100"
+            className="grid size-8 place-items-center rounded-md text-muted hover:bg-surface-muted"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -111,11 +111,11 @@ export default function IntroduceInstanceModal({
         <div className="space-y-4 px-5 py-4">
           <label
             htmlFor="introduce-entity-select"
-            className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+            className="block text-xs font-semibold uppercase tracking-wide text-muted"
           >
             {t('workspace.introduceEntity')}
             {loading ? (
-              <span className="mt-2 flex items-center gap-2 text-sm font-normal normal-case text-slate-500">
+              <span className="mt-2 flex items-center gap-2 text-sm font-normal normal-case text-muted">
                 <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
                 {t('common.loading')}
               </span>
@@ -125,7 +125,7 @@ export default function IntroduceInstanceModal({
                 value={entityId}
                 onChange={(e) => setEntityId(e.target.value)}
                 data-testid="introduce-entity-select"
-                className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal normal-case text-slate-900"
+                className="mt-1.5 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm font-normal normal-case text-ink"
               >
                 <option value="">{t('workspace.introduceEntityPlaceholder')}</option>
                 {entities.map((entity) => (
@@ -140,7 +140,7 @@ export default function IntroduceInstanceModal({
           {errorMessage !== null ? (
             <div
               role="alert"
-              className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+              className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
             >
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
               <p>{errorMessage}</p>
@@ -148,11 +148,11 @@ export default function IntroduceInstanceModal({
           ) : null}
         </div>
 
-        <footer className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink hover:bg-surface-muted"
           >
             {t('common.cancel')}
           </button>
@@ -162,10 +162,10 @@ export default function IntroduceInstanceModal({
             onClick={() => void handleSubmit()}
             data-testid="introduce-instance-submit"
             className={cn(
-              'inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-white',
+              'inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-brand-fg',
               !entityId || submitting || loading
-                ? 'cursor-not-allowed bg-slate-300'
-                : 'bg-blue-600 hover:bg-blue-700',
+                ? 'cursor-not-allowed bg-surface-muted'
+                : 'bg-brand hover:bg-brand-hover',
             )}
           >
             {submitting ? (

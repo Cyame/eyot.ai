@@ -1,8 +1,9 @@
-import { AlertCircle, LoaderCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { ModelInputCombobox } from '@/components/ModelInputCombobox';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import { fetchBaseClass } from '@/lib/api/entities';
 import {
   fetchBaseClassProviderDefault,
@@ -98,13 +99,13 @@ export default function BaseClassDetailPage() {
   }
 
   if (slug === undefined) {
-    return <p className="p-6 text-sm text-red-700">{t('baseClass.slugMissing')}</p>;
+    return <p className="p-6 text-sm text-danger">{t('baseClass.slugMissing')}</p>;
   }
 
   return (
-    <section className="mx-auto w-full max-w-4xl p-6 lg:p-8">
+    <section className="mx-auto w-full max-w-4xl p-6">
       {isLoading ? (
-        <div className="flex items-center gap-3 text-sm text-slate-500">
+        <div className="flex items-center gap-3 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -113,7 +114,7 @@ export default function BaseClassDetailPage() {
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -124,36 +125,34 @@ export default function BaseClassDetailPage() {
         <>
           <header className="mb-6 flex items-start justify-between gap-4">
             <div className="flex items-start gap-4">
-              <span className="grid size-11 place-items-center rounded-xl bg-blue-600 text-white">
-                <Sparkles className="size-6" aria-hidden="true" />
-              </span>
+              <ProgenitorAvatar slug={baseClass.slug} label={baseClass.name} size="lg" />
               <div>
-                <h1 className="text-2xl font-semibold text-slate-950">
+                <h1 className="text-2xl font-semibold text-ink">
                   {t(baseClass.display_name ?? baseClass.name, { defaultValue: baseClass.name })}
                 </h1>
-                <p className="mt-1 font-mono text-sm text-slate-500">{baseClass.slug}</p>
+                <p className="mt-1 font-mono text-sm text-muted">{baseClass.slug}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => openOnboarding({ baseClassSlug: baseClass.slug })}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
             >
               {t('namespaces.summonFromBaseClass')}
             </button>
           </header>
-          <p className="text-sm leading-6 text-slate-600">{baseClass.description}</p>
+          <p className="text-sm leading-6 text-muted">{baseClass.description}</p>
 
-          <section className="mt-8 rounded-xl border border-slate-200 bg-white p-4">
-            <h2 className="text-sm font-semibold text-slate-900">
+          <section className="mt-8 rounded-xl border border-line bg-surface p-4">
+            <h2 className="text-sm font-semibold text-ink">
               {t('baseClass.providerDefaultTitle')}
             </h2>
-            <p className="mt-1 text-xs text-slate-500">{t('baseClass.providerDefaultHint')}</p>
+            <p className="mt-1 text-xs text-muted">{t('baseClass.providerDefaultHint')}</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <label className="block text-xs font-medium text-slate-600">
+              <label className="block text-xs font-medium text-muted">
                 {t('organization.fields.provider')}
                 <select
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
                   value={providerId}
                   disabled={!isSuperAdmin}
                   onChange={(e) => {
@@ -169,10 +168,7 @@ export default function BaseClassDetailPage() {
                   ))}
                 </select>
               </label>
-              <label
-                htmlFor="base-class-model"
-                className="block text-xs font-medium text-slate-600"
-              >
+              <label htmlFor="base-class-model" className="block text-xs font-medium text-muted">
                 {t('organization.fields.model')}
                 <ModelInputCombobox
                   id="base-class-model"
@@ -191,12 +187,12 @@ export default function BaseClassDetailPage() {
                 type="button"
                 disabled={isSaving || !providerId || !model}
                 onClick={() => void handleSaveDefault()}
-                className="mt-4 rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
+                className="mt-4 rounded-lg bg-brand px-3 py-2 text-sm font-medium text-brand-fg disabled:opacity-40"
               >
                 {isSaving ? t('organization.saving') : t('baseClass.saveProviderDefault')}
               </button>
             ) : null}
-            {saveMsg ? <p className="mt-2 text-xs text-slate-600">{saveMsg}</p> : null}
+            {saveMsg ? <p className="mt-2 text-xs text-muted">{saveMsg}</p> : null}
           </section>
         </>
       ) : null}

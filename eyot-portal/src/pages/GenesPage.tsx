@@ -8,16 +8,16 @@ export default function GenesPage() {
   const [subTab, setSubTab] = useState<'deep-sea' | 'human'>('deep-sea');
 
   return (
-    <section className="mx-auto w-full max-w-6xl p-6 lg:p-8" aria-labelledby="genes-title">
+    <section className="mx-auto w-full max-w-6xl p-6" aria-labelledby="genes-title">
       <header className="mb-6 flex items-start gap-4">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
           <Building2 className="size-6" aria-hidden="true" />
         </span>
         <div>
-          <h1 id="genes-title" className="text-2xl font-semibold text-slate-950">
+          <h1 id="genes-title" className="text-2xl font-semibold text-ink">
             {t('nav.genes')}
           </h1>
-          <p className="mt-1 max-w-2xl text-sm text-slate-600">{t('namespaces.genesDetail')}</p>
+          <p className="mt-1 max-w-2xl text-sm text-muted">{t('namespaces.genesDetail')}</p>
         </div>
       </header>
 
@@ -25,7 +25,7 @@ export default function GenesPage() {
         <div
           role="tablist"
           aria-label={t('nav.genes')}
-          className="flex flex-wrap gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1"
+          className="flex flex-wrap gap-1 rounded-lg border border-line bg-surface-muted p-1"
           data-testid="genes-subtabs"
         >
           {(
@@ -45,8 +45,8 @@ export default function GenesPage() {
                 onClick={() => setSubTab(tab.id)}
                 className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
                   active
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                    ? 'bg-surface text-ink shadow-sm'
+                    : 'text-muted hover:bg-surface hover:text-ink'
                 }`}
               >
                 {tab.label}

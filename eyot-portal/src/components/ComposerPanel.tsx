@@ -649,11 +649,11 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
         <div className="flex items-center gap-2">
           {!compact ? (
             <>
-              <MessageSquare className="size-5 text-slate-700" aria-hidden="true" />
-              <h2 className="text-lg font-semibold text-slate-900">{t('composer.title')}</h2>
+              <MessageSquare className="size-5 text-ink" aria-hidden="true" />
+              <h2 className="text-lg font-semibold text-ink">{t('composer.title')}</h2>
             </>
           ) : (
-            <span className="text-xs font-semibold text-slate-700">{t('composer.title')}</span>
+            <span className="text-xs font-semibold text-ink">{t('composer.title')}</span>
           )}
         </div>
         <button
@@ -661,8 +661,8 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
           onClick={() => setSettingsOpen((v) => !v)}
           className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
             settingsOpen
-              ? 'bg-slate-200 text-slate-900'
-              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+              ? 'bg-surface-muted text-ink'
+              : 'text-muted hover:bg-surface-muted hover:text-ink'
           }`}
           aria-expanded={settingsOpen}
           aria-label={t('composer.settingsTitle')}
@@ -673,8 +673,8 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
       </header>
 
       {settingsOpen ? (
-        <div className="mb-2 space-y-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800">
-          <p className="font-semibold text-slate-900">{t('composer.settingsTitle')}</p>
+        <div className="mb-2 space-y-2 rounded-lg border border-line bg-surface-muted px-3 py-2 text-xs text-ink">
+          <p className="font-semibold text-ink">{t('composer.settingsTitle')}</p>
           <label className="flex items-center justify-between gap-3">
             <span>{t('composer.settingShowThinking')}</span>
             <input
@@ -697,7 +697,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
       {parseError !== null ? (
         <div
           role="alert"
-          className="mb-3 flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-800"
+          className="mb-3 flex items-center gap-2 rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-xs text-red-800"
         >
           <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
           <span>{parseError}</span>
@@ -707,7 +707,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
       {sendError !== null ? (
         <div
           role="alert"
-          className="mb-3 flex items-center gap-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-800"
+          className="mb-3 flex items-center gap-2 rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-xs text-red-800"
         >
           <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
           <span>{sendError}</span>
@@ -720,13 +720,13 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
         </div>
       ) : null}
 
-      <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-600">
+      <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] text-muted">
         <label className="inline-flex items-center gap-1">
           <span>{t('composer.filterSpeaker')}</span>
           <select
             value={filterSpeaker}
             onChange={(e) => setFilterSpeaker(e.target.value)}
-            className="rounded border border-slate-300 bg-white px-1.5 py-0.5 text-slate-800"
+            className="rounded border border-line-strong bg-surface px-1.5 py-0.5 text-ink"
           >
             <option value="">{t('composer.filterAll')}</option>
             {speakerOptions.users.map(([username, label]) => (
@@ -750,7 +750,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
           <select
             value={filterRecipient}
             onChange={(e) => setFilterRecipient(e.target.value)}
-            className="rounded border border-slate-300 bg-white px-1.5 py-0.5 text-slate-800"
+            className="rounded border border-line-strong bg-surface px-1.5 py-0.5 text-ink"
           >
             <option value="">{t('composer.filterAll')}</option>
             {recipientOptions.users.map(([username, label]) => (
@@ -768,9 +768,9 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
         </label>
       </div>
 
-      <div className="mb-2 min-h-0 flex-1 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-2">
+      <div className="mb-2 min-h-0 flex-1 space-y-2 overflow-y-auto rounded-lg border border-line bg-surface p-2">
         {filteredTranscript.length === 0 && lanes.length === 0 ? (
-          <p className="px-1 py-6 text-center text-xs text-slate-400">
+          <p className="px-1 py-6 text-center text-xs text-muted-subtle">
             {t('composer.transcriptEmpty')}
           </p>
         ) : null}
@@ -821,7 +821,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
           .map((lane) => (
             <div
               key={lane.turnId}
-              className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-2 py-1.5 text-xs"
+              className="rounded-lg border border-dashed border-line-strong bg-surface-muted px-2 py-1.5 text-xs"
             >
               <div className="mb-1 flex items-center justify-between gap-2">
                 <PartyArrow
@@ -846,14 +846,14 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                 text={lane.text || (lane.status === 'responding' ? '…' : '')}
                 renderMd={renderMd}
               />
-              {lane.error ? <p className="mt-1 text-red-700">{lane.error}</p> : null}
+              {lane.error ? <p className="mt-1 text-danger">{lane.error}</p> : null}
             </div>
           ))}
         <div ref={transcriptEndRef} />
       </div>
 
       {deliveryRows.length > 0 ? (
-        <ul className="mb-2 max-h-16 overflow-y-auto text-xs text-slate-700">
+        <ul className="mb-2 max-h-16 overflow-y-auto text-xs text-ink">
           {deliveryRows.flatMap((row) =>
             row.delivery.map((d) => {
               if (d.delivered) return null;
@@ -882,7 +882,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
           onChange={(e) => setText(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder={t('composer.placeholder')}
-          className={`${textareaHeight} w-full rounded-lg border border-slate-300 p-3 font-mono text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          className={`${textareaHeight} w-full rounded-lg border border-line-strong p-3 font-mono text-sm text-ink shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand`}
           spellCheck={false}
         />
         <CommandAutocomplete
@@ -909,14 +909,11 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
       </div>
 
       {compartments.length > 0 ? (
-        <div
-          className="mt-2 rounded-lg border border-slate-200 bg-white"
-          data-testid="segment-panel"
-        >
+        <div className="mt-2 rounded-lg border border-line bg-surface" data-testid="segment-panel">
           <div
             role="tablist"
             aria-label={t('composer.segment.general')}
-            className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 px-2 py-1.5"
+            className="flex flex-wrap items-center gap-1 border-b border-line bg-surface-muted px-2 py-1.5"
           >
             {compartments.map((c) => {
               const isActive = activeSegment === c.label;
@@ -935,18 +932,18 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                   onClick={() => setActiveSegment(c.label)}
                   data-testid={`segment-tab-${c.label}`}
                   className={cn(
-                    'inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                    'inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
                     isActive
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-600 hover:bg-white hover:text-slate-900',
+                      ? 'bg-surface text-ink shadow-sm'
+                      : 'text-muted hover:bg-surface hover:text-ink',
                   )}
                 >
                   {c.label !== 'general' ? (
-                    <Hash className="size-3 shrink-0 text-slate-400" aria-hidden="true" />
+                    <Hash className="size-3 shrink-0 text-muted-subtle" aria-hidden="true" />
                   ) : null}
                   <span>{label}</span>
                   {directiveCount > 0 ? (
-                    <span className="rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">
+                    <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-[10px] font-medium text-muted">
                       {directiveCount}
                     </span>
                   ) : null}
@@ -973,7 +970,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                     content: (
                       <div
                         key={`dir-${d.cmd}-${d.args.join('-')}`}
-                        className="truncate rounded bg-slate-50 px-2 py-1 font-mono text-xs text-slate-700"
+                        className="truncate rounded bg-surface-muted px-2 py-1 font-mono text-xs text-ink"
                       >
                         {display}
                       </div>
@@ -984,7 +981,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                 items.push({
                   key: 'general-text',
                   content: (
-                    <p key="general-text" className="truncate px-1 text-xs text-slate-500">
+                    <p key="general-text" className="truncate px-1 text-xs text-muted">
                       {active.general_text}
                     </p>
                   ),
@@ -993,7 +990,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                 items.push({
                   key: 'empty',
                   content: (
-                    <p key="empty" className="px-1 text-xs text-slate-400">
+                    <p key="empty" className="px-1 text-xs text-muted-subtle">
                       {t('composer.segment.noDirectives')}
                     </p>
                   ),
@@ -1029,7 +1026,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                         name: entityLabel(activeSegment, activeSegment),
                       })
                 }
-                className="flex-1 rounded border border-slate-300 px-2 py-1 font-mono text-xs text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 rounded border border-line-strong px-2 py-1 font-mono text-xs text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                 aria-label={
                   activeSegment === 'general'
                     ? t('composer.segment.sendGeneral')
@@ -1045,7 +1042,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                 disabled={
                   sending || introducing || (segmentInputs[activeSegment] ?? '').trim().length === 0
                 }
-                className="inline-flex items-center rounded bg-blue-600 px-2 py-1 text-xs font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center rounded bg-brand px-2 py-1 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label={
                   activeSegment === 'general'
                     ? t('composer.segment.sendGeneral')
@@ -1063,12 +1060,12 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
       ) : null}
 
       <div className="mt-3 flex items-center justify-between gap-2">
-        <span className="text-[10px] text-slate-400">{t('composer.sendHint')}</span>
+        <span className="text-[10px] text-muted-subtle">{t('composer.sendHint')}</span>
         <button
           type="button"
           onClick={() => void handleSend()}
           disabled={!canSend}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           {sending ? (
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -1084,32 +1081,32 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
           role="dialog"
           aria-modal="true"
           aria-labelledby="introduce-confirm-title"
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/50 p-0 sm:items-center sm:p-4"
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-overlay p-0 sm:items-center sm:p-4"
         >
-          <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-slate-200 bg-white shadow-2xl sm:rounded-xl">
-            <header className="border-b border-slate-200 px-5 py-4">
-              <h2 id="introduce-confirm-title" className="text-base font-semibold text-slate-950">
+          <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
+            <header className="border-b border-line px-5 py-4">
+              <h2 id="introduce-confirm-title" className="text-base font-semibold text-ink">
                 {t('workspace.introduceTitle')}
               </h2>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-muted">
                 {t('composer.introduceConfirm', { name: introduceTarget.name })}
               </p>
             </header>
             {introduceError !== null ? (
               <div
                 role="alert"
-                className="mx-5 mt-3 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+                className="mx-5 mt-3 flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
               >
                 <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
                 <p>{introduceError}</p>
               </div>
             ) : null}
-            <footer className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+            <footer className="flex justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
               <button
                 type="button"
                 onClick={handleIntroduceCancel}
                 disabled={introducing}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink hover:bg-surface-muted disabled:opacity-50"
               >
                 {t('common.cancel')}
               </button>
@@ -1117,7 +1114,7 @@ export default function ComposerPanel({ workspaceId, compact = false }: Composer
                 type="button"
                 disabled={introducing}
                 onClick={() => void handleIntroduceConfirm()}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {introducing ? (
                   <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -1176,17 +1173,17 @@ function PartyArrow({
 }) {
   const { t } = useTranslation();
   return (
-    <span className="text-[10px] text-slate-500">
-      <span className="font-medium text-slate-700">{speaker}</span>
+    <span className="text-[10px] text-muted">
+      <span className="font-medium text-ink">{speaker}</span>
       {speakerIsYou ? (
-        <span className="ml-0.5 text-slate-400">{t('composer.youSuffix')}</span>
+        <span className="ml-0.5 text-muted-subtle">{t('composer.youSuffix')}</span>
       ) : null}
       {recipient ? (
         <>
-          <span className="mx-1 text-slate-400">→</span>
-          <span className="font-medium text-slate-700">{recipient}</span>
+          <span className="mx-1 text-muted-subtle">→</span>
+          <span className="font-medium text-ink">{recipient}</span>
           {recipientIsYou ? (
-            <span className="ml-0.5 text-slate-400">{t('composer.youSuffix')}</span>
+            <span className="ml-0.5 text-muted-subtle">{t('composer.youSuffix')}</span>
           ) : null}
         </>
       ) : null}
@@ -1199,13 +1196,13 @@ function MessageBody({ text, renderMd }: { readonly text: string; readonly rende
   if (renderMd) {
     return (
       <div
-        className="composer-markdown prose prose-sm max-w-none break-words text-slate-800"
+        className="composer-markdown prose prose-sm max-w-none break-words text-ink"
         // biome-ignore lint/security/noDangerouslySetInnerHtml: renderMarkdown sanitizes via DOMPurify (src/lib/markdown.ts)
         dangerouslySetInnerHTML={{ __html: renderMarkdown(text) }}
       />
     );
   }
-  return <pre className="whitespace-pre-wrap break-words font-sans text-slate-800">{text}</pre>;
+  return <pre className="whitespace-pre-wrap break-words font-sans text-ink">{text}</pre>;
 }
 
 function MessageBubble({
@@ -1240,9 +1237,9 @@ function MessageBubble({
   const body = role === 'assistant' ? stripAgentThinkingBlocks(content) : content;
   const tone =
     role === 'user'
-      ? 'bg-blue-50 text-slate-800'
+      ? 'bg-brand-soft text-ink'
       : role === 'assistant'
-        ? 'bg-slate-50 text-slate-800'
+        ? 'bg-surface-muted text-ink'
         : 'bg-amber-50 text-amber-900';
 
   const entityLabel = targetName.trim() || target || '';
@@ -1265,7 +1262,7 @@ function MessageBubble({
 
   return (
     <div className={`rounded-lg px-2 py-1.5 text-xs ${tone}`}>
-      <div className="mb-0.5 flex items-center justify-between gap-2 text-[10px] text-slate-500">
+      <div className="mb-0.5 flex items-center justify-between gap-2 text-[10px] text-muted">
         <PartyArrow
           speaker={speaker}
           recipient={recipient}

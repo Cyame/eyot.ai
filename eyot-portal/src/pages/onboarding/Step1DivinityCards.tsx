@@ -1,10 +1,10 @@
 import { AlertCircle, Check, Filter, LoaderCircle, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import { ApiError } from '@/lib/api';
 import { fetchBaseClasses } from '@/lib/api/onboarding';
 import { resolveError } from '@/lib/apiError';
-import { getIconForSlug } from '@/lib/baseClassIcons';
 import { normalizeBaseClassTags, translateBaseClassTag } from '@/lib/baseClassTags';
 import type { BaseClass, JsonObject } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ const DEFAULT_TAGS_FOR_SLUG: Record<string, readonly string[]> = {
 };
 
 const TAG_CLASSES: Record<string, string> = {
-  planning: 'bg-blue-50 text-blue-700 border-blue-200',
+  planning: 'bg-brand-soft text-brand border-brand/30',
   execution: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   review: 'bg-violet-50 text-violet-700 border-violet-200',
   ultraworker: 'bg-orange-50 text-orange-800 border-orange-200',
@@ -33,10 +33,10 @@ const TAG_CLASSES: Record<string, string> = {
   oracle: 'bg-indigo-50 text-indigo-700 border-indigo-200',
   gate: 'bg-amber-50 text-amber-800 border-amber-200',
   multimodal: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200',
-  delegate: 'bg-slate-100 text-slate-700 border-slate-300',
+  delegate: 'bg-surface-muted text-ink border-line-strong',
 };
 
-const DEFAULT_TAG_CLASS = 'bg-slate-50 text-slate-700 border-slate-200';
+const DEFAULT_TAG_CLASS = 'bg-surface-muted text-ink border-line';
 
 function resolveTags(baseClass: BaseClass): readonly string[] {
   const fromApi = normalizeBaseClassTags(baseClass.tags);
@@ -157,8 +157,8 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
   return (
     <div className="space-y-5" data-testid="onboarding-step1">
       <div className="space-y-1">
-        <h3 className="text-base font-semibold text-slate-950">{t('onboarding.step1.title')}</h3>
-        <p className="text-sm text-slate-500">{t('onboarding.step1.subtitle')}</p>
+        <h3 className="text-base font-semibold text-ink">{t('onboarding.step1.title')}</h3>
+        <p className="text-sm text-muted">{t('onboarding.step1.subtitle')}</p>
       </div>
 
       <div className="flex flex-wrap gap-2" role="tablist" aria-label="Tag filter">
@@ -172,10 +172,10 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
               aria-selected={isActive}
               onClick={() => setGroupFilter(group.id)}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
+                  ? 'bg-brand text-brand-fg shadow-sm'
+                  : 'bg-surface-muted text-muted hover:bg-surface-muted',
               )}
             >
               {group.id === 'all' ? <Filter className="size-3.5" aria-hidden="true" /> : null}
@@ -210,7 +210,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                 }
               })();
             }}
-            className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-white px-2 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+            className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-surface px-2 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           >
             <RefreshCw className="size-3" aria-hidden="true" />
             {t('common.retry')}
@@ -219,7 +219,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
       ) : null}
 
       {isLoading && classes === null ? (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-slate-50 py-12 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-line bg-surface-muted py-12 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -229,7 +229,6 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((entry) => {
               const isSelected = entry.id === selectedId;
-              const Icon = getIconForSlug(entry.slug);
               const tags = resolveTags(entry);
               const lead = primaryTag(entry);
               const commands = extractCommands(entry.manifest);
@@ -240,10 +239,10 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                   key={entry.id}
                   data-testid={`deity-card-${entry.slug}`}
                   className={cn(
-                    'flex w-full cursor-pointer flex-col items-start gap-3 rounded-xl border bg-white p-4 text-left shadow-sm transition-[border-color,box-shadow,transform] focus-within:ring-2 focus-within:ring-blue-500',
+                    'flex w-full cursor-pointer flex-col items-start gap-3 rounded-xl border bg-surface p-4 text-left shadow-sm transition-[border-color,box-shadow,transform] focus-within:ring-2 focus-within:ring-brand',
                     isSelected
-                      ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md -translate-y-0.5'
-                      : 'border-slate-200 hover:border-slate-400 hover:shadow-md',
+                      ? 'border-brand ring-2 ring-brand/20 shadow-md -translate-y-0.5'
+                      : 'border-line hover:border-line-strong hover:shadow-md',
                   )}
                 >
                   <input
@@ -256,28 +255,21 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                     className="sr-only"
                   />
                   <div className="flex w-full items-start justify-between gap-2">
-                    <span
-                      className={cn(
-                        'grid size-9 shrink-0 place-items-center rounded-lg',
-                        isSelected ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700',
-                      )}
-                    >
-                      <Icon className="size-5" aria-hidden="true" />
-                    </span>
+                    <ProgenitorAvatar slug={entry.slug} label={displayName} size="md" />
                     {isSelected ? (
-                      <span className="grid size-5 place-items-center rounded-full bg-blue-600 text-white">
+                      <span className="grid size-5 place-items-center rounded-full bg-brand text-brand-fg">
                         <Check className="size-3" aria-hidden="true" />
                       </span>
                     ) : null}
                   </div>
 
                   <div className="min-w-0">
-                    <h4 className="text-base font-semibold text-slate-950">{displayName}</h4>
-                    <p className="mt-0.5 font-mono text-xs text-slate-500">{entry.slug}</p>
+                    <h4 className="text-base font-semibold text-ink">{displayName}</h4>
+                    <p className="mt-0.5 font-mono text-xs text-muted">{entry.slug}</p>
                   </div>
 
                   {entry.description !== null ? (
-                    <p className="line-clamp-2 text-xs text-slate-600">{entry.description}</p>
+                    <p className="line-clamp-2 text-xs text-muted">{entry.description}</p>
                   ) : null}
 
                   {commands.length > 0 ? (
@@ -285,7 +277,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                       {commands.slice(0, 3).map((command) => (
                         <span
                           key={command}
-                          className="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 font-mono text-[11px] text-blue-700"
+                          className="rounded-full border border-brand/20 bg-brand-soft px-2 py-0.5 font-mono text-[11px] text-brand"
                         >
                           {command}
                         </span>
@@ -300,7 +292,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                         className={cn(
                           'inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium',
                           TAG_CLASSES[tag] ?? DEFAULT_TAG_CLASS,
-                          tag === lead ? 'ring-1 ring-offset-1 ring-slate-300' : '',
+                          tag === lead ? 'ring-1 ring-offset-1 ring-line-strong' : '',
                         )}
                       >
                         {translateBaseClassTag(tag, t)}
@@ -308,7 +300,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
                     ))}
                     {providerInfo !== null ? (
                       <span
-                        className="ml-auto truncate font-mono text-[11px] text-slate-500"
+                        className="ml-auto truncate font-mono text-[11px] text-muted"
                         title={providerInfo}
                       >
                         {t('onboarding.step1.providerLabel')}: {providerInfo}
@@ -323,7 +315,7 @@ export default function Step1DivinityCards({ onLoadingChange, onErrorChange }: S
       )}
 
       {selectedBaseClass === null ? (
-        <p className="text-xs text-slate-500" aria-live="polite">
+        <p className="text-xs text-muted" aria-live="polite">
           {t('onboarding.step1.selectHint')}
         </p>
       ) : null}

@@ -245,11 +245,11 @@ export function CommandAutocomplete({
     <div
       role="listbox"
       aria-label="Command suggestions"
-      className="absolute bottom-full left-0 right-0 z-20 mb-1 max-h-48 overflow-y-auto rounded-lg border border-slate-300 bg-white shadow-lg"
+      className="absolute bottom-full left-0 right-0 z-20 mb-1 max-h-48 overflow-y-auto rounded-lg border border-line-strong bg-surface shadow-lg"
     >
       {groupedFlat.map((group) => (
         <div key={group.label}>
-          <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-muted">
             {group.label}
           </div>
           {group.items.map((item) => {
@@ -265,11 +265,11 @@ export function CommandAutocomplete({
                   handleSelect(item.cmd);
                 }}
                 className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm ${
-                  isHighlighted ? 'bg-blue-100' : 'bg-white hover:bg-slate-50'
+                  isHighlighted ? 'bg-brand-soft' : 'bg-surface hover:bg-surface-muted'
                 }`}
               >
-                <Terminal className="h-4 w-4 flex-shrink-0 text-slate-500" />
-                <code className="font-mono text-slate-900">{item.cmd}</code>
+                <Terminal className="h-4 w-4 flex-shrink-0 text-muted" />
+                <code className="font-mono text-ink">{item.cmd}</code>
               </button>
             );
           })}

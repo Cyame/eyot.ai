@@ -311,11 +311,13 @@ describe('TopologyPage', () => {
     });
 
     const nodeGroup = screen.getByTestId('topology-node-membership-1');
-    const iconForeignObject = nodeGroup.querySelector('foreignObject[x="-12"]');
+    const iconForeignObject = nodeGroup.querySelector('foreignObject');
     expect(iconForeignObject).toBeInTheDocument();
+    expect(nodeGroup.querySelector('[data-testid="progenitor-avatar"]')).toBeInTheDocument();
+    expect(nodeGroup.querySelector('[data-progenitor-slug="fox"]')).toBeInTheDocument();
   });
 
-  it('falls back to Cpu icon for instance without entity_slug', async () => {
+  it('renders a progenitor avatar for instance without entity_slug', async () => {
     const membershipNoSlug = {
       id: 'membership-noslug',
       workspace_id: 'ws-1',

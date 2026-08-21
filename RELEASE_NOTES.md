@@ -54,6 +54,14 @@ pre-1.0 trajectory.
 - Portal、Backend、Instance Host 的版本号统一到 `0.5.2.dev3`。
 - OrbStack 中旧 Cocoa Portal 占用 `30173` 时，Eyot Portal 改用空闲 NodePort `30174`。
 
+### 2026-08-21 — 0.5.3（视觉波）
+
+- Portal 视觉 SoT（`.omo/evidence/v5-visual-spec.md`）+ Tailwind `@theme` 语义 token + dark/light 双主题（跟随系统 / 持久化偏好）。
+- 壳层现代化：AppShell / IdeShell / Header 去僵硬（苔藓品牌色、pill 导航、玻璃顶栏）。
+- 5 始祖圆形头像 SVG + `ProgenitorAvatar` / `InitialAvatar` 挂始祖卡片、血脉列表、拓扑节点。
+- 公共 `EmptyState`、密度统一为 `p-6`、修复缺失的 `topology-pop` 动画；补 favicon。
+- 版本三处同步为 **0.5.3**（portal / backend / instance-host）。
+
 ### 2026-08-19 — 0.5.2.dev4（Composer 命令历史）
 
 - Composer 主输入框支持 CLI 式上/下方向键翻阅已发送命令（按工作区写入 localStorage，最多 50 条）。

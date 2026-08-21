@@ -241,7 +241,7 @@ export default function WorkspaceIdePage() {
   ];
 
   if (id === undefined) {
-    return <p className="p-6 text-sm text-red-700">{t('workspace.idMissing')}</p>;
+    return <p className="p-6 text-sm text-danger">{t('workspace.idMissing')}</p>;
   }
 
   return (
@@ -252,7 +252,7 @@ export default function WorkspaceIdePage() {
       modeLabel={modeLabel}
     >
       <div className="flex h-full flex-col">
-        <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-slate-200 bg-white px-3 pt-2">
+        <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-surface px-3 pt-2">
           {TABS.map(({ id: tabId, label, Icon }) => (
             <button
               key={tabId}
@@ -262,8 +262,8 @@ export default function WorkspaceIdePage() {
               onClick={() => setActiveTab(tabId)}
               className={`inline-flex shrink-0 items-center gap-2 rounded-t-lg border-b-2 px-4 py-2 text-sm font-medium ${
                 activeTab === tabId
-                  ? 'border-blue-600 bg-blue-50 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:bg-slate-50'
+                  ? 'border-brand bg-brand-soft text-brand'
+                  : 'border-transparent text-muted hover:bg-surface-muted'
               }`}
             >
               <Icon className="size-4" aria-hidden="true" />
@@ -276,7 +276,7 @@ export default function WorkspaceIdePage() {
           {errorMessage !== null ? (
             <div
               role="alert"
-              className="m-4 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+              className="m-4 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
             >
               <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
               <p>{errorMessage}</p>
@@ -284,7 +284,7 @@ export default function WorkspaceIdePage() {
           ) : null}
 
           {isLoading && activeTab !== 'topology' ? (
-            <div className="flex h-full items-center justify-center gap-3 text-sm text-slate-500">
+            <div className="flex h-full items-center justify-center gap-3 text-sm text-muted">
               <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
               {t('common.loading')}
             </div>
@@ -292,12 +292,12 @@ export default function WorkspaceIdePage() {
 
           {activeTab === 'topology' ? (
             <div className="flex h-full flex-col">
-              <div className="flex shrink-0 justify-end border-b border-slate-200 bg-white px-3 py-2">
+              <div className="flex shrink-0 justify-end border-b border-line bg-surface px-3 py-2">
                 <button
                   type="button"
                   onClick={() => setIntroduceOpen(true)}
                   data-testid="workspace-introduce-topology"
-                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
                 >
                   <Plus className="size-3.5" aria-hidden="true" />
                   {t('workspace.introduceInstance')}
@@ -359,7 +359,7 @@ export default function WorkspaceIdePage() {
 
           {!isLoading && activeTab === 'brain' ? (
             <div className="flex h-full flex-col">
-              <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-slate-200 bg-slate-50 px-4 py-2">
+              <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-surface-muted px-4 py-2">
                 {(['fornix', 'vault', 'frontal', 'brainstem', 'cerebellum'] as const).map(
                   (subTab) => (
                     <button
@@ -370,8 +370,8 @@ export default function WorkspaceIdePage() {
                       onClick={() => setBrainSubTab(subTab)}
                       className={`rounded-md px-3 py-1.5 text-xs font-semibold ${
                         brainSubTab === subTab
-                          ? 'bg-white text-slate-900 shadow-sm'
-                          : 'text-slate-600 hover:bg-white'
+                          ? 'bg-surface text-ink shadow-sm'
+                          : 'text-muted hover:bg-surface'
                       }`}
                     >
                       {t(`workspace.brain.${subTab}`)}
@@ -476,21 +476,21 @@ function BrainRegionPanel({
 
   return (
     <div className="space-y-4">
-      <article className="rounded-lg border border-slate-200 bg-white p-4">
-        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+      <article className="rounded-lg border border-line bg-surface p-4">
+        <h2 className="text-sm font-semibold text-ink">{title}</h2>
         {loading ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+          <p className="mt-3 flex items-center gap-2 text-sm text-muted">
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
             {t('common.loading')}
           </p>
         ) : items.length === 0 ? (
-          <p className="mt-3 text-sm text-slate-500">{empty}</p>
+          <p className="mt-3 text-sm text-muted">{empty}</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {items.map((item) => (
               <li
                 key={item.id}
-                className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2 font-mono text-xs text-slate-700"
+                className="rounded-md border border-line-subtle bg-surface-muted px-3 py-2 font-mono text-xs text-ink"
               >
                 {item.label}
               </li>
@@ -661,24 +661,24 @@ function FornixPanel({
     <div className="space-y-4">
       {hub !== null ? (
         <div className="grid gap-4 lg:grid-cols-2">
-          <article className="rounded-lg border border-slate-200 bg-white p-4">
+          <article className="rounded-lg border border-line bg-surface p-4">
             <h2 className="text-sm font-semibold">{t('workspace.sharedContext')}</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap text-sm text-muted">
               {hub.content ?? t('workspace.noSharedContext')}
             </p>
           </article>
-          <article className="rounded-lg border border-slate-200 bg-white p-4">
+          <article className="rounded-lg border border-line bg-surface p-4">
             <h2 className="text-sm font-semibold">{t('workspace.manualNotes')}</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap text-sm text-muted">
               {hub.manual_notes ?? t('workspace.noManualNotes')}
             </p>
           </article>
         </div>
       ) : null}
 
-      <article className="rounded-lg border border-slate-200 bg-white p-4">
+      <article className="rounded-lg border border-line bg-surface p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-slate-900">{t('workspace.fornix.title')}</h2>
+          <h2 className="text-sm font-semibold text-ink">{t('workspace.fornix.title')}</h2>
           <div className="flex gap-2">
             <button
               type="button"
@@ -687,7 +687,7 @@ function FornixPanel({
                 setCreating('file');
               }}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-2.5 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
             >
               <FilePlus className="size-3.5" aria-hidden="true" />
               {t('workspace.fornix.newFile')}
@@ -699,7 +699,7 @@ function FornixPanel({
                 setCreating('directory');
               }}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-2.5 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
             >
               <FolderPlus className="size-3.5" aria-hidden="true" />
               {t('workspace.fornix.newFolder')}
@@ -709,12 +709,12 @@ function FornixPanel({
 
         <nav
           aria-label={t('workspace.fornix.title')}
-          className="mt-3 flex flex-wrap items-center gap-1 text-xs text-slate-500"
+          className="mt-3 flex flex-wrap items-center gap-1 text-xs text-muted"
         >
           <button
             type="button"
             onClick={() => setParentPath('')}
-            className="rounded px-1.5 py-0.5 hover:bg-slate-100 hover:text-slate-700"
+            className="rounded px-1.5 py-0.5 hover:bg-surface-muted hover:text-ink"
           >
             {t('workspace.fornix.root')}
           </button>
@@ -724,7 +724,7 @@ function FornixPanel({
               <button
                 type="button"
                 onClick={() => setParentPath(segments.slice(0, index + 1).join('/'))}
-                className="rounded px-1.5 py-0.5 hover:bg-slate-100 hover:text-slate-700"
+                className="rounded px-1.5 py-0.5 hover:bg-surface-muted hover:text-ink"
               >
                 {segment}
               </button>
@@ -733,30 +733,30 @@ function FornixPanel({
         </nav>
 
         {error !== null ? (
-          <p role="alert" className="mt-3 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+          <p role="alert" className="mt-3 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
             {error}
           </p>
         ) : null}
 
         {loading ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+          <p className="mt-3 flex items-center gap-2 text-sm text-muted">
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
             {t('common.loading')}
           </p>
         ) : items.length === 0 ? (
-          <p className="mt-3 text-sm text-slate-500">{t('workspace.fornix.empty')}</p>
+          <p className="mt-3 text-sm text-muted">{t('workspace.fornix.empty')}</p>
         ) : (
           <>
             <ul className="mt-3 space-y-2">
               {items.map((file) => (
                 <li
                   key={file.id}
-                  className="flex items-center gap-3 rounded-md border border-slate-100 bg-slate-50 px-3 py-2"
+                  className="flex items-center gap-3 rounded-md border border-line-subtle bg-surface-muted px-3 py-2"
                 >
                   {file.is_directory ? (
-                    <Folder className="size-4 shrink-0 text-slate-500" aria-hidden="true" />
+                    <Folder className="size-4 shrink-0 text-muted" aria-hidden="true" />
                   ) : (
-                    <FileText className="size-4 shrink-0 text-slate-500" aria-hidden="true" />
+                    <FileText className="size-4 shrink-0 text-muted" aria-hidden="true" />
                   )}
                   <button
                     type="button"
@@ -768,7 +768,7 @@ function FornixPanel({
                         ? t('workspace.fornix.openFolder')
                         : t('workspace.fornix.viewFile')
                     }
-                    className="min-w-0 flex-1 truncate text-left font-mono text-xs text-slate-700 hover:text-blue-700"
+                    className="min-w-0 flex-1 truncate text-left font-mono text-xs text-ink hover:text-brand-hover"
                   >
                     {file.name}
                   </button>
@@ -783,7 +783,7 @@ function FornixPanel({
                       }}
                       disabled={busy}
                       aria-label={t('workspace.fornix.rename')}
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-60"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted hover:bg-surface-muted disabled:opacity-60"
                     >
                       <Pencil className="size-3.5" aria-hidden="true" />
                     </button>
@@ -793,7 +793,7 @@ function FornixPanel({
                         onClick={() => void handleArchive(file)}
                         disabled={busy}
                         aria-label={t('workspace.fornix.archive')}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-60"
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted hover:bg-surface-muted disabled:opacity-60"
                       >
                         <Archive className="size-3.5" aria-hidden="true" />
                       </button>
@@ -803,7 +803,7 @@ function FornixPanel({
                       onClick={() => void handleDelete(file)}
                       disabled={busy}
                       aria-label={t('workspace.fornix.delete')}
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-danger hover:bg-danger-soft disabled:opacity-60"
                     >
                       <Trash className="size-3.5" aria-hidden="true" />
                     </button>
@@ -811,32 +811,34 @@ function FornixPanel({
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-slate-400">{t('workspace.fornix.count', { total })}</p>
+            <p className="mt-3 text-xs text-muted-subtle">
+              {t('workspace.fornix.count', { total })}
+            </p>
           </>
         )}
       </article>
 
       {viewing !== null ? (
-        <article className="rounded-lg border border-slate-200 bg-white p-4">
+        <article className="rounded-lg border border-line bg-surface p-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="min-w-0 truncate font-mono text-xs font-semibold text-slate-900">
+            <h3 className="min-w-0 truncate font-mono text-xs font-semibold text-ink">
               {viewing.name}
             </h3>
             <button
               type="button"
               onClick={() => setViewing(null)}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted hover:bg-surface-muted"
             >
               {t('common.close')}
             </button>
           </div>
           {viewingLoading ? (
-            <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+            <p className="mt-3 flex items-center gap-2 text-sm text-muted">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('common.loading')}
             </p>
           ) : (
-            <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-md bg-slate-50 px-3 py-2 font-mono text-xs text-slate-700">
+            <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap rounded-md bg-surface-muted px-3 py-2 font-mono text-xs text-ink">
               {viewContent ?? t('workspace.fornix.emptyContent')}
             </pre>
           )}
@@ -844,8 +846,8 @@ function FornixPanel({
       ) : null}
 
       {creating !== null ? (
-        <article className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-xs font-semibold text-slate-900">
+        <article className="rounded-lg border border-line bg-surface p-4">
+          <h3 className="text-xs font-semibold text-ink">
             {creating === 'directory'
               ? t('workspace.fornix.createFolderTitle')
               : t('workspace.fornix.createFileTitle')}
@@ -857,22 +859,22 @@ function FornixPanel({
               void handleCreate();
             }}
           >
-            <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
               {t('workspace.fornix.name')}
               <input
                 value={createName}
                 onChange={(event) => setCreateName(event.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
               />
             </label>
             {creating === 'file' ? (
-              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('workspace.fornix.content')}
                 <textarea
                   value={createContent}
                   onChange={(event) => setCreateContent(event.target.value)}
                   rows={6}
-                  className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"
+                  className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-xs"
                 />
               </label>
             ) : null}
@@ -880,7 +882,7 @@ function FornixPanel({
               <button
                 type="submit"
                 disabled={busy || createName.trim().length === 0}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
               >
                 {creating === 'directory'
                   ? t('workspace.fornix.createFolder')
@@ -894,7 +896,7 @@ function FornixPanel({
                   setCreateContent('');
                 }}
                 disabled={busy}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
               >
                 {t('common.cancel')}
               </button>
@@ -904,10 +906,8 @@ function FornixPanel({
       ) : null}
 
       {editing !== null ? (
-        <article className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-xs font-semibold text-slate-900">
-            {t('workspace.fornix.renameTitle')}
-          </h3>
+        <article className="rounded-lg border border-line bg-surface p-4">
+          <h3 className="text-xs font-semibold text-ink">{t('workspace.fornix.renameTitle')}</h3>
           <form
             className="mt-3 space-y-3"
             onSubmit={(event) => {
@@ -915,28 +915,28 @@ function FornixPanel({
               void handleRenameSave();
             }}
           >
-            <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
               {t('workspace.fornix.name')}
               <input
                 value={editName}
                 onChange={(event) => setEditName(event.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
               />
             </label>
-            <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
               {t('workspace.fornix.parentPath')}
               <input
                 value={editParentPath}
                 onChange={(event) => setEditParentPath(event.target.value)}
                 placeholder={t('workspace.fornix.parentPathPlaceholder')}
-                className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
               />
             </label>
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
               >
                 {t('workspace.fornix.rename')}
               </button>
@@ -944,7 +944,7 @@ function FornixPanel({
                 type="button"
                 onClick={() => setEditing(null)}
                 disabled={busy}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
               >
                 {t('common.cancel')}
               </button>
@@ -1018,9 +1018,9 @@ function VaultPanel({
 
   return (
     <div className="space-y-4">
-      <article className="rounded-lg border border-slate-200 bg-white p-4">
+      <article className="rounded-lg border border-line bg-surface p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-slate-900">{t('workspace.vault.title')}</h2>
+          <h2 className="text-sm font-semibold text-ink">{t('workspace.vault.title')}</h2>
           <form
             className="flex gap-2"
             onSubmit={(event) => {
@@ -1032,11 +1032,11 @@ function VaultPanel({
               value={searchDraft}
               onChange={(event) => setSearchDraft(event.target.value)}
               placeholder={t('workspace.vault.searchPlaceholder')}
-              className="w-56 rounded-lg border border-slate-300 px-3 py-1.5 text-sm"
+              className="w-56 rounded-lg border border-line-strong px-3 py-1.5 text-sm"
             />
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-2.5 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
             >
               <Search className="size-3.5" aria-hidden="true" />
               {t('workspace.vault.search')}
@@ -1048,7 +1048,7 @@ function VaultPanel({
                   setSearch('');
                   setSearchDraft('');
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-2.5 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted"
               >
                 {t('workspace.vault.clear')}
               </button>
@@ -1057,31 +1057,31 @@ function VaultPanel({
         </div>
 
         {error !== null ? (
-          <p role="alert" className="mt-3 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+          <p role="alert" className="mt-3 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
             {error}
           </p>
         ) : null}
 
         {loading ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+          <p className="mt-3 flex items-center gap-2 text-sm text-muted">
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
             {t('common.loading')}
           </p>
         ) : entries.length === 0 ? (
-          <p className="mt-3 text-sm text-slate-500">{t('workspace.vault.empty')}</p>
+          <p className="mt-3 text-sm text-muted">{t('workspace.vault.empty')}</p>
         ) : (
           <>
             <ul className="mt-3 space-y-2">
               {entries.map((entry) => (
                 <li
                   key={entry.id}
-                  className="flex items-center gap-3 rounded-md border border-slate-100 bg-slate-50 px-3 py-2"
+                  className="flex items-center gap-3 rounded-md border border-line-subtle bg-surface-muted px-3 py-2"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-mono text-xs text-slate-700">
+                    <p className="truncate font-mono text-xs text-ink">
                       {entry.archived_key ?? entry.id}
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-400">
+                    <p className="mt-0.5 text-xs text-muted-subtle">
                       {t('workspace.vault.archivedAt')}:{' '}
                       {entry.archived_at !== null
                         ? new Date(entry.archived_at).toLocaleString()
@@ -1092,7 +1092,7 @@ function VaultPanel({
                     type="button"
                     onClick={() => void handleRestore(entry)}
                     disabled={busyId !== null}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-2.5 py-1.5 text-xs font-medium text-ink hover:bg-surface-muted disabled:opacity-60"
                   >
                     <RotateCcw className="size-3.5" aria-hidden="true" />
                     {t('workspace.vault.restore')}
@@ -1100,7 +1100,9 @@ function VaultPanel({
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-slate-400">{t('workspace.vault.count', { total })}</p>
+            <p className="mt-3 text-xs text-muted-subtle">
+              {t('workspace.vault.count', { total })}
+            </p>
           </>
         )}
       </article>
@@ -1194,15 +1196,13 @@ function CerebellumPanel({
   }
 
   return (
-    <article className="max-w-xl rounded-lg border border-slate-200 bg-white p-5">
-      <h2 className="text-sm font-semibold text-slate-900">
-        {t('workspace.brain.cerebellumTitle')}
-      </h2>
-      <p className="mt-1 text-xs text-slate-500">{t('workspace.brain.cerebellumSubtitle')}</p>
-      <p className="mt-3 rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600">{worldHint}</p>
+    <article className="max-w-xl rounded-lg border border-line bg-surface p-5">
+      <h2 className="text-sm font-semibold text-ink">{t('workspace.brain.cerebellumTitle')}</h2>
+      <p className="mt-1 text-xs text-muted">{t('workspace.brain.cerebellumSubtitle')}</p>
+      <p className="mt-3 rounded-md bg-surface-muted px-3 py-2 text-xs text-muted">{worldHint}</p>
 
       <div className="mt-4 space-y-3">
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.fields.provider')}
           <select
             value={providerId}
@@ -1210,7 +1210,7 @@ function CerebellumPanel({
               setProviderId(e.target.value);
               setModel('');
             }}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           >
             <option value="">{t('workspace.brain.inheritWorld')}</option>
             {providers.map((p) => (
@@ -1220,7 +1220,7 @@ function CerebellumPanel({
             ))}
           </select>
         </label>
-        <div className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <div className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('organization.fields.model')}
           <ModelInputCombobox
             aria-label={t('organization.fields.model')}
@@ -1235,7 +1235,7 @@ function CerebellumPanel({
           />
         </div>
         {error !== null ? (
-          <p role="alert" className="text-xs text-red-700">
+          <p role="alert" className="text-xs text-danger">
             {error}
           </p>
         ) : null}
@@ -1243,7 +1243,7 @@ function CerebellumPanel({
           type="button"
           onClick={() => void handleSave()}
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
         >
           {saving ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : null}
           {t('workspace.brain.saveCerebellum')}
@@ -1276,15 +1276,15 @@ function PanelList({
     return (
       <div className="grid h-full place-items-center p-6 text-center">
         <div>
-          <UserRound className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-          <h2 className="mt-4 text-sm font-semibold text-slate-900">{emptyTitle}</h2>
-          <p className="mt-2 text-sm text-slate-500">{emptyDetail}</p>
+          <UserRound className="mx-auto size-8 text-muted-subtle" aria-hidden="true" />
+          <h2 className="mt-4 text-sm font-semibold text-ink">{emptyTitle}</h2>
+          <p className="mt-2 text-sm text-muted">{emptyDetail}</p>
           {actionLabel && onAction ? (
             <button
               type="button"
               onClick={onAction}
               data-testid="workspace-introduce-cta"
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
             >
               <Plus className="size-4" aria-hidden="true" />
               {actionLabel}
@@ -1298,12 +1298,12 @@ function PanelList({
   return (
     <div className="flex h-full flex-col">
       {actionLabel && onAction ? (
-        <div className="flex shrink-0 justify-end border-b border-slate-200 bg-white px-4 py-2">
+        <div className="flex shrink-0 justify-end border-b border-line bg-surface px-4 py-2">
           <button
             type="button"
             onClick={onAction}
             data-testid="workspace-introduce-cta"
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
           >
             <Plus className="size-3.5" aria-hidden="true" />
             {actionLabel}
@@ -1314,21 +1314,21 @@ function PanelList({
         {items.map((item) => (
           <li
             key={item.id}
-            className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4"
+            className="flex items-center gap-3 rounded-lg border border-line bg-surface p-4"
           >
-            <span className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-600">
+            <span className="grid size-9 place-items-center rounded-full bg-surface-muted text-muted">
               <UserRound className="size-4" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-slate-900">{item.title}</p>
-              <p className="mt-1 text-xs capitalize text-slate-500">{item.subtitle}</p>
+              <p className="truncate text-sm font-semibold text-ink">{item.title}</p>
+              <p className="mt-1 text-xs capitalize text-muted">{item.subtitle}</p>
             </div>
             {item.onRemove !== undefined && item.removeLabel !== undefined ? (
               <button
                 type="button"
                 onClick={item.onRemove}
                 data-testid={`workspace-remove-${item.id}`}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-danger/30 bg-surface px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-danger-soft"
               >
                 <Trash className="size-3.5" aria-hidden="true" />
                 {item.removeLabel}

@@ -1,15 +1,4 @@
-import {
-  AlertCircle,
-  Bot,
-  Brain,
-  Cpu,
-  Link,
-  LoaderCircle,
-  Network,
-  Trash,
-  User,
-  X,
-} from 'lucide-react';
+import { AlertCircle, Brain, Link, LoaderCircle, Network, Trash, X } from 'lucide-react';
 import {
   type ReactElement,
   type MouseEvent as ReactMouseEvent,
@@ -22,9 +11,12 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
+import EmptyState from '@/components/EmptyState';
+import InitialAvatar from '@/components/InitialAvatar';
 import { ModeToolbar } from '@/components/ModeToolbar';
 import { NodeModal } from '@/components/NodeModal';
 import { NodeTooltip } from '@/components/NodeTooltip';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import TopologyGlowDefs, {
   GLOW_INTENSITY_OPACITY,
   OutdatedOverlay,
@@ -33,7 +25,6 @@ import { ApiError, api } from '@/lib/api';
 import { deleteInstanceById, deleteMembership, deletePassage } from '@/lib/api/instances';
 import { fetchTopologyLiveStatus } from '@/lib/api/topology';
 import { resolveError } from '@/lib/apiError';
-import { getIconForSlug } from '@/lib/baseClassIcons';
 import { fitNodes } from '@/lib/topologyFit';
 import type {
   Event,
@@ -923,10 +914,8 @@ export default function TopologyPage({
   // ---- Render ----
   if (workspaceId === null) {
     return (
-      <section className="mx-auto w-full max-w-6xl p-6 lg:p-8">
-        <p className="rounded-lg border border-dashed border-red-300 bg-red-50 px-6 py-12 text-center text-sm text-red-700">
-          {t('workspace.idMissing')}
-        </p>
+      <section className="mx-auto w-full max-w-6xl p-6">
+        <EmptyState tone="danger" title={t('workspace.idMissing')} />
       </section>
     );
   }
@@ -940,22 +929,22 @@ export default function TopologyPage({
       aria-labelledby="topology-title"
     >
       {!embedded ? (
-        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6">
+        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-line bg-surface px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-blue-600 text-white">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand text-brand-fg">
               <Network className="size-5" aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-xs text-slate-500">{workspaceId}</p>
+              <p className="font-mono text-xs text-muted">{workspaceId}</p>
               <h1
                 id="topology-title"
-                className="truncate text-lg font-semibold tracking-tight text-slate-950"
+                className="truncate text-lg font-semibold tracking-tight text-ink"
               >
                 {t('topology.title')}
               </h1>
             </div>
           </div>
-          <p className="hidden text-xs text-slate-500 sm:block">{t('topology.tagline')}</p>
+          <p className="hidden text-xs text-muted sm:block">{t('topology.tagline')}</p>
         </header>
       ) : null}
 
@@ -975,7 +964,7 @@ export default function TopologyPage({
       {actionError !== null ? (
         <div
           role="alert"
-          className="flex shrink-0 items-center gap-3 border-b border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 sm:px-6"
+          className="flex shrink-0 items-center gap-3 border-b border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800 sm:px-6"
           data-testid="topology-action-error"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -983,7 +972,7 @@ export default function TopologyPage({
           <button
             type="button"
             onClick={() => setActionError(null)}
-            className="inline-flex size-6 shrink-0 items-center justify-center rounded text-red-600 hover:bg-red-100"
+            className="inline-flex size-6 shrink-0 items-center justify-center rounded text-danger hover:bg-red-100"
             aria-label={t('topology.dismissError')}
           >
             <X className="size-3.5" aria-hidden="true" />
@@ -994,7 +983,7 @@ export default function TopologyPage({
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="flex shrink-0 gap-3 border-b border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 sm:px-6"
+          className="flex shrink-0 gap-3 border-b border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800 sm:px-6"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -1003,7 +992,7 @@ export default function TopologyPage({
 
       <div className="relative flex min-h-0 flex-1">
         <div
-          className="relative flex min-w-0 flex-1 items-center justify-center overflow-hidden bg-slate-50"
+          className="relative flex min-w-0 flex-1 items-center justify-center overflow-hidden bg-surface-muted"
           data-testid="topology-canvas-container"
         >
           <ModeToolbar
@@ -1014,7 +1003,7 @@ export default function TopologyPage({
             canDelete={selectedNode !== null || selectedPassage !== null}
           />
           {isStaticLoading ? (
-            <div className="flex items-center justify-center gap-3 text-sm text-slate-500">
+            <div className="flex items-center justify-center gap-3 text-sm text-muted">
               <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
               {t('topology.loading')}
             </div>
@@ -1211,20 +1200,10 @@ function NodeView({
   const coreStrokeOpacity = intensityStrokeOpacity(node.glowIntensity);
   const isUser = node.fillColor === DEFAULT_USER_FILL;
   const tooltip = `${node.label} | ${node.status}`;
-  const Icon =
-    node.kind === 'hub'
-      ? Brain
-      : isUser
-        ? User
-        : node.slug
-          ? getIconForSlug(node.slug)
-          : node.instanceId !== null
-            ? Cpu
-            : Bot;
   const renderX = dragOverride !== null ? dragOverride.x : node.x;
   const renderY = dragOverride !== null ? dragOverride.y : node.y;
   const highlightStroke =
-    highlightKind === 'pending' ? '#f59e0b' : highlightKind === 'selected' ? '#2563eb' : null;
+    highlightKind === 'pending' ? '#f59e0b' : highlightKind === 'selected' ? '#3D6B4F' : null;
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1305,18 +1284,21 @@ function NodeView({
       <circle
         r={NODE_RADIUS}
         fill={node.fillColor}
-        stroke={node.isCurrentUser ? '#2563eb' : node.glowColor}
+        stroke={node.isCurrentUser ? '#3D6B4F' : node.glowColor}
         strokeOpacity={node.isCurrentUser ? 1 : coreStrokeOpacity}
         strokeWidth={node.isCurrentUser ? CORE_STROKE_WIDTH + 1.5 : CORE_STROKE_WIDTH}
         data-testid={`topology-node-core-${node.id}`}
       />
       {node.outdated ? <OutdatedOverlay nodeId={node.id} /> : null}
-      <foreignObject x={-12} y={-12} width={24} height={24}>
-        <div
-          className="flex h-full w-full items-center justify-center text-slate-800"
-          aria-hidden="true"
-        >
-          <Icon size={20} strokeWidth={2} />
+      <foreignObject x={-14} y={-14} width={28} height={28}>
+        <div className="flex h-full w-full items-center justify-center text-ink" aria-hidden="true">
+          {node.kind === 'hub' ? (
+            <Brain size={18} strokeWidth={2} />
+          ) : isUser ? (
+            <InitialAvatar name={node.label} size="xs" />
+          ) : (
+            <ProgenitorAvatar slug={node.slug} label={node.label} size="xs" />
+          )}
         </div>
       </foreignObject>
       {node.kind !== 'hub'
@@ -1325,7 +1307,7 @@ function NodeView({
             return (
               <text
                 textAnchor="middle"
-                className="fill-slate-700"
+                className="fill-ink"
                 style={{ fontSize: 11, fontWeight: node.isCurrentUser ? 700 : 500 }}
                 data-testid={`topology-node-label-${node.id}`}
               >
@@ -1342,7 +1324,7 @@ function NodeView({
         <text
           y={NODE_RADIUS + 10 + splitLabelLines(node.label).length * 13 + 3}
           textAnchor="middle"
-          className="fill-blue-600"
+          className="fill-brand"
           style={{ fontSize: 10, fontWeight: 700 }}
           data-testid={`topology-node-me-${node.id}`}
         >
@@ -1384,21 +1366,21 @@ export function NodeDrawer({ node, isEditor, onClose, onDelete }: NodeDrawerProp
   const { t } = useTranslation();
   return (
     <aside
-      className="flex w-72 shrink-0 flex-col gap-3 border-l border-slate-200 bg-white p-4"
+      className="flex w-72 shrink-0 flex-col gap-3 border-l border-line bg-surface p-4"
       aria-label="Selected node details"
       data-testid="topology-node-drawer"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted">
             {t('topology.membershipNode')}
           </p>
-          <h2 className="truncate text-base font-semibold text-slate-950">{node.label}</h2>
+          <h2 className="truncate text-base font-semibold text-ink">{node.label}</h2>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+          className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-muted hover:bg-surface-muted hover:text-ink"
           aria-label="Close details"
         >
           <X className="size-4" aria-hidden="true" />
@@ -1407,16 +1389,16 @@ export function NodeDrawer({ node, isEditor, onClose, onDelete }: NodeDrawerProp
 
       <dl className="flex flex-col gap-2 text-sm">
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">ID</dt>
-          <dd className="truncate font-mono text-xs text-slate-800">{node.id}</dd>
+          <dt className="text-muted">ID</dt>
+          <dd className="truncate font-mono text-xs text-ink">{node.id}</dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Status</dt>
-          <dd className="text-slate-800">{node.status}</dd>
+          <dt className="text-muted">Status</dt>
+          <dd className="text-ink">{node.status}</dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Glow</dt>
-          <dd className="flex items-center gap-2 text-slate-800">
+          <dt className="text-muted">Glow</dt>
+          <dd className="flex items-center gap-2 text-ink">
             <span
               className="inline-block size-3 rounded-full"
               style={{ backgroundColor: node.glowColor }}
@@ -1426,18 +1408,18 @@ export function NodeDrawer({ node, isEditor, onClose, onDelete }: NodeDrawerProp
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Position</dt>
-          <dd className="font-mono text-xs text-slate-800">
+          <dt className="text-muted">Position</dt>
+          <dd className="font-mono text-xs text-ink">
             ({node.x}, {node.y})
           </dd>
         </div>
       </dl>
 
       {isEditor ? (
-        <div className="mt-auto flex flex-col gap-2 border-t border-slate-200 pt-3">
+        <div className="mt-auto flex flex-col gap-2 border-t border-line pt-3">
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-danger/30 bg-surface px-3 py-2 text-sm font-medium text-danger transition-colors hover:bg-danger-soft"
             onClick={() => {
               void onDelete(node);
             }}

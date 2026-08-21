@@ -316,7 +316,7 @@ export function MentionAutocomplete({
     <div
       role="listbox"
       aria-label={t('composer.mentionSuggestions')}
-      className="absolute bottom-full left-0 right-0 z-20 mb-1 max-h-48 overflow-y-auto rounded-lg border border-slate-300 bg-white shadow-lg"
+      className="absolute bottom-full left-0 right-0 z-20 mb-1 max-h-48 overflow-y-auto rounded-lg border border-line-strong bg-surface shadow-lg"
     >
       {filtered.map((item, idx) => {
         const isHighlighted = idx === highlighted;
@@ -351,14 +351,14 @@ export function MentionAutocomplete({
             className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm ${
               grayed
                 ? unIntroduced
-                  ? 'cursor-pointer bg-slate-50 text-slate-400 hover:bg-slate-100'
-                  : 'cursor-not-allowed bg-slate-50 text-slate-400'
+                  ? 'cursor-pointer bg-surface-muted text-muted-subtle hover:bg-surface-muted'
+                  : 'cursor-not-allowed bg-surface-muted text-muted-subtle'
                 : isHighlighted
-                  ? 'bg-blue-100'
-                  : 'bg-white hover:bg-slate-50'
+                  ? 'bg-brand-soft'
+                  : 'bg-surface hover:bg-surface-muted'
             }`}
           >
-            <AtSign className="h-4 w-4 flex-shrink-0 text-slate-500" />
+            <AtSign className="h-4 w-4 flex-shrink-0 text-muted" />
             <code className="font-mono">@{item.slug}</code>
             <span className="truncate">{item.name}</span>
             {stopped ? (

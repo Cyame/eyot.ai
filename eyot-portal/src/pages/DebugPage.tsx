@@ -166,28 +166,25 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
   };
 
   return (
-    <section className="w-full p-6 lg:p-8" aria-labelledby="debug-page-title">
+    <section className="w-full p-6" aria-labelledby="debug-page-title">
       <header className="mb-6 flex items-start gap-4">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-slate-900 text-white shadow-sm">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
           <Bug className="size-6" aria-hidden="true" />
         </span>
         <div className="flex-1">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted">
             {t('debug.title')}
           </p>
-          <h1
-            id="debug-page-title"
-            className="mt-1 text-3xl font-semibold tracking-tight text-slate-950"
-          >
+          <h1 id="debug-page-title" className="mt-1 text-3xl font-semibold tracking-tight text-ink">
             {t('debug.title')}
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{t('debug.tagline')}</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">{t('debug.tagline')}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={handleRefresh}
-            className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="inline-flex items-center gap-2 rounded-md border border-line-strong bg-surface px-3 py-2 text-sm font-medium text-ink shadow-sm transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <RefreshCw className="size-4" aria-hidden="true" />
             {t('debug.refresh')}
@@ -195,7 +192,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
           <button
             type="button"
             onClick={handleExport}
-            className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="inline-flex items-center gap-2 rounded-md border border-line-strong bg-surface px-3 py-2 text-sm font-medium text-ink shadow-sm transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <Download className="size-4" aria-hidden="true" />
             {t('debug.export')}
@@ -203,9 +200,9 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
         </div>
       </header>
 
-      <div className="mb-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="mb-4 rounded-xl border border-line bg-surface p-4 shadow-sm">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.typePrefix')}</span>
             <input
               type="text"
@@ -213,16 +210,16 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
               onChange={(e) => updateFilter('typePrefix', e.target.value)}
               placeholder="harness."
               aria-label={t('debug.typePrefix')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.resourceType')}</span>
             <select
               value={draftFilters.resourceType}
               onChange={(e) => updateFilter('resourceType', e.target.value)}
               aria-label={t('debug.resourceType')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value="">(all)</option>
               {RESOURCE_TYPES.map((rt) => (
@@ -232,7 +229,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.resourceId')}</span>
             <input
               type="text"
@@ -240,10 +237,10 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
               onChange={(e) => updateFilter('resourceId', e.target.value)}
               placeholder="uuid"
               aria-label={t('debug.resourceId')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.requestId')}</span>
             <input
               type="text"
@@ -251,32 +248,32 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
               onChange={(e) => updateFilter('requestId', e.target.value)}
               placeholder="uuid"
               aria-label={t('debug.requestId')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.since')}</span>
             <input
               type="datetime-local"
               value={draftFilters.since}
               onChange={(e) => updateFilter('since', e.target.value)}
               aria-label={t('debug.since')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+          <label className="flex flex-col gap-1 text-xs font-medium text-ink">
             <span>{t('debug.until')}</span>
             <input
               type="datetime-local"
               value={draftFilters.until}
               onChange={(e) => updateFilter('until', e.target.value)}
               aria-label={t('debug.until')}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="rounded-md border border-line-strong px-3 py-1.5 text-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </label>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-slate-500">{t('debug.quickLabel')}</span>
+          <span className="text-xs font-medium text-muted">{t('debug.quickLabel')}</span>
           {['harness.', 'instance.', 'messaging.', 'learning.', 'auth.'].map((prefix) => (
             <button
               key={prefix}
@@ -284,8 +281,8 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
               onClick={() => updateFilter('typePrefix', prefix)}
               className={`rounded-full px-2.5 py-0.5 text-xs font-mono transition-colors ${
                 draftFilters.typePrefix === prefix
-                  ? 'bg-blue-100 text-blue-800 ring-1 ring-blue-300'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-brand-soft text-brand ring-1 ring-brand/40'
+                  : 'bg-surface-muted text-muted hover:bg-surface-muted'
               }`}
             >
               {prefix}
@@ -293,7 +290,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
           ))}
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-slate-500">{t('debug.timeLabel')}</span>
+          <span className="text-xs font-medium text-muted">{t('debug.timeLabel')}</span>
           {(
             [
               { key: '1h', label: t('debug.lastHour'), ms: 3600000 },
@@ -309,7 +306,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
                 updateFilter('since', sinceIso.slice(0, 16));
                 updateFilter('until', '');
               }}
-              className="rounded-full px-2.5 py-0.5 text-xs transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200"
+              className="rounded-full px-2.5 py-0.5 text-xs transition-colors bg-surface-muted text-muted hover:bg-surface-muted"
             >
               {label}
             </button>
@@ -320,7 +317,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
             <button
               type="button"
               onClick={handleApply}
-              className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-brand-fg shadow-sm transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             >
               <Filter className="size-4" aria-hidden="true" />
               {t('debug.apply')}
@@ -331,13 +328,13 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
                 setDraftFilters(INITIAL_FILTERS);
                 setAppliedFilters(INITIAL_FILTERS);
               }}
-              className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex items-center gap-2 rounded-md border border-line-strong bg-surface px-3 py-2 text-sm font-medium text-ink shadow-sm transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               aria-label={t('debug.reset')}
             >
               {t('debug.reset')}
             </button>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted">
             {lastUpdated !== null
               ? `Last updated ${new Date(lastUpdated).toLocaleTimeString()}`
               : null}
@@ -348,36 +345,36 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-4 flex items-start gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <Bug className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <div>
             <p className="font-semibold">{t('debug.loadFailed')}</p>
-            <p className="mt-1 text-red-700">{errorMessage}</p>
+            <p className="mt-1 text-danger">{errorMessage}</p>
           </div>
         </div>
       ) : null}
 
       <div
-        className="overflow-auto rounded-xl border border-slate-200 bg-white shadow-sm"
+        className="overflow-auto rounded-xl border border-line bg-surface shadow-sm"
         style={{ maxHeight: '70vh' }}
       >
         <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 z-10 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-600">
+          <thead className="sticky top-0 z-10 bg-surface-muted text-left text-xs uppercase tracking-wider text-muted">
             <tr>
-              <th scope="col" className="border-b border-slate-200 px-4 py-3 font-semibold">
+              <th scope="col" className="border-b border-line px-4 py-3 font-semibold">
                 Created at
               </th>
-              <th scope="col" className="border-b border-slate-200 px-4 py-3 font-semibold">
+              <th scope="col" className="border-b border-line px-4 py-3 font-semibold">
                 Type
               </th>
-              <th scope="col" className="border-b border-slate-200 px-4 py-3 font-semibold">
+              <th scope="col" className="border-b border-line px-4 py-3 font-semibold">
                 Actor
               </th>
-              <th scope="col" className="border-b border-slate-200 px-4 py-3 font-semibold">
+              <th scope="col" className="border-b border-line px-4 py-3 font-semibold">
                 Resource
               </th>
-              <th scope="col" className="border-b border-slate-200 px-4 py-3 font-semibold">
+              <th scope="col" className="border-b border-line px-4 py-3 font-semibold">
                 Payload
               </th>
             </tr>
@@ -385,7 +382,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
           <tbody>
             {isLoading && events.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-muted">
                   <span className="inline-flex items-center gap-2">
                     <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
                     Loading events
@@ -396,7 +393,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
 
             {!isLoading && errorMessage === null && events.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-muted">
                   No events match the current filters.
                 </td>
               </tr>
@@ -408,29 +405,29 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
                 <Fragment key={event.id}>
                   <tr
                     onClick={() => toggleExpand(event.id)}
-                    className="cursor-pointer border-b border-slate-100 transition-colors hover:bg-slate-50"
+                    className="cursor-pointer border-b border-line-subtle transition-colors hover:bg-surface-muted"
                   >
-                    <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs text-slate-600">
+                    <td className="whitespace-nowrap px-4 py-2.5 font-mono text-xs text-muted">
                       {event.created_at}
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-900">{event.type}</td>
-                    <td className="px-4 py-2.5 text-xs text-slate-700">
+                    <td className="px-4 py-2.5 font-mono text-xs text-ink">{event.type}</td>
+                    <td className="px-4 py-2.5 text-xs text-ink">
                       <span className="font-medium">{event.actor_type}</span>
                       {event.actor_id !== null ? (
-                        <span className="ml-1 text-slate-500">{event.actor_id}</span>
+                        <span className="ml-1 text-muted">{event.actor_id}</span>
                       ) : null}
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-700">
+                    <td className="px-4 py-2.5 font-mono text-xs text-ink">
                       {formatResource(event)}
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-500">
+                    <td className="px-4 py-2.5 font-mono text-xs text-muted">
                       {previewPayload(event.payload)}
                     </td>
                   </tr>
                   {isExpanded ? (
-                    <tr className="border-b border-slate-100 bg-slate-50">
+                    <tr className="border-b border-line-subtle bg-surface-muted">
                       <td colSpan={5} className="px-4 py-3">
-                        <pre className="overflow-auto rounded-md bg-slate-900 p-3 text-xs text-slate-100">
+                        <pre className="overflow-auto rounded-md bg-surface p-3 text-xs text-nav-ink">
                           {JSON.stringify(event.payload, null, 2)}
                         </pre>
                       </td>
@@ -443,7 +440,7 @@ export default function DebugPage({ embedded: _embedded = false }: DebugPageProp
         </table>
       </div>
 
-      <p className="mt-3 text-xs text-slate-500">
+      <p className="mt-3 text-xs text-muted">
         Showing {events.length} event{events.length === 1 ? '' : 's'} · polling every 5s
       </p>
     </section>

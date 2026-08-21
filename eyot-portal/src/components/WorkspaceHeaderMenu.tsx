@@ -73,9 +73,9 @@ export default function WorkspaceHeaderMenu({
         aria-label={t('workspaceHeader.menuOpen')}
         data-testid="workspace-header-menu-trigger"
         className={cn(
-          'inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors',
-          'hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:bg-slate-200',
-          isOpen && 'bg-slate-100 text-slate-900',
+          'inline-flex size-9 items-center justify-center rounded-lg border border-line bg-surface text-muted transition-colors',
+          'hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand active:bg-surface-muted',
+          isOpen && 'bg-surface-muted text-ink',
         )}
       >
         <ChevronDown className="size-4" aria-hidden="true" />
@@ -86,7 +86,7 @@ export default function WorkspaceHeaderMenu({
           role="menu"
           aria-label={t('workspaceHeader.menuAria')}
           data-testid="workspace-header-menu"
-          className="absolute right-0 top-full z-30 mt-2 w-64 origin-top-right rounded-lg border border-slate-200 bg-white p-1 shadow-lg ring-1 ring-slate-950/5"
+          className="absolute right-0 top-full z-30 mt-2 w-64 origin-top-right rounded-lg border border-line bg-surface p-1 shadow-lg ring-1 ring-ink/5"
         >
           <MenuItem
             icon={<RotateCw className="size-4" aria-hidden="true" />}
@@ -166,18 +166,18 @@ function MenuItem({
       data-testid={testId}
       className={cn(
         'flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
         enabled
           ? isDanger
-            ? 'text-red-700 hover:bg-red-50'
-            : 'text-slate-700 hover:bg-slate-100'
-          : 'cursor-not-allowed text-slate-400 hover:bg-transparent',
+            ? 'text-danger hover:bg-danger-soft'
+            : 'text-ink hover:bg-surface-muted'
+          : 'cursor-not-allowed text-muted-subtle hover:bg-transparent',
       )}
     >
       <span
         className={cn(
           'grid size-7 shrink-0 place-items-center rounded-md',
-          isDanger ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-600',
+          isDanger ? 'bg-danger-soft text-danger' : 'bg-surface-muted text-muted',
         )}
       >
         {icon}
@@ -187,7 +187,7 @@ function MenuItem({
         <span
           className={cn(
             'inline-flex items-center rounded-full px-2 py-0.5 font-mono text-xs font-semibold',
-            enabled ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-500',
+            enabled ? 'bg-warning-soft text-warning' : 'bg-surface-muted text-muted',
           )}
         >
           {badge}
@@ -199,5 +199,5 @@ function MenuItem({
 }
 
 function MenuDivider(): ReactElement {
-  return <div className="my-1 h-px bg-slate-100" aria-hidden="true" />;
+  return <div className="my-1 h-px bg-line-subtle" aria-hidden="true" />;
 }

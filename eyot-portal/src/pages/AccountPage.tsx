@@ -91,7 +91,7 @@ export default function AccountPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 p-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 p-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -101,23 +101,23 @@ export default function AccountPage() {
   const identityKey = profile?.identity ? IDENTITY_LABEL_KEYS[profile.identity] : null;
 
   return (
-    <section className="mx-auto w-full max-w-3xl p-6 lg:p-8" aria-labelledby="account-title">
+    <section className="mx-auto w-full max-w-3xl p-6" aria-labelledby="account-title">
       <header className="mb-6 flex items-start gap-4">
-        <span className="grid size-11 place-items-center rounded-xl bg-blue-600 text-white">
+        <span className="grid size-11 place-items-center rounded-xl bg-brand text-brand-fg">
           <User className="size-6" aria-hidden="true" />
         </span>
         <div>
-          <h1 id="account-title" className="text-2xl font-semibold text-slate-950">
+          <h1 id="account-title" className="text-2xl font-semibold text-ink">
             {t('account.title')}
           </h1>
-          <p className="mt-1 text-sm text-slate-600">{t('account.subtitle')}</p>
+          <p className="mt-1 text-sm text-muted">{t('account.subtitle')}</p>
         </div>
       </header>
 
       {errorMessage ? (
         <div
           role="alert"
-          className="mb-4 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-4 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -134,52 +134,54 @@ export default function AccountPage() {
 
       <form
         onSubmit={(e) => void handleSaveProfile(e)}
-        className="mb-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        className="mb-6 rounded-xl border border-line bg-surface p-5 shadow-sm"
       >
-        <h2 className="text-sm font-semibold text-slate-900">{t('account.profile')}</h2>
+        <h2 className="text-sm font-semibold text-ink">{t('account.profile')}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">{t('account.username')}</span>
+            <span className="mb-1 block font-medium text-ink">{t('account.username')}</span>
             <input
               value={profile?.username ?? ''}
               disabled
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500"
+              className="w-full rounded-lg border border-line bg-surface-muted px-3 py-2 text-sm text-muted"
             />
-            <span className="mt-1 block text-xs text-slate-400">{t('account.usernameHint')}</span>
+            <span className="mt-1 block text-xs text-muted-subtle">
+              {t('account.usernameHint')}
+            </span>
           </label>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">{t('account.nickname')}</span>
+            <span className="mb-1 block font-medium text-ink">{t('account.nickname')}</span>
             <input
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder={t('account.nicknameHint')}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
           <label className="block text-sm sm:col-span-2">
-            <span className="mb-1 block font-medium text-slate-700">{t('account.email')}</span>
+            <span className="mb-1 block font-medium text-ink">{t('account.email')}</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
         </div>
-        <p className="mt-3 text-sm text-slate-600">
+        <p className="mt-3 text-sm text-muted">
           {t('account.identity')}:{' '}
-          <span className="font-medium text-slate-900">
+          <span className="font-medium text-ink">
             {identityKey ? t(identityKey) : t('identity.member')}
           </span>
         </p>
         <div className="mt-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted">
             {t('account.lockedGenes')}
           </p>
           <ul className="mt-1 flex flex-wrap gap-2">
             {(profile?.locked_genes ?? []).map((g) => (
               <li
                 key={g.id}
-                className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-slate-600"
+                className="rounded-md bg-surface-muted px-2 py-1 font-mono text-xs text-muted"
               >
                 {g.slug}
               </li>
@@ -187,17 +189,17 @@ export default function AccountPage() {
           </ul>
         </div>
         <div className="mt-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted">
             {t('account.extraGenes')}
           </p>
           {(profile?.extra_genes ?? []).length === 0 ? (
-            <p className="mt-1 text-sm text-slate-500">{t('account.noExtraGenes')}</p>
+            <p className="mt-1 text-sm text-muted">{t('account.noExtraGenes')}</p>
           ) : (
             <ul className="mt-1 flex flex-wrap gap-2">
               {profile?.extra_genes.map((g) => (
                 <li
                   key={g.id}
-                  className="rounded-md bg-blue-50 px-2 py-1 font-mono text-xs text-blue-700"
+                  className="rounded-md bg-brand-soft px-2 py-1 font-mono text-xs text-brand"
                 >
                   {g.slug}
                 </li>
@@ -209,7 +211,7 @@ export default function AccountPage() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
           >
             {saving ? t('common.loading') : t('common.save')}
           </button>
@@ -218,36 +220,32 @@ export default function AccountPage() {
 
       <form
         onSubmit={(e) => void handleChangePassword(e)}
-        className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        className="rounded-xl border border-line bg-surface p-5 shadow-sm"
       >
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-ink">
           <KeyRound className="size-4" aria-hidden="true" />
           {t('account.changePassword')}
         </h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
-              {t('account.currentPassword')}
-            </span>
+            <span className="mb-1 block font-medium text-ink">{t('account.currentPassword')}</span>
             <input
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
-              {t('account.newPassword')}
-            </span>
+            <span className="mb-1 block font-medium text-ink">{t('account.newPassword')}</span>
             <input
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={8}
               required
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
         </div>
@@ -255,7 +253,7 @@ export default function AccountPage() {
           <button
             type="submit"
             disabled={passwordBusy}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+            className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted disabled:opacity-60"
           >
             {passwordBusy ? t('common.loading') : t('account.changePassword')}
           </button>

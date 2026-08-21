@@ -70,8 +70,8 @@ export function ModelInputCombobox({
     <div ref={rootRef} className={cn('relative mt-1.5', className)}>
       <div
         className={cn(
-          'flex overflow-hidden rounded-lg border border-slate-300 bg-white',
-          disabled && 'bg-slate-50',
+          'flex overflow-hidden rounded-lg border border-line-strong bg-surface',
+          disabled && 'bg-surface-muted',
         )}
       >
         <input type="hidden" id={id} name={name} value={value} />
@@ -87,9 +87,9 @@ export function ModelInputCombobox({
             if (canOpen) setOpen((prev) => !prev);
           }}
           className={cn(
-            'min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-left font-mono text-sm text-slate-900 outline-none',
-            disabled && 'cursor-not-allowed text-slate-500',
-            !value && 'text-slate-400',
+            'min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-left font-mono text-sm text-ink outline-none',
+            disabled && 'cursor-not-allowed text-muted',
+            !value && 'text-muted-subtle',
           )}
         >
           {displayValue || placeholder || ''}
@@ -101,7 +101,7 @@ export function ModelInputCombobox({
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           onClick={() => setOpen((prev) => !prev)}
-          className="grid w-9 shrink-0 place-items-center border-l border-slate-200 text-slate-500 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="grid w-9 shrink-0 place-items-center border-l border-line text-muted hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronDown
             className={cn('size-4 transition-transform', open && 'rotate-180')}
@@ -113,7 +113,7 @@ export function ModelInputCombobox({
       {open && canOpen ? (
         <ul
           id={listId}
-          className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+          className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-lg border border-line bg-surface py-1 shadow-lg"
         >
           {emptyOptionLabel ? (
             <li>
@@ -121,8 +121,8 @@ export function ModelInputCombobox({
                 type="button"
                 aria-current={value === '' ? 'true' : undefined}
                 className={cn(
-                  'flex w-full px-3 py-1.5 text-left text-sm text-slate-600 hover:bg-slate-50',
-                  value === '' && 'bg-blue-50 text-blue-700',
+                  'flex w-full px-3 py-1.5 text-left text-sm text-muted hover:bg-surface-muted',
+                  value === '' && 'bg-brand-soft text-brand',
                 )}
                 onClick={() => {
                   onChange('');
@@ -141,24 +141,24 @@ export function ModelInputCombobox({
                   type="button"
                   aria-current={selected ? 'true' : undefined}
                   className={cn(
-                    'flex w-full flex-col px-3 py-1.5 text-left hover:bg-slate-50',
-                    selected && 'bg-blue-50',
+                    'flex w-full flex-col px-3 py-1.5 text-left hover:bg-surface-muted',
+                    selected && 'bg-brand-soft',
                   )}
                   onClick={() => {
                     onChange(opt.id);
                     setOpen(false);
                   }}
                 >
-                  <span className="font-mono text-sm text-slate-900">{opt.id}</span>
+                  <span className="font-mono text-sm text-ink">{opt.id}</span>
                   {opt.name && opt.name !== opt.id ? (
-                    <span className="text-xs text-slate-500">{opt.name}</span>
+                    <span className="text-xs text-muted">{opt.name}</span>
                   ) : null}
                 </button>
               </li>
             );
           })}
           {options.length === 0 && !emptyOptionLabel ? (
-            <li className="px-3 py-2 text-xs text-slate-500">—</li>
+            <li className="px-3 py-2 text-xs text-muted">—</li>
           ) : null}
         </ul>
       ) : null}

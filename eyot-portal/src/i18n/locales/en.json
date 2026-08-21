@@ -1462,6 +1462,13 @@
     "switchTo": "中文",
     "current": "EN"
   },
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "toggle": "Switch theme to {{next}}"
+  },
   "identity": {
     "system": "System admin",
     "org": "Continent admin",

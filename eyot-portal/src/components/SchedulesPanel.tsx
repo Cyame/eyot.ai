@@ -100,28 +100,28 @@ function ScheduleForm({ workspaceId, editing, onDone, onFailed }: ScheduleFormPr
       }}
     >
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('schedules.fieldName')}
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder={t('schedules.namePlaceholder')}
             disabled={submitting}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           />
         </label>
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('schedules.fieldCron')}
           <input
             value={cronExpr}
             onChange={(event) => setCronExpr(event.target.value)}
             placeholder={t('schedules.cronPlaceholder')}
             disabled={submitting}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-sm"
           />
         </label>
       </div>
-      <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+      <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
         {t('schedules.fieldPayload')}
         <textarea
           value={payloadText}
@@ -129,21 +129,21 @@ function ScheduleForm({ workspaceId, editing, onDone, onFailed }: ScheduleFormPr
           placeholder={t('schedules.payloadPlaceholder')}
           disabled={submitting}
           rows={3}
-          className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"
+          className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 font-mono text-xs"
         />
       </label>
-      <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
+      <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
         <input
           type="checkbox"
           checked={enabled}
           onChange={(event) => setEnabled(event.target.checked)}
           disabled={submitting}
-          className="size-3.5 rounded border-slate-300 text-blue-600"
+          className="size-3.5 rounded border-line-strong text-brand"
         />
         {t('schedules.fieldEnabled')}
       </label>
       {formError !== null ? (
-        <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
           {formError}
         </p>
       ) : null}
@@ -151,7 +151,7 @@ function ScheduleForm({ workspaceId, editing, onDone, onFailed }: ScheduleFormPr
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? (
             <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
@@ -169,7 +169,7 @@ function ScheduleForm({ workspaceId, editing, onDone, onFailed }: ScheduleFormPr
             onDone('');
           }}
           disabled={submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
         >
           {t('common.cancel')}
         </button>
@@ -266,9 +266,9 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
 
   return (
     <div className="space-y-4">
-      <article className="rounded-lg border border-slate-200 bg-white p-4">
+      <article className="rounded-lg border border-line bg-surface p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-slate-900">{t('schedules.title')}</h2>
+          <h2 className="text-sm font-semibold text-ink">{t('schedules.title')}</h2>
           {!formOpen ? (
             <button
               type="button"
@@ -276,7 +276,7 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
                 setEditing(null);
                 setFormOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-2.5 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
             >
               <Plus className="size-3.5" aria-hidden="true" />
               {t('schedules.createTitle')}
@@ -305,7 +305,7 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
         {error !== null ? (
           <p
             role="alert"
-            className="mt-3 flex items-center gap-2 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700"
+            className="mt-3 flex items-center gap-2 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger"
           >
             <AlertCircle className="size-3.5 shrink-0" aria-hidden="true" />
             {error}
@@ -313,35 +313,35 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
         ) : null}
 
         {loading ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+          <p className="mt-3 flex items-center gap-2 text-sm text-muted">
             <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
             {t('common.loading')}
           </p>
         ) : items.length === 0 ? (
-          <p className="mt-3 text-sm text-slate-500">{t('schedules.empty')}</p>
+          <p className="mt-3 text-sm text-muted">{t('schedules.empty')}</p>
         ) : (
           <>
             <ul className="mt-3 space-y-2">
               {items.map((schedule) => (
                 <li
                   key={schedule.id}
-                  className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2"
+                  className="rounded-md border border-line-subtle bg-surface-muted px-3 py-2"
                 >
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate font-mono text-xs font-semibold text-slate-900">
+                        <p className="truncate font-mono text-xs font-semibold text-ink">
                           {schedule.name}
                         </p>
-                        <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2 py-0.5 text-xs">
                           <span
                             aria-hidden="true"
-                            className={`size-1.5 rounded-full ${schedule.enabled ? 'bg-emerald-500' : 'bg-slate-400'}`}
+                            className={`size-1.5 rounded-full ${schedule.enabled ? 'bg-success' : 'bg-muted-subtle'}`}
                           />
                           {schedule.enabled ? t('schedules.enabled') : t('schedules.disabled')}
                         </span>
                       </div>
-                      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-xs text-slate-500">
+                      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-xs text-muted">
                         <span>{schedule.cron_expr}</span>
                         <span className="flex items-center gap-1">
                           <CalendarClock className="size-3.5" aria-hidden="true" />
@@ -360,17 +360,17 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
                         onClick={() => void handleToggleEnabled(schedule)}
                         disabled={busyId !== null}
                         aria-label={t('schedules.fieldEnabled')}
-                        className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+                        className="inline-flex items-center gap-1.5 rounded-md border border-line-strong bg-surface px-2 py-1 text-xs font-medium text-ink hover:bg-surface-muted disabled:opacity-60"
                       >
                         <span
                           aria-hidden="true"
                           className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${
-                            schedule.enabled ? 'bg-emerald-500' : 'bg-slate-300'
+                            schedule.enabled ? 'bg-success' : 'bg-surface-muted'
                           }`}
                         >
                           <span
                             aria-hidden="true"
-                            className={`inline-block size-3 transform rounded-full bg-white transition-transform ${
+                            className={`inline-block size-3 transform rounded-full bg-surface transition-transform ${
                               schedule.enabled ? 'translate-x-3.5' : 'translate-x-0.5'
                             }`}
                           />
@@ -385,7 +385,7 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
                         }}
                         disabled={busyId !== null}
                         aria-label={t('schedules.edit')}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-60"
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted hover:bg-surface-muted disabled:opacity-60"
                       >
                         <Pencil className="size-3.5" aria-hidden="true" />
                       </button>
@@ -394,7 +394,7 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
                         onClick={() => void handleDelete(schedule)}
                         disabled={busyId !== null}
                         aria-label={t('schedules.delete')}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-danger hover:bg-danger-soft disabled:opacity-60"
                       >
                         <Trash className="size-3.5" aria-hidden="true" />
                       </button>
@@ -403,7 +403,7 @@ export default function SchedulesPanel({ workspaceId }: { readonly workspaceId: 
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-slate-400">{t('schedules.count', { total })}</p>
+            <p className="mt-3 text-xs text-muted-subtle">{t('schedules.count', { total })}</p>
           </>
         )}
       </article>

@@ -2,6 +2,7 @@ import { AlertCircle, BookOpen, LoaderCircle, Pencil, Plus, Tag, Trash2, X } fro
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
+import EmptyState from '@/components/EmptyState';
 import {
   createKnowledgeDimension,
   createKnowledgeEntry,
@@ -32,7 +33,7 @@ const SCOPE_FALLBACK_LABELS: Record<KnowledgeEntryScope, string> = {
 
 const SCOPE_BADGE_CLASS: Record<KnowledgeEntryScope, string> = {
   system: 'bg-purple-50 text-purple-700',
-  org: 'bg-blue-50 text-blue-700',
+  org: 'bg-brand-soft text-brand',
   namespace: 'bg-teal-50 text-teal-700',
   workspace: 'bg-amber-50 text-amber-700',
 };
@@ -274,20 +275,17 @@ export default function KnowledgePage() {
   };
 
   return (
-    <section className="mx-auto w-full max-w-6xl p-6 lg:p-8" aria-labelledby="knowledge-title">
+    <section className="mx-auto w-full max-w-6xl p-6" aria-labelledby="knowledge-title">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-4">
-          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
             <BookOpen className="size-6" aria-hidden="true" />
           </span>
           <div>
-            <h1
-              id="knowledge-title"
-              className="text-2xl font-semibold tracking-tight text-slate-950"
-            >
+            <h1 id="knowledge-title" className="text-2xl font-semibold tracking-tight text-ink">
               {t('knowledge.title', { defaultValue: '知识管理' })}
             </h1>
-            <p className="mt-1 max-w-2xl text-sm text-slate-600">
+            <p className="mt-1 max-w-2xl text-sm text-muted">
               {t('knowledge.subtitle', {
                 defaultValue: '管理注入到 Agent 提示词脚手架中的知识条目与维度。',
               })}
@@ -297,7 +295,7 @@ export default function KnowledgePage() {
         <button
           type="button"
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           data-testid="knowledge-create-entry"
         >
           <Plus className="size-4" aria-hidden="true" />
@@ -308,14 +306,14 @@ export default function KnowledgePage() {
       {error !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p className="flex-1">{error}</p>
           <button
             type="button"
             onClick={() => void load()}
-            className="rounded-md px-2 py-0.5 text-xs font-semibold text-red-700 hover:bg-red-100"
+            className="rounded-md px-2 py-0.5 text-xs font-semibold text-danger hover:bg-red-100"
           >
             {t('common.retry')}
           </button>
@@ -327,17 +325,17 @@ export default function KnowledgePage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="knowledge-form-title"
-          className="mb-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="mb-6 rounded-xl border border-line bg-surface p-5 shadow-sm"
           data-testid="knowledge-entry-form"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 id="knowledge-form-title" className="text-base font-semibold text-slate-950">
+              <h2 id="knowledge-form-title" className="text-base font-semibold text-ink">
                 {editing !== null
                   ? t('knowledge.editEntry', { defaultValue: '编辑知识' })
                   : t('knowledge.createEntry', { defaultValue: '新建知识' })}
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted">
                 {t('knowledge.form.scopeHelp', {
                   defaultValue: '作用域决定注入优先级：workspace > namespace > org > system。',
                 })}
@@ -346,7 +344,7 @@ export default function KnowledgePage() {
             <button
               type="button"
               onClick={closeForm}
-              className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className="rounded-md p-1 text-muted-subtle hover:bg-surface-muted hover:text-ink"
               aria-label={t('knowledge.form.cancel', { defaultValue: '取消' })}
             >
               <X className="size-4" aria-hidden="true" />
@@ -355,7 +353,7 @@ export default function KnowledgePage() {
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('knowledge.form.key', { defaultValue: 'Key' })}
               </span>
               <input
@@ -365,27 +363,27 @@ export default function KnowledgePage() {
                   defaultValue: '例如 eyot.collab.passage',
                 })}
                 aria-label={t('knowledge.form.key', { defaultValue: 'Key' })}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
-              <span className="mt-1 block text-xs text-slate-400">
+              <span className="mt-1 block text-xs text-muted-subtle">
                 {t('knowledge.form.keyLowercaseHint', { defaultValue: '自动转为小写' })}
               </span>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('knowledge.form.title', { defaultValue: '标题' })}
               </span>
               <input
                 value={formTitle}
                 onChange={(event) => setFormTitle(event.target.value)}
                 aria-label={t('knowledge.form.title', { defaultValue: '标题' })}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
             </label>
           </div>
 
           <label className="mt-3 block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
+            <span className="mb-1 block font-medium text-ink">
               {t('knowledge.form.body', { defaultValue: '内容' })}
             </span>
             <textarea
@@ -393,14 +391,14 @@ export default function KnowledgePage() {
               onChange={(event) => setFormBody(event.target.value)}
               rows={5}
               aria-label={t('knowledge.form.body', { defaultValue: '内容' })}
-              className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full resize-y rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             />
           </label>
 
           {editing === null ? (
             <>
               <label className="mt-3 block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('knowledge.form.scope', { defaultValue: '作用域' })}
                 </span>
                 <select
@@ -408,7 +406,7 @@ export default function KnowledgePage() {
                   onChange={(event) => handleScopeChange(event.target.value as KnowledgeEntryScope)}
                   aria-label={t('knowledge.form.scope', { defaultValue: '作用域' })}
                   data-testid="knowledge-scope-select"
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 >
                   {SCOPES.map((scope) => (
                     <option key={scope} value={scope}>
@@ -421,7 +419,7 @@ export default function KnowledgePage() {
               {formScope !== 'system' ? (
                 <div className="mt-3 grid gap-3 sm:grid-cols-3">
                   <label className="block text-sm">
-                    <span className="mb-1 block font-medium text-slate-700">
+                    <span className="mb-1 block font-medium text-ink">
                       {t('knowledge.form.organization', { defaultValue: '组织' })}
                     </span>
                     <select
@@ -429,7 +427,7 @@ export default function KnowledgePage() {
                       onChange={(event) => setFormOrgId(event.target.value)}
                       aria-label={t('knowledge.form.organization', { defaultValue: '组织' })}
                       data-testid="knowledge-org-select"
-                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                      className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                     >
                       <option value="">—</option>
                       <option value={orgId}>{orgName ?? orgId}</option>
@@ -437,7 +435,7 @@ export default function KnowledgePage() {
                   </label>
                   {formScope === 'namespace' || formScope === 'workspace' ? (
                     <label className="block text-sm">
-                      <span className="mb-1 block font-medium text-slate-700">
+                      <span className="mb-1 block font-medium text-ink">
                         {t('knowledge.form.namespace', { defaultValue: '命名空间' })}
                       </span>
                       <select
@@ -448,7 +446,7 @@ export default function KnowledgePage() {
                         }}
                         aria-label={t('knowledge.form.namespace', { defaultValue: '命名空间' })}
                         data-testid="knowledge-namespace-select"
-                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                        className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                       >
                         <option value="">—</option>
                         {namespaces.map((ns) => (
@@ -461,7 +459,7 @@ export default function KnowledgePage() {
                   ) : null}
                   {formScope === 'workspace' ? (
                     <label className="block text-sm">
-                      <span className="mb-1 block font-medium text-slate-700">
+                      <span className="mb-1 block font-medium text-ink">
                         {t('knowledge.form.workspace', { defaultValue: '工作区' })}
                       </span>
                       <select
@@ -469,7 +467,7 @@ export default function KnowledgePage() {
                         onChange={(event) => setFormWsId(event.target.value)}
                         aria-label={t('knowledge.form.workspace', { defaultValue: '工作区' })}
                         data-testid="knowledge-workspace-select"
-                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                        className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                       >
                         <option value="">—</option>
                         {workspaces
@@ -486,7 +484,7 @@ export default function KnowledgePage() {
               ) : null}
             </>
           ) : (
-            <p className="mt-3 text-sm text-slate-500">
+            <p className="mt-3 text-sm text-muted">
               <span
                 className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${SCOPE_BADGE_CLASS[editing.scope]}`}
               >
@@ -497,7 +495,7 @@ export default function KnowledgePage() {
           )}
 
           <label className="mt-3 block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
+            <span className="mb-1 block font-medium text-ink">
               {t('knowledge.form.dimension', { defaultValue: '维度（可选）' })}
             </span>
             <select
@@ -505,7 +503,7 @@ export default function KnowledgePage() {
               onChange={(event) => setFormDimensionId(event.target.value)}
               aria-label={t('knowledge.form.dimension', { defaultValue: '维度（可选）' })}
               data-testid="knowledge-dimension-select"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
             >
               <option value="">
                 {t('knowledge.form.noDimension', { defaultValue: '无维度' })}
@@ -519,7 +517,7 @@ export default function KnowledgePage() {
           </label>
 
           {formError !== null ? (
-            <p role="alert" className="mt-3 text-sm text-red-600">
+            <p role="alert" className="mt-3 text-sm text-danger">
               {formError}
             </p>
           ) : null}
@@ -528,7 +526,7 @@ export default function KnowledgePage() {
             <button
               type="button"
               onClick={closeForm}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
             >
               {t('knowledge.form.cancel', { defaultValue: '取消' })}
             </button>
@@ -537,7 +535,7 @@ export default function KnowledgePage() {
               disabled={!canSubmit}
               onClick={() => void handleSubmit()}
               data-testid="knowledge-form-submit"
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
             >
               {formBusy
                 ? t('knowledge.form.busy', { defaultValue: '保存中…' })
@@ -548,24 +546,20 @@ export default function KnowledgePage() {
       ) : null}
 
       {isLoading ? (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-16 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-line bg-surface px-6 py-16 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
       ) : null}
 
       {!isLoading && entries.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-          <BookOpen className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-          <h2 className="mt-4 text-base font-semibold text-slate-900">
-            {t('knowledge.emptyTitle', { defaultValue: '暂无知识条目' })}
-          </h2>
-          <p className="mt-2 text-sm text-slate-500">
-            {t('knowledge.emptyDetail', {
-              defaultValue: '创建第一条知识，它将被注入到 Agent 的提示词脚手架中。',
-            })}
-          </p>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title={t('knowledge.emptyTitle', { defaultValue: '暂无知识条目' })}
+          description={t('knowledge.emptyDetail', {
+            defaultValue: '创建第一条知识，它将被注入到 Agent 的提示词脚手架中。',
+          })}
+        />
       ) : null}
 
       {!isLoading && entries.length > 0 ? (
@@ -588,10 +582,10 @@ export default function KnowledgePage() {
       <div className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-semibold text-slate-900">
+            <h2 className="text-sm font-semibold text-ink">
               {t('knowledge.dimensions.title', { defaultValue: '维度管理' })}
             </h2>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-muted">
               {t('knowledge.dimensions.subtitle', {
                 defaultValue: '维度用于给知识条目分组，方便按维度检索。',
               })}
@@ -603,7 +597,7 @@ export default function KnowledgePage() {
               setDimCreateOpen((open) => !open);
               setDimError(null);
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
           >
             <Plus className="size-4" aria-hidden="true" />
             {t('knowledge.dimensions.create', { defaultValue: '新建维度' })}
@@ -611,32 +605,32 @@ export default function KnowledgePage() {
         </div>
 
         {dimCreateOpen ? (
-          <div className="mt-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mt-3 rounded-xl border border-line bg-surface p-4 shadow-sm">
             <div className="grid gap-3 sm:grid-cols-3">
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('knowledge.dimensions.name', { defaultValue: '名称' })}
                 </span>
                 <input
                   value={dimName}
                   onChange={(event) => setDimName(event.target.value)}
                   aria-label={t('knowledge.dimensions.name', { defaultValue: '名称' })}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('knowledge.dimensions.slug', { defaultValue: 'Slug（可选）' })}
                 </span>
                 <input
                   value={dimSlug}
                   onChange={(event) => setDimSlug(event.target.value.toLowerCase())}
                   aria-label={t('knowledge.dimensions.slug', { defaultValue: 'Slug（可选）' })}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
+                <span className="mb-1 block font-medium text-ink">
                   {t('knowledge.dimensions.description', { defaultValue: '描述（可选）' })}
                 </span>
                 <input
@@ -645,12 +639,12 @@ export default function KnowledgePage() {
                   aria-label={t('knowledge.dimensions.description', {
                     defaultValue: '描述（可选）',
                   })}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
                 />
               </label>
             </div>
             {dimError !== null ? (
-              <p role="alert" className="mt-3 text-sm text-red-600">
+              <p role="alert" className="mt-3 text-sm text-danger">
                 {dimError}
               </p>
             ) : null}
@@ -661,7 +655,7 @@ export default function KnowledgePage() {
                   setDimCreateOpen(false);
                   setDimError(null);
                 }}
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
               >
                 {t('knowledge.form.cancel', { defaultValue: '取消' })}
               </button>
@@ -670,7 +664,7 @@ export default function KnowledgePage() {
                 disabled={dimBusy}
                 onClick={() => void handleCreateDimension()}
                 data-testid="knowledge-dimension-submit"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
               >
                 {dimBusy
                   ? t('knowledge.dimensions.busy', { defaultValue: '保存中…' })
@@ -681,18 +675,20 @@ export default function KnowledgePage() {
         ) : null}
 
         {dimensions.length === 0 ? (
-          <p className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm text-slate-500">
-            {t('knowledge.dimensions.empty', { defaultValue: '暂无维度' })}
-          </p>
+          <EmptyState
+            compact
+            className="mt-3"
+            title={t('knowledge.dimensions.empty', { defaultValue: '暂无维度' })}
+          />
         ) : (
-          <ul className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="mt-3 divide-y divide-line-subtle overflow-hidden rounded-xl border border-line bg-surface">
             {dimensions.map((dim) => (
               <li key={dim.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <Tag className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+                  <Tag className="size-4 shrink-0 text-muted-subtle" aria-hidden="true" />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-900">{dim.name}</p>
-                    <p className="truncate font-mono text-xs text-slate-400">{dim.slug}</p>
+                    <p className="truncate text-sm font-medium text-ink">{dim.name}</p>
+                    <p className="truncate font-mono text-xs text-muted-subtle">{dim.slug}</p>
                   </div>
                 </div>
                 <span
@@ -737,9 +733,9 @@ function EntryTable({
   readonly t: TFn;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-line bg-surface">
       <table className="min-w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3">{t('knowledge.columns.key', { defaultValue: 'Key' })}</th>
             <th className="px-4 py-3">{t('knowledge.columns.title', { defaultValue: '标题' })}</th>
@@ -766,13 +762,11 @@ function EntryTable({
             const dimension = dimensionById.get(entry.dimension_id ?? '');
             const isDeleting = deleteTarget?.id === entry.id;
             return (
-              <tr key={entry.id} className="border-b border-slate-100 last:border-0">
-                <td className="px-4 py-3 font-mono text-xs font-medium text-slate-900">
-                  {entry.key}
-                </td>
+              <tr key={entry.id} className="border-b border-line-subtle last:border-0">
+                <td className="px-4 py-3 font-mono text-xs font-medium text-ink">{entry.key}</td>
                 <td className="max-w-[12rem] px-4 py-3">
-                  <p className="truncate font-medium text-slate-900">{entry.title}</p>
-                  <p className="line-clamp-2 text-xs text-slate-500">{entry.body}</p>
+                  <p className="truncate font-medium text-ink">{entry.title}</p>
+                  <p className="line-clamp-2 text-xs text-muted">{entry.body}</p>
                 </td>
                 <td className="px-4 py-3">
                   <span
@@ -781,19 +775,19 @@ function EntryTable({
                     {scopeLabel(t, entry.scope)}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-slate-600">{binding ?? '—'}</td>
-                <td className="px-4 py-3 text-slate-600">{dimension?.name ?? '—'}</td>
-                <td className="px-4 py-3 text-slate-500">
+                <td className="px-4 py-3 text-muted">{binding ?? '—'}</td>
+                <td className="px-4 py-3 text-muted">{dimension?.name ?? '—'}</td>
+                <td className="px-4 py-3 text-muted">
                   {new Date(entry.created_at).toLocaleString()}
                 </td>
                 <td className="px-4 py-3">
                   {entry.scope === 'system' ? (
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-muted-subtle">
                       {t('knowledge.actions.readonly', { defaultValue: '只读' })}
                     </span>
                   ) : isDeleting ? (
                     <span className="flex items-center gap-2">
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs text-muted">
                         {t('knowledge.delete.confirmText', {
                           key: entry.key,
                           defaultValue: '确认删除 {{key}}？',
@@ -811,7 +805,7 @@ function EntryTable({
                       <button
                         type="button"
                         onClick={onCancelDelete}
-                        className="rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                        className="rounded-md border border-line px-2 py-1 text-xs font-medium text-ink hover:bg-surface-muted"
                       >
                         {t('knowledge.delete.cancel', { defaultValue: '取消' })}
                       </button>
@@ -822,7 +816,7 @@ function EntryTable({
                         type="button"
                         onClick={() => onEdit(entry)}
                         data-testid={`knowledge-edit-${entry.id}`}
-                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700"
+                        className="inline-flex items-center gap-1 text-brand hover:text-brand-hover"
                       >
                         <Pencil className="size-3.5" aria-hidden="true" />
                         {t('knowledge.actions.edit', { defaultValue: '编辑' })}
@@ -831,7 +825,7 @@ function EntryTable({
                         type="button"
                         onClick={() => onRequestDelete(entry)}
                         data-testid={`knowledge-delete-${entry.id}`}
-                        className="inline-flex items-center gap-1 text-red-600 hover:text-red-700"
+                        className="inline-flex items-center gap-1 text-danger hover:text-danger"
                       >
                         <Trash2 className="size-3.5" aria-hidden="true" />
                         {t('knowledge.actions.delete', { defaultValue: '删除' })}

@@ -280,8 +280,8 @@ export default function Step2EntityForm({
   return (
     <div className="space-y-5" data-testid="onboarding-step2">
       <div className="space-y-1">
-        <h3 className="text-base font-semibold text-slate-950">{t('onboarding.step2.title')}</h3>
-        <p className="text-sm text-slate-500">{t('onboarding.step2.subtitle')}</p>
+        <h3 className="text-base font-semibold text-ink">{t('onboarding.step2.title')}</h3>
+        <p className="text-sm text-muted">{t('onboarding.step2.subtitle')}</p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -289,24 +289,24 @@ export default function Step2EntityForm({
           <div>
             <label
               htmlFor="onboarding-namespace"
-              className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+              className="block text-xs font-semibold uppercase tracking-wide text-muted"
             >
               {t('onboarding.step2.namespaceLabel')}
             </label>
             {namespacesLoading ? (
-              <p className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+              <p className="mt-2 flex items-center gap-2 text-xs text-muted">
                 <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
                 {t('onboarding.step2.loadingNamespaces')}
               </p>
             ) : namespaces.length === 0 ? (
-              <p className="mt-2 text-xs text-slate-500">{t('onboarding.step2.noNamespaces')}</p>
+              <p className="mt-2 text-xs text-muted">{t('onboarding.step2.noNamespaces')}</p>
             ) : (
               <select
                 id="onboarding-namespace"
                 name="namespace_id"
                 value={namespaceId}
                 onChange={(event) => setNamespaceId(event.currentTarget.value)}
-                className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
                 {namespaces.map((ns) => (
                   <option key={ns.id} value={ns.id}>
@@ -315,13 +315,13 @@ export default function Step2EntityForm({
                 ))}
               </select>
             )}
-            <p className="mt-1.5 text-xs text-slate-500">{t('onboarding.step2.namespaceHelp')}</p>
+            <p className="mt-1.5 text-xs text-muted">{t('onboarding.step2.namespaceHelp')}</p>
           </div>
 
           <div>
             <label
               htmlFor="onboarding-display-name"
-              className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+              className="block text-xs font-semibold uppercase tracking-wide text-muted"
             >
               {t('onboarding.step2.displayNameLabel')}
             </label>
@@ -336,15 +336,15 @@ export default function Step2EntityForm({
               placeholder={t('onboarding.step2.displayNamePlaceholder')}
               aria-invalid={effectiveDisplayNameError !== null}
               className={cn(
-                'mt-2 w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2',
+                'mt-2 w-full rounded-lg border bg-surface px-3 py-2 text-sm text-ink shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2',
                 showDisplayNameInvalid || effectiveDisplayNameError !== null
-                  ? 'border-red-300 focus-visible:ring-red-500'
-                  : 'border-slate-300 focus-visible:ring-blue-500',
+                  ? 'border-danger/40 focus-visible:ring-red-500'
+                  : 'border-line-strong focus-visible:ring-brand',
               )}
             />
-            <p className="mt-1.5 text-xs text-slate-500">{t('onboarding.step2.displayNameHelp')}</p>
+            <p className="mt-1.5 text-xs text-muted">{t('onboarding.step2.displayNameHelp')}</p>
             {effectiveDisplayNameError !== null && trimmedDisplayName.length > 0 ? (
-              <p className="mt-1.5 text-xs text-red-700" role="alert">
+              <p className="mt-1.5 text-xs text-danger" role="alert">
                 {effectiveDisplayNameError}
               </p>
             ) : null}
@@ -353,7 +353,7 @@ export default function Step2EntityForm({
           <div>
             <label
               htmlFor="onboarding-slug"
-              className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+              className="block text-xs font-semibold uppercase tracking-wide text-muted"
             >
               {t('onboarding.step2.slugLabel')}
             </label>
@@ -367,15 +367,15 @@ export default function Step2EntityForm({
               placeholder={t('onboarding.step2.slugPlaceholder')}
               aria-invalid={showSlugInvalid}
               className={cn(
-                'mt-2 w-full rounded-lg border bg-white px-3 py-2 font-mono text-sm text-slate-900 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2',
+                'mt-2 w-full rounded-lg border bg-surface px-3 py-2 font-mono text-sm text-ink shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2',
                 showSlugInvalid
-                  ? 'border-red-300 focus-visible:ring-red-500'
-                  : 'border-slate-300 focus-visible:ring-blue-500',
+                  ? 'border-danger/40 focus-visible:ring-red-500'
+                  : 'border-line-strong focus-visible:ring-brand',
               )}
             />
-            <p className="mt-1.5 text-xs text-slate-500">{t('onboarding.step2.slugHelp')}</p>
+            <p className="mt-1.5 text-xs text-muted">{t('onboarding.step2.slugHelp')}</p>
             {showSlugInvalid ? (
-              <p className="mt-1.5 text-xs text-red-700" role="alert">
+              <p className="mt-1.5 text-xs text-danger" role="alert">
                 {slugError}
               </p>
             ) : null}
@@ -385,7 +385,7 @@ export default function Step2EntityForm({
             <div className="flex items-center justify-between gap-2">
               <label
                 htmlFor="onboarding-description"
-                className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                className="block text-xs font-semibold uppercase tracking-wide text-muted"
               >
                 {t('onboarding.step2.descriptionLabel')}
               </label>
@@ -398,8 +398,8 @@ export default function Step2EntityForm({
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-medium transition-colors',
                   generateDisabledReason !== null || generateLoading
-                    ? 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400'
-                    : 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100',
+                    ? 'cursor-not-allowed border-line bg-surface-muted text-muted-subtle'
+                    : 'border-brand/30 bg-brand-soft text-brand hover:bg-brand-soft',
                 )}
               >
                 {generateLoading ? (
@@ -417,17 +417,17 @@ export default function Step2EntityForm({
               value={description}
               onChange={(event) => setDescription(event.currentTarget.value)}
               placeholder={t('onboarding.step2.descriptionPlaceholder')}
-              className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             />
             {generateError !== null ? (
-              <p role="alert" className="mt-1.5 text-xs text-red-700">
+              <p role="alert" className="mt-1.5 text-xs text-danger">
                 {generateError}
               </p>
             ) : null}
           </div>
 
           {providersLoading ? (
-            <p className="flex items-center gap-2 text-xs text-slate-500">
+            <p className="flex items-center gap-2 text-xs text-muted">
               <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
               {t('onboarding.step2.loadingProviders')}
             </p>
@@ -443,7 +443,7 @@ export default function Step2EntityForm({
               <div>
                 <label
                   htmlFor="onboarding-provider"
-                  className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                  className="block text-xs font-semibold uppercase tracking-wide text-muted"
                 >
                   {t('onboarding.step2.providerLabel')}
                 </label>
@@ -456,7 +456,7 @@ export default function Step2EntityForm({
                     setProviderId(event.currentTarget.value);
                     setModel('');
                   }}
-                  className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   <option value="">{t('onboarding.step2.providerInherit')}</option>
                   {providers.map((p) => (
@@ -470,7 +470,7 @@ export default function Step2EntityForm({
                 <div>
                   <label
                     htmlFor="onboarding-model"
-                    className="block text-xs font-semibold uppercase tracking-wide text-slate-600"
+                    className="block text-xs font-semibold uppercase tracking-wide text-muted"
                   >
                     {t('onboarding.step2.modelLabel')}
                   </label>
@@ -490,12 +490,10 @@ export default function Step2EntityForm({
                     className="mt-2"
                   />
                   {modelsLoading ? (
-                    <p className="mt-1 text-xs text-slate-500">
-                      {t('onboarding.step2.loadingModels')}
-                    </p>
+                    <p className="mt-1 text-xs text-muted">{t('onboarding.step2.loadingModels')}</p>
                   ) : null}
                   {modelsError !== null ? (
-                    <div className="mt-1 flex items-center gap-2 text-xs text-red-700" role="alert">
+                    <div className="mt-1 flex items-center gap-2 text-xs text-danger" role="alert">
                       <span>{modelsError}</span>
                       <button
                         type="button"
@@ -537,13 +535,13 @@ export default function Step2EntityForm({
 
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('onboarding.step2.knowledgeEnvLabel')}
               </span>
               <button
                 type="button"
                 onClick={addKnowledgeRow}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="inline-flex items-center gap-1 rounded-md border border-line-strong bg-surface px-2 py-1 text-xs font-medium text-ink hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
                 <Plus className="size-3" aria-hidden="true" />
                 {t('onboarding.step2.knowledgeEnvAdd')}
@@ -551,11 +549,11 @@ export default function Step2EntityForm({
             </div>
             <div className="mt-2 space-y-2">
               {knowledgeRows.length === 0 ? (
-                <p className="text-xs text-slate-500">{t('onboarding.step2.knowledgeFileEmpty')}</p>
+                <p className="text-xs text-muted">{t('onboarding.step2.knowledgeFileEmpty')}</p>
               ) : (
                 knowledgeRows.map((row, index) => (
                   <div key={row.id} className="flex items-center gap-2">
-                    <KeyRound className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+                    <KeyRound className="size-4 shrink-0 text-muted-subtle" aria-hidden="true" />
                     <input
                       type="text"
                       value={row.key}
@@ -564,9 +562,9 @@ export default function Step2EntityForm({
                       }
                       placeholder="KEY"
                       aria-label={`env key ${index + 1}`}
-                      className="w-1/3 rounded-md border border-slate-300 bg-white px-2 py-1.5 font-mono text-xs text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className="w-1/3 rounded-md border border-line-strong bg-surface px-2 py-1.5 font-mono text-xs text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                     />
-                    <span className="text-slate-400">=</span>
+                    <span className="text-muted-subtle">=</span>
                     <input
                       type="text"
                       value={row.value}
@@ -575,13 +573,13 @@ export default function Step2EntityForm({
                       }
                       placeholder="VALUE"
                       aria-label={`env value ${index + 1}`}
-                      className="flex-1 rounded-md border border-slate-300 bg-white px-2 py-1.5 font-mono text-xs text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className="flex-1 rounded-md border border-line-strong bg-surface px-2 py-1.5 font-mono text-xs text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                     />
                     <button
                       type="button"
                       onClick={() => removeKnowledgeRow(row.id)}
                       aria-label={`remove env ${index + 1}`}
-                      className="grid size-7 place-items-center rounded-md border border-slate-300 text-slate-500 hover:bg-slate-50 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className="grid size-7 place-items-center rounded-md border border-line-strong text-muted hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                     >
                       <Trash2 className="size-3.5" aria-hidden="true" />
                     </button>
@@ -593,12 +591,12 @@ export default function Step2EntityForm({
 
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted">
                 {t('onboarding.step2.knowledgeFileLabel')}
               </span>
               <label
                 htmlFor="onboarding-knowledge-file"
-                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 focus-within:ring-2 focus-within:ring-blue-500"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line-strong bg-surface px-2 py-1 text-xs font-medium text-ink hover:bg-surface-muted focus-within:ring-2 focus-within:ring-brand"
               >
                 <Plus className="size-3" aria-hidden="true" />
                 {t('onboarding.step2.knowledgeFileAdd')}
@@ -614,17 +612,17 @@ export default function Step2EntityForm({
             </div>
             <div className="mt-2 space-y-2">
               {knowledgeFiles.length === 0 ? (
-                <p className="text-xs text-slate-500">{t('onboarding.step2.knowledgeFileEmpty')}</p>
+                <p className="text-xs text-muted">{t('onboarding.step2.knowledgeFileEmpty')}</p>
               ) : (
                 knowledgeFiles.map((file, index) => (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2"
+                    className="flex items-center justify-between gap-2 rounded-md border border-line bg-surface-muted px-3 py-2"
                   >
                     <div className="flex min-w-0 items-center gap-2">
-                      <FileText className="size-4 shrink-0 text-slate-500" aria-hidden="true" />
-                      <span className="truncate text-sm text-slate-900">{file.name}</span>
-                      <span className="font-mono text-xs text-slate-500">
+                      <FileText className="size-4 shrink-0 text-muted" aria-hidden="true" />
+                      <span className="truncate text-sm text-ink">{file.name}</span>
+                      <span className="font-mono text-xs text-muted">
                         ({formatBytes(file.sizeBytes)})
                       </span>
                     </div>
@@ -632,7 +630,7 @@ export default function Step2EntityForm({
                       type="button"
                       onClick={() => removeKnowledgeFile(file.id)}
                       aria-label={`remove file ${index + 1}`}
-                      className="grid size-7 place-items-center rounded-md text-slate-500 hover:bg-white hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className="grid size-7 place-items-center rounded-md text-muted hover:bg-surface hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                     >
                       <X className="size-3.5" aria-hidden="true" />
                     </button>
@@ -653,7 +651,7 @@ export default function Step2EntityForm({
           {submitError !== null ? (
             <div
               role="alert"
-              className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700"
+              className="flex items-start gap-2 rounded-md border border-danger/30 bg-danger-soft px-3 py-2 text-xs text-danger"
             >
               <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
               <span>{submitError}</span>
@@ -661,51 +659,51 @@ export default function Step2EntityForm({
           ) : null}
 
           {isSubmitting ? (
-            <div className="flex items-center gap-2 text-xs text-slate-500" aria-live="polite">
+            <div className="flex items-center gap-2 text-xs text-muted" aria-live="polite">
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               {t('onboarding.step2.summoning')}
             </div>
           ) : null}
         </form>
 
-        <aside className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <aside className="space-y-3 rounded-xl border border-line bg-surface-muted p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
             <Sparkles className="size-3.5" aria-hidden="true" />
             {t('onboarding.step2.previewLabel')}
           </div>
-          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="font-mono text-xs text-slate-500">
+          <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
+            <p className="font-mono text-xs text-muted">
               {selectedBaseClass?.slug ?? 'unknown-deity'}
             </p>
-            <p className="mt-1 text-base font-semibold text-slate-950">
+            <p className="mt-1 text-base font-semibold text-ink">
               {trimmedDisplayName === '' ? t('onboarding.step2.unnamedEntity') : trimmedDisplayName}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 font-mono text-[11px] text-blue-700">
+              <span className="rounded-full bg-brand-soft px-2 py-0.5 font-mono text-[11px] text-brand">
                 {trimmedSlug === '' ? 'no-slug' : trimmedSlug}
               </span>
             </div>
-            <dl className="mt-3 space-y-1.5 text-xs text-slate-600">
+            <dl className="mt-3 space-y-1.5 text-xs text-muted">
               <div className="flex items-center justify-between">
-                <dt className="text-slate-500">{t('onboarding.step2.providerLabel')}</dt>
-                <dd className="font-mono text-slate-900">{previewProvider}</dd>
+                <dt className="text-muted">{t('onboarding.step2.providerLabel')}</dt>
+                <dd className="font-mono text-ink">{previewProvider}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-slate-500">{t('onboarding.step2.modelLabel')}</dt>
-                <dd className="font-mono text-slate-900">{previewModel}</dd>
+                <dt className="text-muted">{t('onboarding.step2.modelLabel')}</dt>
+                <dd className="font-mono text-ink">{previewModel}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-slate-500">{t('onboarding.step2.knowledgeEnvLabel')}</dt>
-                <dd className="text-slate-900">
+                <dt className="text-muted">{t('onboarding.step2.knowledgeEnvLabel')}</dt>
+                <dd className="text-ink">
                   {t('onboarding.step2.previewKnowledgeCount', { count: previewKnowledgeCount })}
                 </dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-slate-500">{t('onboarding.step2.knowledgeFileLabel')}</dt>
-                <dd className="text-slate-900">{knowledgeFiles.length}</dd>
+                <dt className="text-muted">{t('onboarding.step2.knowledgeFileLabel')}</dt>
+                <dd className="text-ink">{knowledgeFiles.length}</dd>
               </div>
             </dl>
-            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-slate-500">
+            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted">
               <Cpu className="size-3" aria-hidden="true" />
               <span>{t('onboarding.step2.previewTag')}</span>
             </div>

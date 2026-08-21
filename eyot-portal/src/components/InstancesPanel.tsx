@@ -34,14 +34,14 @@ const DELIVERY_MODES: readonly InjectDeliveryMode[] = ['notify', 'soft_inject', 
 
 const EVENT_DOT_CLASS: Readonly<Record<string, string>> = {
   'harness.inject_requested': 'bg-amber-500',
-  'harness.inject_applied': 'bg-emerald-500',
+  'harness.inject_applied': 'bg-success',
   'harness.inject_failed': 'bg-red-500',
 };
 
 function eventDotClass(eventType: string): string {
   const known = EVENT_DOT_CLASS[eventType];
   if (known !== undefined) return known;
-  return eventType.startsWith('harness.report_') ? 'bg-blue-500' : 'bg-slate-400';
+  return eventType.startsWith('harness.report_') ? 'bg-brand' : 'bg-muted-subtle';
 }
 
 function summarizePayload(event: Event): string {
@@ -91,14 +91,14 @@ export default function InstancesPanel({
     return (
       <div className="grid h-full place-items-center p-6 text-center">
         <div>
-          <UserRound className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-          <h2 className="mt-4 text-sm font-semibold text-slate-900">{emptyTitle}</h2>
-          <p className="mt-2 text-sm text-slate-500">{emptyDetail}</p>
+          <UserRound className="mx-auto size-8 text-muted-subtle" aria-hidden="true" />
+          <h2 className="mt-4 text-sm font-semibold text-ink">{emptyTitle}</h2>
+          <p className="mt-2 text-sm text-muted">{emptyDetail}</p>
           <button
             type="button"
             onClick={onAction}
             data-testid="workspace-introduce-cta"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           >
             <Plus className="size-4" aria-hidden="true" />
             {actionLabel}
@@ -110,12 +110,12 @@ export default function InstancesPanel({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex shrink-0 justify-end border-b border-slate-200 bg-white px-4 py-2">
+      <div className="flex shrink-0 justify-end border-b border-line bg-surface px-4 py-2">
         <button
           type="button"
           onClick={onAction}
           data-testid="workspace-introduce-cta"
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover"
         >
           <Plus className="size-3.5" aria-hidden="true" />
           {actionLabel}
@@ -128,7 +128,7 @@ export default function InstancesPanel({
           const isExpanded = expandedIds.has(inst.id);
           return (
             <Fragment key={inst.id}>
-              <li className="rounded-lg border border-slate-200 bg-white">
+              <li className="rounded-lg border border-line bg-surface">
                 <div className="flex items-center gap-3 p-4">
                   <button
                     type="button"
@@ -138,7 +138,7 @@ export default function InstancesPanel({
                       isExpanded ? t('instanceDetail.collapse') : t('instanceDetail.expand')
                     }
                     data-testid={`workspace-expand-${inst.id}`}
-                    className="inline-flex shrink-0 items-center rounded-md p-1 text-slate-500 hover:bg-slate-100"
+                    className="inline-flex shrink-0 items-center rounded-md p-1 text-muted hover:bg-surface-muted"
                   >
                     {isExpanded ? (
                       <ChevronDown className="size-4" aria-hidden="true" />
@@ -146,18 +146,18 @@ export default function InstancesPanel({
                       <ChevronRight className="size-4" aria-hidden="true" />
                     )}
                   </button>
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-600">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-muted text-muted">
                     <UserRound className="size-4" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-slate-900">{title}</p>
-                    <p className="mt-1 text-xs capitalize text-slate-500">{inst.status}</p>
+                    <p className="truncate text-sm font-semibold text-ink">{title}</p>
+                    <p className="mt-1 text-xs capitalize text-muted">{inst.status}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => onRemove(inst.id, title)}
                     data-testid={`workspace-remove-${inst.id}`}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-danger/30 bg-surface px-2.5 py-1.5 text-xs font-medium text-danger hover:bg-danger-soft"
                   >
                     <Trash className="size-3.5" aria-hidden="true" />
                     {removeLabel}
@@ -235,16 +235,16 @@ function InstanceDetailSection({
   }, [fetchEvents]);
 
   return (
-    <div className="border-t border-slate-100 bg-slate-50 px-4 py-3">
+    <div className="border-t border-line-subtle bg-surface-muted px-4 py-3">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">
           {t('instanceDetail.events.title')}
         </h3>
         <button
           type="button"
           onClick={() => setInjectOpen((open) => !open)}
           data-testid={`workspace-inject-${instanceId}`}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-2.5 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand/30 bg-surface px-2.5 py-1.5 text-xs font-medium text-brand hover:bg-brand-soft"
         >
           <Syringe className="size-3.5" aria-hidden="true" />
           {t('instanceDetail.inject.action')}
@@ -261,7 +261,7 @@ function InstanceDetailSection({
       ) : null}
 
       {isLoading && events.length === 0 ? (
-        <p className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+        <p className="mt-3 flex items-center gap-2 text-xs text-muted">
           <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </p>
@@ -270,7 +270,7 @@ function InstanceDetailSection({
       {!isLoading && errorMessage !== null ? (
         <p
           role="alert"
-          className="mt-3 flex items-center gap-2 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700"
+          className="mt-3 flex items-center gap-2 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger"
         >
           <AlertCircle className="size-3.5 shrink-0" aria-hidden="true" />
           {errorMessage}
@@ -278,7 +278,7 @@ function InstanceDetailSection({
       ) : null}
 
       {!isLoading && errorMessage === null && events.length === 0 ? (
-        <p className="mt-3 text-xs text-slate-500">{t('instanceDetail.events.empty')}</p>
+        <p className="mt-3 text-xs text-muted">{t('instanceDetail.events.empty')}</p>
       ) : null}
 
       {events.length > 0 ? (
@@ -286,7 +286,7 @@ function InstanceDetailSection({
           {events.map((event) => (
             <li
               key={event.id}
-              className="flex items-start gap-2 rounded-md border border-slate-100 bg-white px-2.5 py-1.5"
+              className="flex items-start gap-2 rounded-md border border-line-subtle bg-surface px-2.5 py-1.5"
             >
               <span
                 aria-hidden="true"
@@ -294,14 +294,14 @@ function InstanceDetailSection({
               />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="font-mono text-xs font-medium text-slate-900">
+                  <span className="font-mono text-xs font-medium text-ink">
                     {event.type.replace(/^harness\./, '')}
                   </span>
-                  <span className="font-mono text-xs text-slate-400">
+                  <span className="font-mono text-xs text-muted-subtle">
                     {new Date(event.created_at).toLocaleString()}
                   </span>
                 </div>
-                <p className="mt-0.5 truncate font-mono text-xs text-slate-500">
+                <p className="mt-0.5 truncate font-mono text-xs text-muted">
                   {summarizePayload(event)}
                 </p>
               </div>
@@ -347,7 +347,7 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
 
   return (
     <form
-      className="mt-3 space-y-3 rounded-lg border border-slate-200 bg-white p-3"
+      className="mt-3 space-y-3 rounded-lg border border-line bg-surface p-3"
       aria-label={t('instanceDetail.inject.title', { name: instanceTitle })}
       onSubmit={(event) => {
         event.preventDefault();
@@ -355,13 +355,13 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
       }}
     >
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('instanceDetail.inject.kind')}
           <select
             value={kind}
             onChange={(event) => setKind(event.target.value as InjectKind)}
             disabled={submitting}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           >
             {INJECT_KINDS.map((value) => (
               <option key={value} value={value}>
@@ -370,13 +370,13 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
             ))}
           </select>
         </label>
-        <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
           {t('instanceDetail.inject.deliveryMode')}
           <select
             value={deliveryMode}
             onChange={(event) => setDeliveryMode(event.target.value as InjectDeliveryMode)}
             disabled={submitting}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
           >
             {DELIVERY_MODES.map((value) => (
               <option key={value} value={value}>
@@ -386,7 +386,7 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
           </select>
         </label>
       </div>
-      <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
+      <label className="block text-xs font-semibold uppercase tracking-wide text-muted">
         {t('instanceDetail.inject.tldr')}
         <input
           value={tldr}
@@ -394,14 +394,16 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
           placeholder={t('instanceDetail.inject.tldrPlaceholder')}
           disabled={submitting}
           maxLength={400}
-          className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="mt-1.5 w-full rounded-lg border border-line-strong px-3 py-2 text-sm"
         />
       </label>
       {feedback !== null ? (
         <p
           role={feedback.tone === 'error' ? 'alert' : 'status'}
           className={`rounded-md px-3 py-2 text-xs ${
-            feedback.tone === 'error' ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'
+            feedback.tone === 'error'
+              ? 'bg-danger-soft text-danger'
+              : 'bg-emerald-50 text-emerald-700'
           }`}
         >
           {feedback.text}
@@ -411,7 +413,7 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? (
             <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
@@ -422,7 +424,7 @@ function InjectForm({ instanceId, instanceTitle, onClose, onSubmitted }: InjectF
           type="button"
           onClick={onClose}
           disabled={submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-surface-muted disabled:opacity-60"
         >
           {t('common.cancel')}
         </button>

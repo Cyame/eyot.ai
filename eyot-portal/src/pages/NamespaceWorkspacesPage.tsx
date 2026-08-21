@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import CloneDialog from '@/components/CloneDialog';
+import EmptyState from '@/components/EmptyState';
 import { ApiError, api } from '@/lib/api';
 import { fetchMe } from '@/lib/api/auth';
 import { type ClonePayload, cloneWorkspace } from '@/lib/api/clone';
@@ -152,17 +153,17 @@ export default function NamespaceWorkspacesPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl p-6 lg:p-8" aria-labelledby="ns-workspaces-title">
+    <section className="mx-auto w-full max-w-6xl p-6" aria-labelledby="ns-workspaces-title">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-4">
-          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-sm">
+          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand text-brand-fg shadow-sm">
             <Building2 className="size-6" aria-hidden="true" />
           </span>
           <div>
-            <h1 id="ns-workspaces-title" className="text-2xl font-semibold text-slate-950">
+            <h1 id="ns-workspaces-title" className="text-2xl font-semibold text-ink">
               {t('nav.workspaces')}
             </h1>
-            <p className="mt-1 max-w-2xl text-sm text-slate-600">{t('namespaces.subtitle')}</p>
+            <p className="mt-1 max-w-2xl text-sm text-muted">{t('namespaces.subtitle')}</p>
           </div>
         </div>
         <button
@@ -171,7 +172,7 @@ export default function NamespaceWorkspacesPage() {
             setCreateOpen(true);
             setCreateError(null);
           }}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
         >
           <Plus className="size-4" aria-hidden="true" />
           {t('namespaces.createWorkspace')}
@@ -183,19 +184,19 @@ export default function NamespaceWorkspacesPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="create-workspace-title"
-          className="mb-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          className="mb-6 rounded-xl border border-line bg-surface p-5 shadow-sm"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 id="create-workspace-title" className="text-base font-semibold text-slate-950">
+              <h2 id="create-workspace-title" className="text-base font-semibold text-ink">
                 {t('namespaces.createWorkspaceTitle')}
               </h2>
-              <p className="mt-1 text-sm text-slate-500">{t('namespaces.createWorkspaceHint')}</p>
+              <p className="mt-1 text-sm text-muted">{t('namespaces.createWorkspaceHint')}</p>
             </div>
             <button
               type="button"
               onClick={() => setCreateOpen(false)}
-              className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className="rounded-md p-1 text-muted-subtle hover:bg-surface-muted hover:text-ink"
               aria-label={t('namespaces.cancel')}
             >
               <X className="size-4" aria-hidden="true" />
@@ -203,7 +204,7 @@ export default function NamespaceWorkspacesPage() {
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('namespaces.workspaceName')}
               </span>
               <input
@@ -216,23 +217,23 @@ export default function NamespaceWorkspacesPage() {
                   }
                 }}
                 placeholder={t('namespaces.workspaceNamePlaceholder')}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('namespaces.workspaceSlug')}
               </span>
               <input
                 value={createSlug}
                 onChange={(event) => setCreateSlug(slugify(event.target.value))}
                 placeholder={t('namespaces.workspaceSlugPlaceholder')}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
               />
             </label>
           </div>
           {createError !== null ? (
-            <p role="alert" className="mt-3 text-sm text-red-600">
+            <p role="alert" className="mt-3 text-sm text-danger">
               {createError}
             </p>
           ) : null}
@@ -240,7 +241,7 @@ export default function NamespaceWorkspacesPage() {
             <button
               type="button"
               onClick={() => setCreateOpen(false)}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-surface-muted"
             >
               {t('namespaces.cancel')}
             </button>
@@ -248,7 +249,7 @@ export default function NamespaceWorkspacesPage() {
               type="button"
               disabled={createBusy}
               onClick={() => void handleCreateWorkspace()}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover disabled:opacity-60"
             >
               {createBusy ? t('namespaces.creatingWorkspace') : t('namespaces.confirmCreate')}
             </button>
@@ -259,7 +260,7 @@ export default function NamespaceWorkspacesPage() {
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="mb-6 flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="mb-6 flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -267,7 +268,7 @@ export default function NamespaceWorkspacesPage() {
       ) : null}
 
       {isLoading ? (
-        <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-16 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-3 rounded-xl border border-line bg-surface px-6 py-16 text-sm text-muted">
           <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
           {t('common.loading')}
         </div>
@@ -324,21 +325,21 @@ function WorkspaceList({
 }) {
   if (workspaces.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <Building2 className="mx-auto size-8 text-slate-400" aria-hidden="true" />
-        <h2 className="mt-4 text-base font-semibold text-slate-900">
-          {t('namespaces.noWorkspacesTitle')}
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">{t('namespaces.noWorkspacesDetail')}</p>
-        <button
-          type="button"
-          onClick={onCreate}
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
-        >
-          <Plus className="size-4" aria-hidden="true" />
-          {t('namespaces.createWorkspace')}
-        </button>
-      </div>
+      <EmptyState
+        icon={Building2}
+        title={t('namespaces.noWorkspacesTitle')}
+        description={t('namespaces.noWorkspacesDetail')}
+        action={
+          <button
+            type="button"
+            onClick={onCreate}
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
+          >
+            <Plus className="size-4" aria-hidden="true" />
+            {t('namespaces.createWorkspace')}
+          </button>
+        }
+      />
     );
   }
 
@@ -347,35 +348,31 @@ function WorkspaceList({
       {workspaces.map(({ workspace, memberCount, instanceCount }) => (
         <div
           key={workspace.id}
-          className="group rounded-xl border border-slate-200 bg-white shadow-sm transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
+          className="group rounded-xl border border-line bg-surface shadow-sm transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
         >
           <Link to={`/orgs/${orgId}/workspaces/${workspace.id}`} className="block p-5">
             <div className="flex items-start justify-between gap-4">
-              <span className="grid size-10 place-items-center rounded-lg bg-blue-50 text-blue-700 group-hover:bg-blue-100">
+              <span className="grid size-10 place-items-center rounded-lg bg-brand-soft text-brand group-hover:bg-brand-soft">
                 <Building2 className="size-5" aria-hidden="true" />
               </span>
-              <span className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-slate-600">
+              <span className="rounded-full bg-surface-muted px-2.5 py-1 font-mono text-xs text-muted">
                 {workspace.slug}
               </span>
             </div>
-            <h2 className="mt-5 text-lg font-semibold tracking-tight text-slate-950">
-              {workspace.name}
-            </h2>
-            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-sm text-slate-600">
+            <h2 className="mt-5 text-lg font-semibold tracking-tight text-ink">{workspace.name}</h2>
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-line-subtle pt-4 text-sm text-muted">
               <span className="flex items-center gap-2">
-                <Users className="size-4 text-slate-400" aria-hidden="true" />
+                <Users className="size-4 text-muted-subtle" aria-hidden="true" />
                 {memberCount} {t('workspace.directors')}
               </span>
               <span className="flex items-center gap-2">
-                <Cpu className="size-4 text-slate-400" aria-hidden="true" />
+                <Cpu className="size-4 text-muted-subtle" aria-hidden="true" />
                 {instanceCount} {t('workspace.lostOnes')}
               </span>
             </div>
-            <p className="mt-4 text-sm font-medium text-blue-600">
-              {t('namespaces.enterWorkspace')}
-            </p>
+            <p className="mt-4 text-sm font-medium text-brand">{t('namespaces.enterWorkspace')}</p>
           </Link>
-          <div className="flex justify-end border-t border-slate-100 px-5 py-3">
+          <div className="flex justify-end border-t border-line-subtle px-5 py-3">
             {canClone ? (
               <button
                 type="button"
@@ -383,7 +380,7 @@ function WorkspaceList({
                 onClick={() => onClone(workspace)}
                 data-testid={`workspace-clone-${workspace.id}`}
                 title={t('clone.instancesNotCopied')}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink disabled:opacity-50"
               >
                 <Copy className="size-3.5" aria-hidden="true" />
                 {cloningId === workspace.id ? t('clone.cloning') : t('clone.workspace')}

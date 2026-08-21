@@ -69,16 +69,16 @@ export default function CloneDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="clone-dialog-title"
-      className="fixed inset-0 z-[60] grid place-items-center bg-slate-950/60 p-4"
+      className="fixed inset-0 z-[60] grid place-items-center bg-overlay p-4"
       data-testid="clone-dialog"
     >
-      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div className="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-2xl">
+        <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-lg bg-blue-100 text-blue-800">
+            <span className="grid size-9 place-items-center rounded-lg bg-brand-soft text-brand">
               <Copy className="size-5" aria-hidden="true" />
             </span>
-            <h2 id="clone-dialog-title" className="text-base font-semibold text-slate-950">
+            <h2 id="clone-dialog-title" className="text-base font-semibold text-ink">
               {title}
             </h2>
           </div>
@@ -88,20 +88,18 @@ export default function CloneDialog({
             disabled={busy}
             aria-label={t('clone.dialog.close')}
             data-testid="clone-dialog-close"
-            className="grid size-8 place-items-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
+            className="grid size-8 place-items-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:opacity-50"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
         </header>
 
         <div className="space-y-4 px-5 py-5">
-          <p className="text-sm text-slate-600">{confirmMessage}</p>
-          <p className="text-xs text-slate-500">{t('clone.instancesNotCopied')}</p>
+          <p className="text-sm text-muted">{confirmMessage}</p>
+          <p className="text-xs text-muted">{t('clone.instancesNotCopied')}</p>
 
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
-              {t('clone.dialog.nameLabel')}
-            </span>
+            <span className="mb-1 block font-medium text-ink">{t('clone.dialog.nameLabel')}</span>
             <input
               type="text"
               value={name}
@@ -109,14 +107,12 @@ export default function CloneDialog({
               onChange={(e) => setName(e.target.value)}
               placeholder={t('clone.dialog.namePlaceholder')}
               data-testid="clone-dialog-name"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:bg-slate-50"
+              className="w-full rounded-lg border border-line-strong px-3 py-2 text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:bg-surface-muted"
             />
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">
-              {t('clone.dialog.slugLabel')}
-            </span>
+            <span className="mb-1 block font-medium text-ink">{t('clone.dialog.slugLabel')}</span>
             <input
               type="text"
               value={slug}
@@ -128,33 +124,33 @@ export default function CloneDialog({
               placeholder={t('clone.dialog.slugPlaceholder')}
               data-testid="clone-dialog-slug"
               className={cn(
-                'w-full rounded-lg border px-3 py-2 font-mono text-sm text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 disabled:bg-slate-50',
+                'w-full rounded-lg border px-3 py-2 font-mono text-sm text-ink shadow-sm focus-visible:outline-none focus-visible:ring-2 disabled:bg-surface-muted',
                 slugInvalid
-                  ? 'border-red-300 focus-visible:ring-red-500'
-                  : 'border-slate-300 focus-visible:ring-blue-500',
+                  ? 'border-danger/40 focus-visible:ring-red-500'
+                  : 'border-line-strong focus-visible:ring-brand',
               )}
             />
             {slugInvalid ? (
               <p
                 role="alert"
-                className="mt-1 text-xs text-red-700"
+                className="mt-1 text-xs text-danger"
                 data-testid="clone-dialog-slug-error"
               >
                 {t('clone.dialog.slugInvalid')}
               </p>
             ) : (
-              <p className="mt-1 text-xs text-slate-500">{t('clone.dialog.slugHint')}</p>
+              <p className="mt-1 text-xs text-muted">{t('clone.dialog.slugHint')}</p>
             )}
           </label>
         </div>
 
-        <footer className="flex items-center justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
+        <footer className="flex items-center justify-end gap-2 border-t border-line bg-surface-muted px-5 py-3">
           <button
             type="button"
             onClick={onCancel}
             disabled={busy}
             data-testid="clone-dialog-cancel"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
+            className="rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:opacity-50"
           >
             {t('clone.dialog.cancel')}
           </button>
@@ -164,7 +160,7 @@ export default function CloneDialog({
             onClick={() => onConfirm(payload)}
             data-testid="clone-dialog-confirm"
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+              'inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
               'disabled:opacity-60',
             )}
           >

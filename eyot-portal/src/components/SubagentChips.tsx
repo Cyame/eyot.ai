@@ -43,7 +43,7 @@ export default function SubagentChips({ capabilities }: SubagentChipsProps) {
   return (
     <div className="space-y-1.5">
       <p
-        className="text-xs font-semibold uppercase tracking-wide text-slate-500"
+        className="text-xs font-semibold uppercase tracking-wide text-muted"
         data-testid="subagent-chips-heading"
       >
         {t('subagent.heading')}
@@ -57,7 +57,7 @@ export default function SubagentChips({ capabilities }: SubagentChipsProps) {
           <li
             key={cap}
             data-testid={`subagent-chip-${cap}`}
-            className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-800"
+            className="inline-flex items-center rounded-md border border-brand/30 bg-brand-soft px-2 py-0.5 text-xs font-medium text-brand"
           >
             {t(`subagent.${cap}`)}
           </li>

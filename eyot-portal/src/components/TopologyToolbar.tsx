@@ -48,7 +48,7 @@ export default function TopologyToolbar({ className }: TopologyToolbarProps): Re
   return (
     <div
       className={cn(
-        'sticky top-0 z-20 flex items-center gap-2 border-b border-slate-200 bg-white px-4 py-2 sm:px-6',
+        'sticky top-0 z-20 flex items-center gap-2 border-b border-line bg-surface px-4 py-2 sm:px-6',
         className,
       )}
       role="toolbar"
@@ -67,10 +67,10 @@ export default function TopologyToolbar({ className }: TopologyToolbarProps): Re
             data-active={isActive ? 'true' : 'false'}
             className={cn(
               'inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand',
               isActive
-                ? 'bg-blue-600 text-white'
-                : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-100',
+                ? 'bg-brand text-brand-fg'
+                : 'border border-line bg-surface text-ink hover:bg-surface-muted',
             )}
           >
             <Icon className="size-4" aria-hidden="true" />
@@ -78,7 +78,7 @@ export default function TopologyToolbar({ className }: TopologyToolbarProps): Re
             <kbd
               className={cn(
                 'ml-1 rounded px-1 py-0.5 font-mono text-[10px] leading-none',
-                isActive ? 'bg-blue-500/40 text-blue-50' : 'bg-slate-100 text-slate-500',
+                isActive ? 'bg-brand/40 text-brand-fg' : 'bg-surface-muted text-muted',
               )}
             >
               {shortcut}

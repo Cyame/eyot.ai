@@ -59,7 +59,7 @@ export function NodeModal({ node, onClose, onRemove }: NodeModalProps): ReactEle
   return (
     /* biome-ignore lint/a11y/noStaticElementInteractions: backdrop click dismisses the modal; dialog remains keyboard accessible */
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-slate-950/20 sm:p-6"
+      className="fixed inset-0 z-50 grid place-items-center bg-overlay sm:p-6"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
@@ -72,49 +72,49 @@ export function NodeModal({ node, onClose, onRemove }: NodeModalProps): ReactEle
         aria-labelledby="topology-node-modal-title"
         tabIndex={-1}
         data-testid="topology-node-modal"
-        className="flex h-full w-full origin-center animate-[topology-pop_300ms_cubic-bezier(.2,.8,.2,1)] flex-col overflow-hidden bg-white shadow-2xl outline-none sm:h-[min(640px,calc(100vh-3rem))] sm:w-[min(920px,calc(100vw-3rem))] sm:rounded-2xl"
+        className="flex h-full w-full origin-center animate-topology-pop flex-col overflow-hidden bg-surface shadow-lg outline-none sm:h-[min(640px,calc(100vh-3rem))] sm:w-[min(920px,calc(100vw-3rem))] sm:rounded-2xl"
       >
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-xl bg-blue-600 text-white">
+            <span className="grid size-10 place-items-center rounded-xl bg-brand text-brand-fg">
               <Icon className="size-5" />
             </span>
             <div>
-              <h2 id="topology-node-modal-title" className="text-lg font-semibold text-slate-950">
+              <h2 id="topology-node-modal-title" className="text-lg font-semibold text-ink">
                 {node.label}
               </h2>
-              <p className="font-mono text-xs text-slate-500">{node.slug}</p>
+              <p className="font-mono text-xs text-muted">{node.slug}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('topology.closeDetails')}
-            className="grid size-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
+            className="grid size-9 place-items-center rounded-lg text-muted hover:bg-surface-muted"
           >
             <X className="size-5" />
           </button>
         </header>
         <div className="grid flex-1 gap-4 overflow-auto p-5 md:grid-cols-3">
-          <section className="rounded-xl border border-slate-200 p-4 md:col-span-2">
-            <h3 className="font-semibold text-slate-950">{t('topology.instanceDetails')}</h3>
+          <section className="rounded-xl border border-line p-4 md:col-span-2">
+            <h3 className="font-semibold text-ink">{t('topology.instanceDetails')}</h3>
             <dl className="mt-4 grid gap-3 text-sm">
               <div className="flex justify-between">
-                <dt className="text-slate-500">ID</dt>
+                <dt className="text-muted">ID</dt>
                 <dd className="font-mono">{node.instanceId ?? node.id}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-slate-500">{t('topology.status')}</dt>
+                <dt className="text-muted">{t('topology.status')}</dt>
                 <dd>{node.status}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-slate-500">{t('topology.activeHash')}</dt>
+                <dt className="text-muted">{t('topology.activeHash')}</dt>
                 <dd className="max-w-64 truncate font-mono">{node.activeHash ?? '—'}</dd>
               </div>
             </dl>
           </section>
-          <aside className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <h3 className="font-semibold text-slate-950">{t('topology.actions')}</h3>
+          <aside className="rounded-xl border border-line bg-surface-muted p-4">
+            <h3 className="font-semibold text-ink">{t('topology.actions')}</h3>
             {node.outdated ? (
               <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
                 {t('topology.outdatedNotice')}
@@ -128,7 +128,7 @@ export function NodeModal({ node, onClose, onRemove }: NodeModalProps): ReactEle
                   void handleRemove();
                 }}
                 data-testid={`topology-node-remove-${node.id}`}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60"
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-danger/30 bg-surface px-3 py-2 text-sm font-medium text-danger transition-colors hover:bg-danger-soft disabled:opacity-60"
               >
                 {removing ? (
                   <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -141,15 +141,15 @@ export function NodeModal({ node, onClose, onRemove }: NodeModalProps): ReactEle
               </button>
             ) : null}
             {canRemove ? (
-              <p className="mt-2 text-xs text-slate-500">{t('topology.removeHint')}</p>
+              <p className="mt-2 text-xs text-muted">{t('topology.removeHint')}</p>
             ) : null}
           </aside>
         </div>
-        <footer className="border-t border-slate-200 p-4 text-right">
+        <footer className="border-t border-line p-4 text-right">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-brand-fg hover:bg-brand-hover"
           >
             {t('topology.backToTopology')}
           </button>

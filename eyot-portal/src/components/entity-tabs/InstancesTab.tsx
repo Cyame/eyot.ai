@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import EmptyState from '@/components/EmptyState';
 import type { AvatarDisplayStatus, EntityInstanceStatus } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -29,11 +30,11 @@ const STATUS_PRIORITY: Readonly<Record<AvatarDisplayStatus, number>> = {
 const STATUS_BADGE_CLASS: Readonly<Record<AvatarDisplayStatus, string>> = {
   busy: 'border-emerald-200 bg-emerald-50 text-emerald-800',
   idle: 'border-amber-200 bg-amber-50 text-amber-800',
-  stopped: 'border-slate-200 bg-slate-100 text-slate-700',
-  starting: 'border-blue-200 bg-blue-50 text-blue-800',
+  stopped: 'border-line bg-surface-muted text-ink',
+  starting: 'border-brand/30 bg-brand-soft text-brand',
   restarting: 'border-orange-200 bg-orange-50 text-orange-800',
-  deleting: 'border-slate-200 bg-slate-100 text-slate-600',
-  start_failed: 'border-red-200 bg-red-50 text-red-800',
+  deleting: 'border-line bg-surface-muted text-muted',
+  start_failed: 'border-danger/30 bg-danger-soft text-red-800',
 };
 
 const FILTER_OPTIONS: readonly AvatarDisplayStatus[] = [
@@ -114,7 +115,7 @@ export default function InstancesTab({
   return (
     <section aria-labelledby="instances-tab-heading" className="space-y-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="instances-tab-heading" className="text-sm font-semibold text-slate-900">
+        <h2 id="instances-tab-heading" className="text-sm font-semibold text-ink">
           {t('entityModal.tabs.instances')}
         </h2>
         <span
@@ -142,18 +143,18 @@ export default function InstancesTab({
       </dl>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5">
-          <Search className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+        <div className="flex items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 py-1.5">
+          <Search className="size-4 shrink-0 text-muted-subtle" aria-hidden="true" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('entityModal.instancesTab.searchPlaceholder')}
             data-testid="instances-search"
-            className="w-48 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+            className="w-48 bg-transparent text-sm text-ink placeholder:text-muted-subtle focus:outline-none"
           />
         </div>
-        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-700">
+        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-ink">
           <input
             type="checkbox"
             checked={onlyBusy}
@@ -163,7 +164,7 @@ export default function InstancesTab({
           />
           {t('entityModal.instancesTab.onlyBusy')}
         </label>
-        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-700">
+        <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-ink">
           <input
             type="checkbox"
             checked={onlyIdle}
@@ -173,15 +174,15 @@ export default function InstancesTab({
           />
           {t('entityModal.instancesTab.onlyIdle')}
         </label>
-        <label className="inline-flex items-center gap-2 text-xs text-slate-700">
-          <span className="font-semibold uppercase tracking-wide text-slate-500">
+        <label className="inline-flex items-center gap-2 text-xs text-ink">
+          <span className="font-semibold uppercase tracking-wide text-muted">
             {t('entityModal.instancesTab.filterByStatus')}
           </span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             data-testid="instances-status-filter"
-            className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded-md border border-line bg-surface px-2 py-1 text-xs text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <option value="all">{t('entityModal.instancesTab.allStatuses')}</option>
             {FILTER_OPTIONS.map((s) => (
@@ -196,7 +197,7 @@ export default function InstancesTab({
       {errorMessage !== null ? (
         <div
           role="alert"
-          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800"
+          className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-4 py-2.5 text-sm text-red-800"
         >
           <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -204,24 +205,19 @@ export default function InstancesTab({
       ) : null}
 
       {isLoading ? (
-        <div className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-6 text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-line-strong p-6 text-sm text-muted">
           <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
           {t('entityModal.instancesTab.loading')}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-slate-900">
-            {t('entityModal.instancesTab.emptyTitle')}
-          </p>
-          <p className="mt-2 text-xs text-slate-500">{t('entityModal.instancesTab.emptyDetail')}</p>
-        </div>
+        <EmptyState
+          title={t('entityModal.instancesTab.emptyTitle')}
+          description={t('entityModal.instancesTab.emptyDetail')}
+        />
       ) : (
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-          <table
-            className="min-w-full divide-y divide-slate-200 text-sm"
-            data-testid="instances-table"
-          >
-            <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <div className="overflow-hidden rounded-lg border border-line bg-surface">
+          <table className="min-w-full divide-y divide-line text-sm" data-testid="instances-table">
+            <thead className="bg-surface-muted text-left text-xs font-semibold uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-3 py-2">{t('entityModal.instancesTab.columnId')}</th>
                 <th className="px-3 py-2">{t('entityModal.instancesTab.columnStatus')}</th>
@@ -233,7 +229,7 @@ export default function InstancesTab({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line-subtle">
               {filtered.map((inst) => (
                 <InstanceRow
                   key={inst.id}
@@ -256,9 +252,9 @@ export default function InstancesTab({
 
 function CounterCard({ label, value }: { readonly label: string; readonly value: number }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
-      <dd className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{value}</dd>
+    <div className="rounded-lg border border-line bg-surface px-3 py-2.5">
+      <dt className="text-xs font-medium uppercase tracking-wide text-muted">{label}</dt>
+      <dd className="mt-1 text-2xl font-semibold tabular-nums text-ink">{value}</dd>
     </div>
   );
 }
@@ -288,7 +284,7 @@ function InstanceRow({
   const canStop = isRunning;
   return (
     <tr data-testid={`instance-row-${instance.id}`}>
-      <td className="px-3 py-2 font-mono text-xs text-slate-900" title={instance.id}>
+      <td className="px-3 py-2 font-mono text-xs text-ink" title={instance.id}>
         {shortId}
       </td>
       <td className="px-3 py-2">
@@ -307,7 +303,7 @@ function InstanceRow({
             'inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold',
             isHealthy
               ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-              : 'border-slate-200 bg-slate-100 text-slate-600',
+              : 'border-line bg-surface-muted text-muted',
           )}
           title={t('entityModal.instancesTab.healthHint')}
         >
@@ -316,10 +312,8 @@ function InstanceRow({
             : t('entityModal.instancesTab.healthDown')}
         </span>
       </td>
-      <td className="px-3 py-2 font-mono text-xs text-slate-700">{instance.spawn_time}</td>
-      <td className="px-3 py-2 font-mono text-xs text-slate-700">
-        {instance.last_active_at ?? '—'}
-      </td>
+      <td className="px-3 py-2 font-mono text-xs text-ink">{instance.spawn_time}</td>
+      <td className="px-3 py-2 font-mono text-xs text-ink">{instance.last_active_at ?? '—'}</td>
       <td className="px-3 py-2">
         <div className="flex items-center justify-end gap-1.5">
           <button
@@ -335,7 +329,7 @@ function InstanceRow({
             type="button"
             onClick={() => onGoWorkspace(instance)}
             disabled={!canGoWorkspace}
-            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-blue-700 transition-colors hover:border-blue-200 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-brand transition-colors hover:border-brand/30 hover:bg-brand-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-40"
             title={
               canGoWorkspace
                 ? t('entityModal.instancesTab.goToWorkspace')
@@ -350,7 +344,7 @@ function InstanceRow({
             onClick={() => onStop(instance)}
             disabled={!canStop}
             data-testid="instance-stop"
-            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-slate-200 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-ink transition-colors hover:border-line hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-40"
             title={t('entityModal.instancesTab.stop')}
           >
             <Power className="size-3.5" aria-hidden="true" />
@@ -377,7 +371,7 @@ function InstanceRow({
             type="button"
             onClick={() => onDelete(instance)}
             data-testid="instance-delete"
-            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-red-700 transition-colors hover:border-red-200 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            className="inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs font-medium text-danger transition-colors hover:border-danger/30 hover:bg-danger-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
             title={t('entityModal.instancesTab.delete')}
           >
             <Trash2 className="size-3.5" aria-hidden="true" />

@@ -1,6 +1,7 @@
 import { AlertCircle, LoaderCircle, Pencil, Plus, Sparkles, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import EmptyState from '@/components/EmptyState';
 import {
   createNamespace,
   deleteNamespace,
@@ -94,7 +95,7 @@ export function OrganizationWorldPanel({ canWrite, orgId }: WorldProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -102,10 +103,10 @@ export function OrganizationWorldPanel({ canWrite, orgId }: WorldProps) {
   }
 
   return (
-    <div className="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-900">{t('organization.world.title')}</h2>
+    <div className="max-w-xl space-y-4 rounded-xl border border-line bg-surface p-5 shadow-sm">
+      <h2 className="text-base font-semibold text-ink">{t('organization.world.title')}</h2>
       {errorMessage ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-danger">
           {errorMessage}
         </p>
       ) : null}
@@ -115,35 +116,31 @@ export function OrganizationWorldPanel({ canWrite, orgId }: WorldProps) {
         </p>
       ) : null}
       <label className="block text-sm">
-        <span className="mb-1 block font-medium text-slate-700">
-          {t('organization.world.name')}
-        </span>
+        <span className="mb-1 block font-medium text-ink">{t('organization.world.name')}</span>
         <input
           value={name}
           disabled={!canWrite}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm disabled:bg-slate-50"
+          className="w-full rounded-lg border border-line px-3 py-2 text-sm disabled:bg-surface-muted"
         />
       </label>
       <label className="block text-sm">
-        <span className="mb-1 block font-medium text-slate-700">
-          {t('organization.world.slug')}
-        </span>
+        <span className="mb-1 block font-medium text-ink">{t('organization.world.slug')}</span>
         <input
           value={org?.slug ?? ''}
           disabled
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-500"
+          className="w-full rounded-lg border border-line bg-surface-muted px-3 py-2 font-mono text-sm text-muted"
         />
       </label>
       <div className="block text-sm">
         <div className="mb-1 flex items-center justify-between gap-2">
-          <span className="font-medium text-slate-700">{t('organization.world.description')}</span>
+          <span className="font-medium text-ink">{t('organization.world.description')}</span>
           {canWrite ? (
             <button
               type="button"
               disabled={generating || !name.trim()}
               onClick={() => void handleGenerate()}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-xs text-ink hover:bg-surface-muted disabled:opacity-50"
             >
               {generating ? (
                 <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
@@ -159,7 +156,7 @@ export function OrganizationWorldPanel({ canWrite, orgId }: WorldProps) {
           disabled={!canWrite}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm disabled:bg-slate-50"
+          className="w-full rounded-lg border border-line px-3 py-2 text-sm disabled:bg-surface-muted"
         />
       </div>
       {canWrite ? (
@@ -168,7 +165,7 @@ export function OrganizationWorldPanel({ canWrite, orgId }: WorldProps) {
             type="button"
             disabled={busy || !name.trim()}
             onClick={() => void handleSave()}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg disabled:opacity-60"
           >
             {t('common.save')}
           </button>
@@ -279,7 +276,7 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-3 py-16 text-sm text-slate-500">
+      <div className="flex items-center justify-center gap-3 py-16 text-sm text-muted">
         <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
         {t('common.loading')}
       </div>
@@ -289,14 +286,14 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold text-slate-900">
+        <h2 className="text-base font-semibold text-ink">
           {t('organization.namespacesAdmin.title')}
         </h2>
         {canWrite ? (
           <button
             type="button"
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
           >
             <Plus className="size-4" aria-hidden="true" />
             {t('organization.namespacesAdmin.create')}
@@ -307,7 +304,7 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
       {errorMessage ? (
         <div
           role="alert"
-          className="flex gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="flex gap-3 rounded-lg border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-red-800"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{errorMessage}</p>
@@ -315,10 +312,10 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
       ) : null}
 
       {draft ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-line bg-surface p-4 shadow-sm">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('organization.namespacesAdmin.name')}
               </span>
               <input
@@ -338,11 +335,11 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
                       : prev,
                   );
                 }}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-700">
+              <span className="mb-1 block font-medium text-ink">
                 {t('organization.namespacesAdmin.slug')}
               </span>
               <input
@@ -351,20 +348,20 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
                 onChange={(e) =>
                   setDraft((prev) => (prev ? { ...prev, slug: slugify(e.target.value) } : prev))
                 }
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm disabled:bg-slate-50"
+                className="w-full rounded-lg border border-line px-3 py-2 font-mono text-sm disabled:bg-surface-muted"
               />
             </label>
           </div>
           <div className="mt-3 block text-sm">
             <div className="mb-1 flex items-center justify-between gap-2">
-              <span className="font-medium text-slate-700">
+              <span className="font-medium text-ink">
                 {t('organization.namespacesAdmin.description')}
               </span>
               <button
                 type="button"
                 disabled={generating || !draft.name.trim()}
                 onClick={() => void handleGenerate()}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-1 text-xs text-ink hover:bg-surface-muted disabled:opacity-50"
               >
                 {generating ? (
                   <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
@@ -380,14 +377,14 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
                 setDraft((prev) => (prev ? { ...prev, description: e.target.value } : prev))
               }
               rows={3}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
             />
           </div>
           <div className="mt-3 flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setDraft(null)}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
             >
               {t('common.cancel')}
             </button>
@@ -395,7 +392,7 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
               type="button"
               disabled={busy || !draft.name.trim()}
               onClick={() => void handleSave()}
-              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-brand-fg disabled:opacity-60"
             >
               {draft.id ? t('common.save') : t('organization.namespacesAdmin.create')}
             </button>
@@ -404,13 +401,11 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
       ) : null}
 
       {items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
-          {t('organization.namespacesAdmin.empty')}
-        </p>
+        <EmptyState compact title={t('organization.namespacesAdmin.empty')} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <table className="min-w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">{t('organization.namespacesAdmin.name')}</th>
                 <th className="px-4 py-3">{t('organization.namespacesAdmin.slug')}</th>
@@ -425,24 +420,24 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
                 <tr
                   key={ns.id}
                   onClick={onOpenNamespace ? () => onOpenNamespace(ns) : undefined}
-                  className={`border-b border-slate-100 last:border-0 ${
-                    onOpenNamespace ? 'cursor-pointer hover:bg-slate-50' : ''
+                  className={`border-b border-line-subtle last:border-0 ${
+                    onOpenNamespace ? 'cursor-pointer hover:bg-surface-muted' : ''
                   }`}
                 >
-                  <td className="px-4 py-3 font-medium text-slate-900">{ns.name}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-slate-500">{ns.slug}</td>
-                  <td className="max-w-xs truncate px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 font-medium text-ink">{ns.name}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted">{ns.slug}</td>
+                  <td className="max-w-xs truncate px-4 py-3 text-muted">
                     {ns.description || '—'}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{ns.workspace_count}</td>
-                  <td className="px-4 py-3 text-slate-600">{ns.entity_count}</td>
+                  <td className="px-4 py-3 text-muted">{ns.workspace_count}</td>
+                  <td className="px-4 py-3 text-muted">{ns.entity_count}</td>
                   {canWrite ? (
                     <td className="px-4 py-3 text-right">
                       <div className="inline-flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => openEdit(ns)}
-                          className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900"
+                          className="inline-flex items-center gap-1 text-muted hover:text-ink"
                         >
                           <Pencil className="size-3.5" aria-hidden="true" />
                           {t('common.edit')}
@@ -452,7 +447,7 @@ export function OrganizationNamespacesPanel({ canWrite, orgId, onOpenNamespace }
                           onClick={() => {
                             void deleteNamespace(ns.id).then(load);
                           }}
-                          className="inline-flex items-center gap-1 text-red-600 hover:text-red-700"
+                          className="inline-flex items-center gap-1 text-danger hover:text-danger"
                         >
                           <Trash2 className="size-3.5" aria-hidden="true" />
                           {t('organization.namespacesAdmin.delete')}
