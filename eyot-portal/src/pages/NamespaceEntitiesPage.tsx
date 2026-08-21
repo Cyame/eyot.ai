@@ -1,7 +1,8 @@
-import { AlertCircle, Building2, Copy, FlaskConical, LoaderCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Building2, FlaskConical, LoaderCircle, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router';
+import CatalogCard from '@/components/CatalogCard';
 import CloneDialog from '@/components/CloneDialog';
 import EmptyState from '@/components/EmptyState';
 import ProgenitorAvatar from '@/components/ProgenitorAvatar';
@@ -163,7 +164,7 @@ export default function NamespaceEntitiesPage() {
           cloningId={cloningId}
           onSelect={setSelectedEntityId}
           onClone={(entity) => setCloneTarget(entity)}
-          onOpen={(id) => openEntityModal(id)}
+          onOpen={(id) => openEntityModal(id, 'instances')}
           onOpenDistill={(id) => openEntityModal(id, 'distill')}
           t={t}
         />
@@ -214,81 +215,58 @@ function EntitiesList({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-surface">
-      <table className="min-w-full text-sm">
-        <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
-          <tr>
-            <th className="px-4 py-3">{t('entityModal.fields.displayName')}</th>
-            <th className="px-4 py-3">{t('entityModal.fields.slug')}</th>
-            <th className="px-4 py-3">{t('namespaces.entityActions')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {entities.map((entity) => (
-            <tr
-              key={entity.id}
-              className={`border-b border-line-subtle last:border-0 ${
-                selectedId === entity.id ? 'bg-brand-soft' : ''
-              }`}
-              onClick={() => onSelect(entity.id)}
-            >
-              <td className="px-4 py-3 font-medium text-ink">
-                <span className="inline-flex items-center gap-2">
-                  <ProgenitorAvatar
-                    slug={entity.preset_slug}
-                    label={entity.display_name ?? entity.name}
-                    size="sm"
-                  />
-                  {entity.display_name ?? entity.name}
-                </span>
-              </td>
-              <td className="px-4 py-3 font-mono text-xs text-muted">{entity.slug}</td>
-              <td className="px-4 py-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpen(entity.id);
-                    }}
-                    className="text-brand hover:text-brand-hover"
-                  >
-                    {t('namespaces.viewDetail')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpenDistill(entity.id);
-                    }}
-                    className="inline-flex items-center gap-1 text-purple-700 hover:text-purple-800"
-                    data-testid={`entity-transmute-${entity.id}`}
-                  >
-                    <FlaskConical className="size-3.5" aria-hidden="true" />
-                    {t('namespaces.distillTransmute')}
-                  </button>
-                  {canClone ? (
-                    <button
-                      type="button"
-                      disabled={cloningId !== null}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClone(entity);
-                      }}
-                      className="inline-flex items-center gap-1 text-muted hover:text-ink disabled:opacity-50"
-                      data-testid={`entity-clone-${entity.id}`}
-                      title={t('clone.instancesNotCopied')}
-                    >
-                      <Copy className="size-3.5" aria-hidden="true" />
-                      {cloningId === entity.id ? t('clone.cloning') : t('clone.entity')}
-                    </button>
-                  ) : null}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {entities.map((entity) => (
+        <CatalogCard
+          key={entity.id}
+          selected={selectedId === entity.id}
+          avatar={
+            <ProgenitorAvatar
+              slug={entity.preset_slug}
+              label={entity.display_name ?? entity.name}
+              size="lg"
+            />
+          }
+          slug={entity.slug}
+          title={entity.display_name ?? entity.name}
+          tags={
+            <>
+              <span className="inline-flex rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
+                {t('nav.entities')}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  onSelect(entity.id);
+                  onOpenDistill(entity.id);
+                }}
+                data-testid={`entity-transmute-${entity.id}`}
+                className="inline-flex items-center rounded-md border border-line px-2 py-0.5 text-xs font-medium text-ink hover:bg-surface-muted"
+              >
+                {t('namespaces.distillTransmute')}
+              </button>
+            </>
+          }
+          primary={{
+            label: t('namespaces.summonFromBaseClass'),
+            onClick: () => {
+              onSelect(entity.id);
+              onOpen(entity.id);
+            },
+          }}
+          secondary={
+            canClone
+              ? {
+                  label: cloningId === entity.id ? t('clone.cloning') : t('clone.action'),
+                  onClick: () => onClone(entity),
+                  testId: `entity-clone-${entity.id}`,
+                  disabled: cloningId !== null,
+                  title: t('clone.instancesNotCopied'),
+                }
+              : undefined
+          }
+        />
+      ))}
     </div>
   );
 }

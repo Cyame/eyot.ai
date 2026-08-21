@@ -6,7 +6,8 @@
     "explore": "检索",
     "research": "参考",
     "vision": "视觉",
-    "heading": "可用 Subagent 能力"
+    "heading": "可用 Subagent 能力",
+    "tag": "子代理"
   },
   "common": {
     "appName": "Eyot",
@@ -98,6 +99,7 @@
     "entity": "克隆血脉",
     "organization": "克隆大陆",
     "workspace": "克隆生境",
+    "action": "克隆",
     "cloning": "克隆中…",
     "confirmOrganization": "克隆大陆「{{name}}」？将复制区域、生境结构与始祖，但不会复制任何成员成员。",
     "confirmWorkspace": "克隆生境「{{name}}」？仅复制智人及他们之间的兽道。",
@@ -124,7 +126,7 @@
     "noResults": "未找到匹配的用户。",
     "addMember": "添加成员",
     "addMemberTitle": "向本大陆添加成员",
-    "atomSelect": "授予原子权限",
+    "atomSelect": "授予权限",
     "removeMember": "移除",
     "removeConfirm": "从本大陆移除 {{name}}？其权限将被撤销。",
     "selfLockError": "不能移除自己的大陆管理权限。",
@@ -154,20 +156,46 @@
     "title": "区域成员",
     "inheritedTooltip": "大陆成员继承",
     "inheritedLabel": "大陆成员继承",
-    "namespaceLabel": "区域原子",
+    "namespaceLabel": "区域权限",
     "empty": "区域内还没有成员。",
     "loading": "正在加载成员…",
-    "addAtom": "添加原子",
-    "removeAtom": "移除原子",
+    "addAtom": "添加权限",
+    "removeAtom": "移除权限",
     "contractCount": "{{count}} 份成员"
   },
   "statusBar": {
-    "atomsLabel": "大陆原子",
+    "atomsLabel": "权限",
+    "geneLabel": "智人基因",
+    "permissionsLabel": "权限",
+    "permissionsHint": "这份智人基因包含的权限。拓扑改动不会改写这些权限。",
     "role": {
       "owner": "拥有者",
       "operator": "操作员",
       "editor": "编辑者",
       "viewer": "查看者"
+    }
+  },
+  "permissions": {
+    "unit": "权限",
+    "pack": "智人基因",
+    "kind": "种类",
+    "atoms": {
+      "can_manage_organization": "管理大陆",
+      "can_manage_org_members": "管理大陆成员",
+      "can_manage_namespace": "管理区域",
+      "can_manage_workspace": "管理工作区",
+      "can_edit_workspace": "编辑工作区",
+      "can_view_workspace": "查看工作区",
+      "can_operate_workspace": "操作工作区",
+      "can_manage_genes": "管理基因",
+      "can_manage_capabilities": "管理能力",
+      "can_manage_ai_genes": "管理 AI 基因",
+      "can_clone_base_class": "克隆始祖",
+      "can_clone_entity": "克隆血脉",
+      "can_clone_organization": "克隆大陆",
+      "can_clone_workspace": "克隆工作区",
+      "can_manage_knowledge": "管理知识",
+      "can_manage_meetings": "管理会议"
     }
   },
   "legacyRedirect": {
@@ -435,7 +463,9 @@
       "org": "大陆",
       "namespace": "区域",
       "workspace": "生境"
-    }
+    },
+    "conventionBadge": "公约",
+    "conventionHint": "静态协作约定，不是拓扑或粮仓的快照。改兽道或移动文件不会改写这条知识。"
   },
   "employees": {
     "eyebrow": "员工",
@@ -953,8 +983,8 @@
     "instanceStatus": "状态",
     "instancesPromote": "蜕变",
     "goIntroduceInWorkspace": "前往生境引入",
-    "genesTitle": "智人基因",
-    "genesDetail": "权限包（can_*）。身份基因锁定；其余可附加到用户。",
+    "genesTitle": "权限与智人基因",
+    "genesDetail": "单元权限是具体能力位，界面显示中文名；智人基因是权限包。",
     "genesSubDeepSea": "生物基因",
     "genesSubHuman": "智人基因",
     "aiGenesTitle": "生物基因",
@@ -1487,14 +1517,18 @@
     "nicknameHint": "展示用大名（类似 display_name）",
     "email": "邮箱",
     "identity": "当前身份",
-    "lockedGenes": "锁定基因",
-    "extraGenes": "附加基因",
+    "lockedGenes": "锁定智人基因",
+    "extraGenes": "附加智人基因",
     "noExtraGenes": "暂无附加基因",
     "changePassword": "修改密码",
     "currentPassword": "当前密码",
     "newPassword": "新密码",
     "saved": "已保存",
-    "passwordChanged": "密码已更新"
+    "passwordChanged": "密码已更新",
+    "debugTitle": "调试面板",
+    "debugHint": "调试不是日常功能。超管可从导航中隐藏它。",
+    "hideDebug": "从导航隐藏调试",
+    "openDebug": "打开调试面板"
   },
   "deploy": {
     "runningTitle": "正在部署后裔",

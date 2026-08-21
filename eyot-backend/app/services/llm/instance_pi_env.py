@@ -102,9 +102,7 @@ def provider_to_pi_env(
     return out
 
 
-async def _load_org_for_instance(
-    db: AsyncSession, instance: Instance
-) -> Organization | None:
+async def _load_org_for_instance(db: AsyncSession, instance: Instance) -> Organization | None:
     entity = await db.get(Entity, instance.entity_id)
     if entity is None or entity.deleted_at is not None:
         return None
@@ -128,14 +126,23 @@ async def resolve_provider_for_instance(
 
     # 1) BaseClass provider default via preset_slug
     if entity.preset_slug:
-        bc = (
-            await db.execute(
-                select(BaseClass).where(
-                    BaseClass.slug == entity.preset_slug,
-                    BaseClass.deleted_at.is_(None),
+        from app.core.preset_aliases import candidate_slugs
+
+        wanted = candidate_slugs(entity.preset_slug)
+        rows = (
+            (
+                await db.execute(
+                    select(BaseClass).where(
+                        BaseClass.slug.in_(wanted),
+                        BaseClass.deleted_at.is_(None),
+                    )
                 )
             )
-        ).scalar_one_or_none()
+            .scalars()
+            .all()
+        )
+        by_slug = {row.slug: row for row in rows}
+        bc = next((by_slug[slug] for slug in wanted if slug in by_slug), None)
         if bc is not None:
             binding = (
                 await db.execute(
@@ -147,11 +154,7 @@ async def resolve_provider_for_instance(
             ).scalar_one_or_none()
             if binding is not None:
                 provider = await db.get(OrganizationProvider, binding.provider_id)
-                if (
-                    provider is not None
-                    and provider.deleted_at is None
-                    and provider.enabled
-                ):
+                if provider is not None and provider.deleted_at is None and provider.enabled:
                     return provider, binding.model
 
     # 2) Org system hub / cerebellum default
@@ -188,9 +191,7 @@ async def resolve_provider_for_instance(
     return row, row.default_model
 
 
-async def resolve_pi_env_for_instance(
-    db: AsyncSession, instance_id: str
-) -> dict[str, str]:
+async def resolve_pi_env_for_instance(db: AsyncSession, instance_id: str) -> dict[str, str]:
     """Env fragment injected into Instance pods for pi auth + model."""
     provider, model = await resolve_provider_for_instance(db, instance_id)
     if provider is None:

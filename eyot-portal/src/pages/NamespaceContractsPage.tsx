@@ -9,6 +9,7 @@ import {
   updateNamespaceContractAtoms,
 } from '@/lib/api/contracts';
 import { resolveError } from '@/lib/apiError';
+import { permissionLabel } from '@/lib/permissionAtoms';
 import { cn } from '@/lib/utils';
 import { WORLD_ATOM_CATALOG } from '@/pages/WorldMembersPage';
 
@@ -181,13 +182,13 @@ export default function NamespaceContractsPage() {
                         type="button"
                         disabled={pending}
                         onClick={() => void handleRemoveNamespaceAtom(contract, atom.slug)}
-                        title={`${t('namespaceContracts.removeAtom')}: ${atom.slug}`}
+                        title={`${t('namespaceContracts.removeAtom')}: ${permissionLabel(t, atom.slug)}`}
                         className={cn(
                           'inline-flex items-center gap-1 rounded-lg border border-brand bg-brand-soft px-2.5 py-1 text-xs font-medium text-brand transition-colors hover:bg-brand-soft',
                           pending && 'cursor-wait opacity-60',
                         )}
                       >
-                        {atom.slug}
+                        {permissionLabel(t, atom.slug)}
                         <X className="size-3" aria-hidden="true" />
                       </button>
                     ))}
@@ -197,14 +198,14 @@ export default function NamespaceContractsPage() {
                         type="button"
                         disabled={pending}
                         onClick={() => void handleAddNamespaceAtom(contract, atom.slug)}
-                        title={`${t('namespaceContracts.addAtom')}: ${atom.slug}`}
+                        title={`${t('namespaceContracts.addAtom')}: ${permissionLabel(t, atom.slug)}`}
                         className={cn(
                           'inline-flex items-center gap-1 rounded-lg border border-dashed border-line-strong px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:border-brand hover:text-brand-hover',
                           pending && 'cursor-wait opacity-60',
                         )}
                       >
                         <Plus className="size-3" aria-hidden="true" />
-                        {atom.slug}
+                        {permissionLabel(t, atom.slug)}
                       </button>
                     ))}
                     {contract.namespace_atoms.length === 0 && addableAtoms.length === 0 ? (
@@ -229,7 +230,7 @@ export default function NamespaceContractsPage() {
                           title={t('namespaceContracts.inheritedTooltip')}
                           className="inline-flex cursor-default items-center gap-1 rounded-lg border border-line bg-surface-muted px-2.5 py-1 text-xs font-medium text-muted-subtle"
                         >
-                          {atom.slug}
+                          {permissionLabel(t, atom.slug)}
                         </span>
                       ))}
                     </div>

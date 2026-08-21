@@ -2,6 +2,7 @@ import { AlertCircle, Building2, LoaderCircle, Plus, UserRound } from 'lucide-re
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router';
+import EmptyState from '@/components/EmptyState';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ThemeToggle from '@/components/ThemeToggle';
 import { createOrganization, fetchOrganizations } from '@/lib/api/organizations';
@@ -146,20 +147,23 @@ export default function OrgPickerPage() {
             {t('orgPicker.loading')}
           </div>
         ) : orgs === null ? null : orgs.length === 0 ? (
-          <div className="rounded-xl border border-nav-line bg-overlay px-6 py-12 text-center">
-            <UserRound className="mx-auto size-8 text-muted" aria-hidden="true" />
-            <h2 className="mt-4 text-sm font-semibold text-nav-ink">{t('orgPicker.emptyTitle')}</h2>
-            <p className="mt-2 text-sm text-muted-subtle">{t('orgPicker.emptyDetail')}</p>
-            <button
-              type="button"
-              onClick={openCreate}
-              data-testid="org-picker-empty-cta"
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover"
-            >
-              <Plus className="size-4" aria-hidden="true" />
-              {t('orgPicker.ctaCreate')}
-            </button>
-          </div>
+          <EmptyState
+            tone="earth"
+            icon={UserRound}
+            title={t('orgPicker.emptyTitle')}
+            description={t('orgPicker.emptyDetail')}
+            action={
+              <button
+                type="button"
+                onClick={openCreate}
+                data-testid="org-picker-empty-cta"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand-hover"
+              >
+                <Plus className="size-4" aria-hidden="true" />
+                {t('orgPicker.ctaCreate')}
+              </button>
+            }
+          />
         ) : (
           <div>
             <div className="mb-3 flex items-center justify-between">

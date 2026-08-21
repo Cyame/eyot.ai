@@ -62,6 +62,7 @@ describe('OrgPickerPage', () => {
     renderPicker();
 
     expect(await screen.findByText('No continents yet')).toBeInTheDocument();
+    expect(screen.getByTestId('empty-state')).toHaveClass('bg-earth');
     expect(screen.getByTestId('org-picker-empty-cta')).toHaveTextContent('Create continent');
   });
 

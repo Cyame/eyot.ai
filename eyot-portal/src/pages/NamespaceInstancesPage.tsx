@@ -1,8 +1,10 @@
-import { AlertCircle, Cpu, LoaderCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Cpu, LoaderCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useParams } from 'react-router';
+import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import CatalogCard from '@/components/CatalogCard';
 import EmptyState from '@/components/EmptyState';
+import ProgenitorAvatar from '@/components/ProgenitorAvatar';
 import PromoteModal from '@/components/PromoteModal';
 import { ApiError, api } from '@/lib/api';
 import { type EntityDetail, fetchEntity, promoteEntity } from '@/lib/api/entities';
@@ -21,6 +23,7 @@ type OffsetPage<T> = {
 export default function NamespaceInstancesPage() {
   const { t } = useTranslation();
   const { orgId, nsId } = useParams<{ orgId: string; nsId: string }>();
+  const navigate = useNavigate();
 
   const [instances, setInstances] = useState<readonly Instance[]>([]);
   const [entities, setEntities] = useState<readonly Entity[]>([]);
@@ -108,6 +111,9 @@ export default function NamespaceInstancesPage() {
           orgId={orgId ?? ''}
           nsId={nsId ?? ''}
           onOpenEntity={(id) => openEntityModal(id, 'instances')}
+          onEnterWorkspace={(workspaceId) => {
+            if (orgId !== undefined) navigate(`/orgs/${orgId}/workspaces/${workspaceId}`);
+          }}
           onPromote={async (entityId, instanceId) => {
             setPromoteTarget({ entityId, instanceId });
             try {
@@ -153,6 +159,7 @@ function InstancesList({
   orgId,
   nsId,
   onOpenEntity,
+  onEnterWorkspace,
   onPromote,
   t,
 }: {
@@ -161,6 +168,7 @@ function InstancesList({
   readonly orgId: string;
   readonly nsId: string;
   readonly onOpenEntity: (entityId: string) => void;
+  readonly onEnterWorkspace: (workspaceId: string) => void;
   readonly onPromote: (entityId: string, instanceId: string) => void;
   readonly t: TFn;
 }) {
@@ -185,50 +193,43 @@ function InstancesList({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-surface">
-      <table className="min-w-full text-sm">
-        <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
-          <tr>
-            <th className="px-4 py-3">{t('namespaces.instanceEntity')}</th>
-            <th className="px-4 py-3">{t('namespaces.instanceId')}</th>
-            <th className="px-4 py-3">{t('namespaces.instanceStatus')}</th>
-            <th className="px-4 py-3">{t('namespaces.entityActions')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {instances.map((inst) => {
-            const entity = entityById.get(inst.entity_id);
-            const label = entity?.display_name ?? entity?.name ?? inst.entity_id;
-            return (
-              <tr key={inst.id} className="border-b border-line-subtle last:border-0">
-                <td className="px-4 py-3 font-medium text-ink">{label}</td>
-                <td className="px-4 py-3 font-mono text-xs text-muted">{inst.id.slice(0, 8)}</td>
-                <td className="px-4 py-3 capitalize text-muted">{inst.status}</td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => onOpenEntity(inst.entity_id)}
-                      className="text-brand hover:text-brand-hover"
-                    >
-                      {t('namespaces.viewDetail')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onPromote(inst.entity_id, inst.id)}
-                      className="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-800"
-                      data-testid={`instance-promote-${inst.id}`}
-                    >
-                      <Sparkles className="size-3.5" aria-hidden="true" />
-                      {t('promoteModal.open')}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {instances.map((inst) => {
+        const entity = entityById.get(inst.entity_id);
+        const label = entity?.display_name ?? entity?.name ?? inst.entity_id;
+        return (
+          <CatalogCard
+            key={inst.id}
+            avatar={<ProgenitorAvatar slug={entity?.preset_slug ?? null} label={label} size="lg" />}
+            slug={inst.id.slice(0, 8)}
+            title={label}
+            description={inst.status}
+            tags={
+              <>
+                <span className="inline-flex rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
+                  {t('nav.instances')}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onOpenEntity(inst.entity_id)}
+                  className="inline-flex items-center rounded-md border border-line px-2 py-0.5 text-xs font-medium text-ink hover:bg-surface-muted"
+                >
+                  {t('namespaces.viewDetail')}
+                </button>
+              </>
+            }
+            primary={{
+              label: t('namespaces.enterWorkspace'),
+              onClick: () => onEnterWorkspace(inst.workspace_id),
+            }}
+            secondary={{
+              label: t('promoteModal.open'),
+              onClick: () => onPromote(inst.entity_id, inst.id),
+              testId: `instance-promote-${inst.id}`,
+            }}
+          />
+        );
+      })}
     </div>
   );
 }

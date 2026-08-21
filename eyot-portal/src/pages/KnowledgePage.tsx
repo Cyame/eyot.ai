@@ -18,6 +18,7 @@ import { fetchNamespaces } from '@/lib/api/namespaces';
 import { fetchOrganization } from '@/lib/api/organizations';
 import { fetchWorkspaces } from '@/lib/api/workspaces';
 import { resolveError } from '@/lib/apiError';
+import { isKnowledgeConvention } from '@/lib/knowledgeConventions';
 import type { Namespace, Workspace } from '@/lib/types';
 
 type TFn = ReturnType<typeof useTranslation>['t'];
@@ -761,12 +762,26 @@ function EntryTable({
             const binding = entryBindingLabel(entry, orgName, namespaceById, workspaceById);
             const dimension = dimensionById.get(entry.dimension_id ?? '');
             const isDeleting = deleteTarget?.id === entry.id;
+            const isConvention = isKnowledgeConvention(entry.key);
             return (
               <tr key={entry.id} className="border-b border-line-subtle last:border-0">
-                <td className="px-4 py-3 font-mono text-xs font-medium text-ink">{entry.key}</td>
+                <td className="px-4 py-3 font-mono text-xs font-medium text-ink">
+                  <span className="block">{entry.key}</span>
+                  {isConvention ? (
+                    <span
+                      data-testid={`knowledge-convention-${entry.key}`}
+                      className="mt-1 inline-flex rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-900"
+                    >
+                      {t('knowledge.conventionBadge')}
+                    </span>
+                  ) : null}
+                </td>
                 <td className="max-w-[12rem] px-4 py-3">
                   <p className="truncate font-medium text-ink">{entry.title}</p>
                   <p className="line-clamp-2 text-xs text-muted">{entry.body}</p>
+                  {isConvention ? (
+                    <p className="mt-1 text-xs text-ink-muted">{t('knowledge.conventionHint')}</p>
+                  ) : null}
                 </td>
                 <td className="px-4 py-3">
                   <span

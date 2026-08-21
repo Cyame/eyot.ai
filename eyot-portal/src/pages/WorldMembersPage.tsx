@@ -12,6 +12,7 @@ import {
   updateOrganizationMember,
 } from '@/lib/api/organizations';
 import { resolveError as sharedResolveError } from '@/lib/apiError';
+import { permissionLabel } from '@/lib/permissionAtoms';
 import type { OrgMember, UserBrief } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -61,7 +62,7 @@ function formatDate(iso: string): string {
 type TFn = ReturnType<typeof useTranslation>['t'];
 
 function atomDisplayName(t: TFn, slug: string): string {
-  return t(`worldMembers.atoms.${slug}`, { defaultValue: slug });
+  return permissionLabel(t, slug);
 }
 
 export default function WorldMembersPage() {
@@ -453,7 +454,7 @@ export default function WorldMembersPage() {
                         onClick={() => void handleToggleAtom(member, atom.slug)}
                         aria-pressed={has}
                         aria-label={`${displayName}: ${has ? 'on' : 'off'}`}
-                        title={atom.slug}
+                        title={displayName}
                         className={cn(
                           'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors',
                           has

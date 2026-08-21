@@ -9,7 +9,7 @@ export type EmptyStateProps = {
   readonly action?: ReactNode;
   readonly className?: string;
   readonly compact?: boolean;
-  readonly tone?: 'default' | 'danger';
+  readonly tone?: 'default' | 'danger' | 'earth';
 };
 
 export default function EmptyState({
@@ -22,20 +22,25 @@ export default function EmptyState({
   tone = 'default',
 }: EmptyStateProps) {
   const isDanger = tone === 'danger';
+  const isEarth = tone === 'earth';
   return (
     <div
       data-testid="empty-state"
       className={cn(
-        'grid place-items-center rounded-xl border border-dashed text-center',
+        'grid place-items-center rounded-xl border text-center',
         compact ? 'px-3 py-6' : 'px-6 py-16',
-        isDanger ? 'border-danger/40 bg-danger-soft' : 'border-line-strong bg-surface',
+        isDanger
+          ? 'border-danger/40 bg-danger-soft'
+          : isEarth
+            ? 'border-earth-line bg-earth'
+            : 'border-dashed border-line-strong bg-surface',
         className,
       )}
     >
       <Icon
         className={cn(
           compact ? 'size-5' : 'size-8',
-          isDanger ? 'text-danger' : 'text-muted-subtle',
+          isDanger ? 'text-danger' : isEarth ? 'text-ink-muted' : 'text-muted-subtle',
         )}
         aria-hidden="true"
       />
@@ -52,7 +57,7 @@ export default function EmptyState({
         <p
           className={cn(
             compact ? 'mt-1 text-xs' : 'mt-1 text-sm',
-            isDanger ? 'text-danger/80' : 'text-muted',
+            isDanger ? 'text-danger/80' : 'text-ink-muted',
           )}
         >
           {description}

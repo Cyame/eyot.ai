@@ -36,6 +36,8 @@
   --eyot-progenitor-sparrow: oklch(0.72 0.08 80);
   --eyot-progenitor-coyote: oklch(0.7 0.1 85);
   --eyot-progenitor-lion: oklch(0.72 0.14 80);
+  --eyot-earth: oklch(0.905 0.038 82);
+  --eyot-earth-line: oklch(0.78 0.055 75);
   --eyot-shadow-sm: 0 1px 2px oklch(0.3 0.02 155 / 0.06);
   --eyot-shadow-md: 0 8px 24px oklch(0.28 0.02 155 / 0.1);
   --eyot-shadow-lg: 0 18px 40px oklch(0.25 0.02 155 / 0.16);
@@ -70,6 +72,8 @@
   --eyot-warning-soft: oklch(0.3 0.05 75);
   --eyot-danger: oklch(0.76 0.12 25);
   --eyot-danger-soft: oklch(0.3 0.05 25);
+  --eyot-earth: oklch(0.26 0.035 80);
+  --eyot-earth-line: oklch(0.42 0.05 75);
   --eyot-shadow-sm: 0 1px 2px oklch(0.05 0.02 155 / 0.4);
   --eyot-shadow-md: 0 8px 24px oklch(0.05 0.02 155 / 0.45);
   --eyot-shadow-lg: 0 18px 40px oklch(0.02 0.02 155 / 0.55);
@@ -79,6 +83,8 @@
   --color-canvas: var(--eyot-canvas);
   --color-surface: var(--eyot-surface);
   --color-surface-muted: var(--eyot-surface-muted);
+  --color-earth: var(--eyot-earth);
+  --color-earth-line: var(--eyot-earth-line);
   --color-ink: var(--eyot-ink);
   --color-ink-muted: var(--eyot-ink-muted);
   --color-muted: var(--eyot-muted);

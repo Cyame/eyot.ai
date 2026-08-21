@@ -1,16 +1,8 @@
-import {
-  AlertCircle,
-  Building2,
-  Copy,
-  Layers,
-  LoaderCircle,
-  Pencil,
-  Plus,
-  Sparkles,
-} from 'lucide-react';
+import { AlertCircle, Building2, Layers, LoaderCircle, Pencil, Sparkles } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
+import CatalogCard from '@/components/CatalogCard';
 import CloneDialog from '@/components/CloneDialog';
 import EmptyState from '@/components/EmptyState';
 import ProgenitorAvatar from '@/components/ProgenitorAvatar';
@@ -20,7 +12,6 @@ import { fetchMe } from '@/lib/api/auth';
 import { fetchBaseClassesPage } from '@/lib/api/baseClasses';
 import { type ClonePayload, cloneBaseClass } from '@/lib/api/clone';
 import { resolveError } from '@/lib/apiError';
-import { translateBaseClassTag } from '@/lib/baseClassTags';
 import type { BaseClass, OrgIdentity } from '@/lib/types';
 import { useOnboardingModalStore } from '@/stores/onboardingModalStore';
 import { useSessionStore } from '@/stores/session';
@@ -206,69 +197,50 @@ function BaseClassGrid({
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {baseClasses.map((bc) => (
-        <article key={bc.id} className="rounded-xl border border-line bg-surface p-5 shadow-sm">
-          <Link to={`/orgs/${orgId}/base-classes/${bc.slug}`} className="block">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex min-w-0 items-start gap-3">
-                <ProgenitorAvatar slug={bc.slug} label={bc.name} size="lg" />
-                <h2 className="text-lg font-semibold text-ink">
-                  {t(bc.display_name ?? bc.name, { defaultValue: bc.name })}
-                </h2>
-              </div>
-              {bc.scope === 'system' ? (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
-                  <Layers className="size-3" aria-hidden="true" />
-                  {t('namespaces.preset')}
-                </span>
-              ) : (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
-                  <Pencil className="size-3" aria-hidden="true" />
-                  {t('namespaces.custom')}
-                </span>
-              )}
-            </div>
-            <p className="mt-1 font-mono text-xs text-muted">{bc.slug}</p>
-            <p className="mt-3 line-clamp-3 text-sm text-muted">{bc.description}</p>
-          </Link>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {(bc.tags ?? []).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted"
-              >
-                {translateBaseClassTag(tag, t)}
-              </span>
-            ))}
-          </div>
-          <div className="mt-3">
-            <SubagentChips capabilities={extractSubagentCapabilities(bc.manifest)} />
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => onSummon(bc.slug)}
-              className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:text-brand-hover"
-            >
-              <Plus className="size-3.5" aria-hidden="true" />
-              {t('namespaces.summonFromBaseClass')}
-            </button>
-            {canClone ? (
-              <button
-                type="button"
-                disabled={cloningId !== null}
-                onClick={() => onClone(bc)}
-                data-testid={`base-class-clone-${bc.id}`}
-                title={t('clone.instancesNotCopied')}
-                className="inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-ink disabled:opacity-50"
-              >
-                <Copy className="size-3.5" aria-hidden="true" />
-                {cloningId === bc.id ? t('clone.cloning') : t('clone.baseClass')}
-              </button>
-            ) : null}
-          </div>
-        </article>
-      ))}
+      {baseClasses.map((bc) => {
+        const subagents = extractSubagentCapabilities(bc.manifest);
+        return (
+          <CatalogCard
+            key={bc.id}
+            href={`/orgs/${orgId}/base-classes/${bc.slug}`}
+            avatar={<ProgenitorAvatar slug={bc.slug} label={bc.name} size="lg" />}
+            slug={bc.slug}
+            title={t(bc.display_name ?? bc.name, { defaultValue: bc.name })}
+            description={bc.description}
+            tags={
+              <>
+                {bc.scope === 'system' ? (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
+                    <Layers className="size-3" aria-hidden="true" />
+                    {t('namespaces.preset')}
+                  </span>
+                ) : (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-muted">
+                    <Pencil className="size-3" aria-hidden="true" />
+                    {t('namespaces.custom')}
+                  </span>
+                )}
+                <SubagentChips capabilities={subagents} variant="tag" />
+              </>
+            }
+            primary={{
+              label: t('namespaces.summonFromBaseClass'),
+              onClick: () => onSummon(bc.slug),
+            }}
+            secondary={
+              canClone
+                ? {
+                    label: cloningId === bc.id ? t('clone.cloning') : t('clone.action'),
+                    onClick: () => onClone(bc),
+                    testId: `base-class-clone-${bc.id}`,
+                    disabled: cloningId !== null,
+                    title: t('clone.instancesNotCopied'),
+                  }
+                : undefined
+            }
+          />
+        );
+      })}
     </div>
   );
 }

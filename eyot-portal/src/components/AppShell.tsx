@@ -29,6 +29,7 @@ import { api } from '@/lib/api';
 import type { AuthUserPayload } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { APP_VERSION } from '@/lib/version';
+import { useDebugNavStore } from '@/stores/debugNav';
 import { useSessionStore } from '@/stores/session';
 
 const DESKTOP_LINK_CLASS =
@@ -61,7 +62,6 @@ function worldNavItems(orgId: string): readonly NavItem[] {
     { to: `/orgs/${orgId}/genes`, labelKey: 'nav.genes', Icon: Dna },
     { to: `/orgs/${orgId}/knowledge`, labelKey: 'nav.knowledge', Icon: BookOpen },
     { to: `/orgs/${orgId}/namespaces`, labelKey: 'nav.namespaces', Icon: Layers, exact: true },
-    { to: `/orgs/${orgId}/debug`, labelKey: 'nav.debug', Icon: Bug },
   ];
 }
 
@@ -114,6 +114,7 @@ export default function AppShell() {
   const setCurrentOrg = useSessionStore((state) => state.setCurrentOrg);
   const setCurrentNamespace = useSessionStore((state) => state.setCurrentNamespace);
   const clearToken = useSessionStore((state) => state.clearToken);
+  const debugHidden = useDebugNavStore((state) => state.hidden);
 
   useEffect(() => {
     if (token === null) return;
@@ -182,6 +183,7 @@ export default function AppShell() {
     activeOrgId !== null && activeNamespaceId !== null
       ? namespaceNavItems(activeOrgId, activeNamespaceId)
       : [];
+  const showDebug = activeOrgId !== null && !debugHidden;
 
   return (
     <div className="flex min-h-dvh bg-canvas text-ink md:h-dvh md:overflow-hidden">
@@ -288,6 +290,26 @@ export default function AppShell() {
                 <User className="size-4 shrink-0" aria-hidden="true" />
                 <span className="truncate">{t('nav.account')}</span>
               </NavLink>
+              {showDebug && activeOrgId !== null ? (
+                <NavLink
+                  to={`/orgs/${activeOrgId}/debug`}
+                  data-testid="nav-debug"
+                  className={() =>
+                    cn(
+                      DESKTOP_LINK_CLASS,
+                      navActive(
+                        { to: `/orgs/${activeOrgId}/debug`, labelKey: 'nav.debug', Icon: Bug },
+                        location.pathname,
+                      )
+                        ? 'bg-brand text-brand-fg shadow-sm'
+                        : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
+                    )
+                  }
+                >
+                  <Bug className="size-4 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{t('nav.debug')}</span>
+                </NavLink>
+              ) : null}
             </div>
           </section>
         </nav>
@@ -316,7 +338,6 @@ export default function AppShell() {
           ) : null}
 
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <ThemeToggle variant="surface" />
             <Link
               to="/account"
               className="flex min-w-0 items-center gap-2 rounded-full px-2 py-1.5 hover:bg-surface-muted"
@@ -413,6 +434,21 @@ export default function AppShell() {
           >
             {t('nav.account')}
           </NavLink>
+          {showDebug && activeOrgId !== null ? (
+            <NavLink
+              to={`/orgs/${activeOrgId}/debug`}
+              className={() =>
+                cn(
+                  'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
+                  location.pathname === `/orgs/${activeOrgId}/debug`
+                    ? 'border-brand bg-brand-soft text-brand'
+                    : 'border-transparent text-muted hover:bg-surface-muted',
+                )
+              }
+            >
+              {t('nav.debug')}
+            </NavLink>
+          ) : null}
         </nav>
 
         <main className="min-h-0 flex-1 overflow-y-auto">

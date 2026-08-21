@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AppShell from '@/components/AppShell';
 import { api } from '@/lib/api';
+import { useDebugNavStore } from '@/stores/debugNav';
 import { useSessionStore } from '@/stores/session';
 
 vi.mock('@/lib/api', async (importOriginal) => {
@@ -53,6 +54,8 @@ function desktopNav() {
 beforeEach(() => {
   mockedApi.mockReset();
   mockedApi.mockResolvedValue(ME_PAYLOAD);
+  localStorage.clear();
+  useDebugNavStore.setState({ hidden: false });
   useSessionStore.setState({
     token: 'jwt',
     user: {
@@ -96,6 +99,7 @@ describe('AppShell sidebar sections', () => {
       '/orgs/org-1/namespaces',
     );
     expect(nav.getByRole('link', { name: 'Debug' })).toHaveAttribute('href', '/orgs/org-1/debug');
+    expect(screen.getAllByTestId('theme-toggle')).toHaveLength(1);
   });
 
   it('renders the Current namespace section with its switcher when a namespace is active', () => {

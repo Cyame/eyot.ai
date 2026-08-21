@@ -16,9 +16,11 @@ Resolve semantics for an instance:
    (uuid, deterministic) — the query is ordered ``updated_at DESC, id DESC``
    and the first candidate at the winning scope is picked.
 
-The system seeds (:data:`SYSTEM_SEEDS`) mirror the plan's optional seed rows
-(``eyot.collab.passage`` / ``eyot.hub.shared_work``) and are ensured
-idempotently at app startup.
+The system seeds (:data:`SYSTEM_SEEDS`) are **standing conventions**, not
+live topology dumps. ``eyot.collab.passage`` states the neighbor-only
+messaging rule; ``eyot.hub.shared_work`` states Hub path prefixes. Moving
+nodes or files does not rewrite these rows. They are ensured
+idempotently at app startup (title/body refreshed for system scope).
 """
 
 from __future__ import annotations
@@ -51,25 +53,26 @@ SYSTEM_SEEDS: tuple[dict[str, str], ...] = (
         "key": "eyot.collab.passage",
         "title": "近邻通道协作约束",
         "body": (
-            "化身只通过近邻消息通道与走廊内相邻的化身交换情报：消息仅送达直接相连"
-            "的邻居，跨走廊的情报须经共享黑板上流转，禁止向非邻居化身直达。"
+            "【公约，非拓扑快照】这条知识不会随兽道增删而改写。"
+            "它只声明协作规则：化身只通过近邻兽道与直接相连的邻居交换情报；"
+            "跨兽道的情报须经信号塔流转，禁止向非邻居直达。"
+            "实际邻居集合以当前生境的 Passage 行准，不写在本条文里。"
         ),
     },
     {
         "key": "eyot.hub.shared_work",
         "title": "Hub 工作区约定",
         "body": (
-            "Hub 中 shared 前缀路径为协作面，所有化身共享只读约定与产物；"
-            "work 前缀路径为当前化身私有临时区，仅本人可读写，跨化身投递需显式"
-            "复制到 shared。"
+            "【公约，非目录快照】这条知识不会随粮仓文件移动而改写。"
+            "它只声明路径约定：信号塔里 shared 前缀是协作面（共享只读约定与产物）；"
+            "work 前缀是当前后裔的私有临时区，跨后裔投递须显式复制到 shared。"
+            "实际文件树以粮仓为准，不写在本条文里。"
         ),
     },
 )
 
 
-async def _scope_chain(
-    db: AsyncSession, entity_id: str
-) -> tuple[str | None, str | None]:
+async def _scope_chain(db: AsyncSession, entity_id: str) -> tuple[str | None, str | None]:
     """Resolve ``(org_id, namespace_id)`` following entity → namespace."""
     entity = await db.get(Entity, entity_id)
     if entity is None or entity.deleted_at is not None:
@@ -182,9 +185,7 @@ async def resolve_knowledge_winners(
     return winners
 
 
-async def resolve_knowledge_for_instance(
-    db: AsyncSession, instance: Instance | str
-) -> list[KnowledgeEntry]:
+async def resolve_knowledge_for_instance(db: AsyncSession, instance: Instance | str) -> list[KnowledgeEntry]:
     """Resolve the visible knowledge rows for an instance (D16/H1).
 
     Accepts either an :class:`Instance` ORM object or an instance id string.
@@ -244,5 +245,9 @@ async def ensure_knowledge_seeds(db: AsyncSession) -> dict[str, KnowledgeEntry]:
             await db.flush()
             out[seed["key"]] = entry
         else:
+            # System rows are operator-readonly. Refresh the standing-convention
+            # text so a definition change ships without a data migration.
+            existing.title = seed["title"]
+            existing.body = seed["body"]
             out[seed["key"]] = existing
     return out

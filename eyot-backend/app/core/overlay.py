@@ -26,11 +26,7 @@ def deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]
     """Recursively merge *override* onto a copy of *base*."""
     result = deepcopy(base)
     for key, value in override.items():
-        if (
-            key in result
-            and isinstance(result[key], dict)
-            and isinstance(value, dict)
-        ):
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
             result[key] = deep_merge(result[key], value)
         else:
             result[key] = deepcopy(value)
@@ -44,24 +40,16 @@ def _manifest_template_subset(manifest: dict[str, Any]) -> dict[str, Any]:
     """
     return {
         "provider_config": manifest.get("provider_config") or {},
-        "default_model": manifest.get("default_model")
-        or manifest.get("model")
-        or "tbd",
+        "default_model": manifest.get("default_model") or manifest.get("model") or "tbd",
         "commands": list(manifest.get("commands") or []),
-        "system_prompt": manifest.get("system_prompt")
-        or manifest.get("prompt")
-        or "",
+        "system_prompt": manifest.get("system_prompt") or manifest.get("prompt") or "",
         "tools": list(manifest.get("tools") or []),
         "runtime_config": dict(manifest.get("runtime_config") or {}),
         # Subagent delegation strategy (v5.1) — flows for scaffold intent hints.
         "subagent_strategy": manifest.get("subagent_strategy") or {},
         # Template-only copies for world-hub prompt composition (not live caps).
-        "baseclass_template_prompt": manifest.get("system_prompt")
-        or manifest.get("prompt")
-        or "",
-        "baseclass_operating_form": manifest.get("operating_form")
-        or manifest.get("description")
-        or "",
+        "baseclass_template_prompt": manifest.get("system_prompt") or manifest.get("prompt") or "",
+        "baseclass_operating_form": manifest.get("operating_form") or manifest.get("description") or "",
     }
 
 
@@ -101,9 +89,7 @@ def resolve_entity_config(
         resolved = deep_merge(resolved, merge_overlay)
 
     # Explicit Entity-side capability/gene assignment (override list wins if present).
-    if "default_capabilities" in override and isinstance(
-        override["default_capabilities"], list
-    ):
+    if "default_capabilities" in override and isinstance(override["default_capabilities"], list):
         resolved["default_capabilities"] = list(override["default_capabilities"])
     elif "capabilities" in override and isinstance(override["capabilities"], list):
         resolved["default_capabilities"] = list(override["capabilities"])
@@ -144,22 +130,22 @@ async def resolve_instance_agent_config(
 
     manifest: dict[str, Any] | None = None
     if entity.preset_slug:
+        from app.core.preset_aliases import candidate_slugs
+
+        wanted = candidate_slugs(entity.preset_slug)
         result = await db.execute(
             select(BaseClass).where(
-                BaseClass.slug == entity.preset_slug,
+                BaseClass.slug.in_(wanted),
                 BaseClass.deleted_at.is_(None),
             )
         )
-        preset = result.scalar_one_or_none()
+        by_slug = {row.slug: row for row in result.scalars().all()}
+        preset = next((by_slug[slug] for slug in wanted if slug in by_slug), None)
         if preset is not None and isinstance(preset.manifest, dict):
             manifest = preset.manifest
-            resolved = resolve_entity_config(
-                entity, manifest, capabilities=capabilities, gene_refs=gene_refs
-            )
+            resolved = resolve_entity_config(entity, manifest, capabilities=capabilities, gene_refs=gene_refs)
             resolved["baseclass_slug"] = preset.slug
             resolved["baseclass_name"] = preset.display_name or preset.name
             return resolved
 
-    return resolve_entity_config(
-        entity, manifest, capabilities=capabilities, gene_refs=gene_refs
-    )
+    return resolve_entity_config(entity, manifest, capabilities=capabilities, gene_refs=gene_refs)

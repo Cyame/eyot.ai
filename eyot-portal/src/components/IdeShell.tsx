@@ -5,8 +5,8 @@ import { Link, Navigate, NavLink } from 'react-router';
 import ComposerPanel from '@/components/ComposerPanel';
 import GlobalModals from '@/components/GlobalModals';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import ThemeToggle from '@/components/ThemeToggle';
 import { cn } from '@/lib/utils';
+import { useDebugNavStore } from '@/stores/debugNav';
 import { useSessionStore } from '@/stores/session';
 
 type IdeShellProps = {
@@ -29,6 +29,7 @@ export default function IdeShell({
   const user = useSessionStore((state) => state.user);
   const orgId = useSessionStore((state) => state.currentOrgId);
   const clearToken = useSessionStore((state) => state.clearToken);
+  const debugHidden = useDebugNavStore((state) => state.hidden);
 
   if (token === null) {
     return <Navigate to="/login" replace />;
@@ -47,7 +48,15 @@ export default function IdeShell({
       Icon: Sparkles,
       label: t('ide.sidebar.capabilityMarket'),
     },
-    { href: '/namespaces?tab=debug', Icon: Bug, label: t('ide.sidebar.debug') },
+    ...(orgId !== null && !debugHidden
+      ? [
+          {
+            href: `/orgs/${encodeURIComponent(orgId)}/debug`,
+            Icon: Bug,
+            label: t('ide.sidebar.debug'),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -83,7 +92,6 @@ export default function IdeShell({
               {t('ide.backToNamespaces')}
             </Link>
             <div className="flex items-center gap-2">
-              <ThemeToggle variant="surface" />
               <LanguageSwitcher variant="surface" placement="down" />
             </div>
           </div>

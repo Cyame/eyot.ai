@@ -170,6 +170,9 @@ describe('KnowledgePage', () => {
 
     expect(await screen.findByText('eyot.collab.passage')).toBeInTheDocument();
     expect(screen.getByText('近邻通道约束')).toBeInTheDocument();
+    expect(screen.getByTestId('knowledge-convention-eyot.collab.passage')).toHaveTextContent(
+      'Convention',
+    );
     expect(screen.getByText('共享工作区约定')).toBeInTheDocument();
     // org binding resolves to the org name; workspace binding to "ns / ws".
     expect(screen.getByText('Eyot 世界')).toBeInTheDocument();

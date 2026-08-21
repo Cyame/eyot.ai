@@ -23,4 +23,12 @@ describe('EmptyState', () => {
     render(<EmptyState icon={Inbox} title="Empty" />);
     expect(screen.getByTestId('empty-state')).toBeInTheDocument();
   });
+
+  it('uses earth fill and ink text for the continent empty state', () => {
+    render(<EmptyState tone="earth" title="No continents yet" description="Create one." />);
+    const box = screen.getByTestId('empty-state');
+    expect(box).toHaveClass('bg-earth');
+    expect(box).toHaveClass('border-earth-line');
+    expect(screen.getByText('No continents yet')).toHaveClass('text-ink');
+  });
 });

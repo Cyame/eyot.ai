@@ -64,9 +64,11 @@ async def lifespan(app: FastAPI):
     # prevent registration on subsequent queue instances (e.g., test lifespan re-entry).
     # Reset to None so the new queue always gets registered.
     from app.core import activation as act_mod
+
     act_mod._pending_daily_report = None
     act_mod._task_queue = None
     from app.core.activation import schedule_daily_report_sync
+
     await schedule_daily_report_sync(queue)
 
     # P8: supervisor registration order is load-bearing — register the
@@ -79,18 +81,28 @@ async def lifespan(app: FastAPI):
     queue.register_task("idle_check", idle_check_handler)
     try:
         await supervisor.start()
-        await queue.enqueue(
-            "idle_check", delay=0, payload={"task_queue": queue}
-        )
+        await queue.enqueue("idle_check", delay=0, payload={"task_queue": queue})
         register_activation_consumer()
         async with get_session_factory()() as rehydrate_session:
             await supervisor.rehydrate(rehydrate_session)
     except Exception:
-        logger.opt(exception=True).warning(
-            "Harness supervisor init failed; continuing without rehydrate"
-        )
+        logger.opt(exception=True).warning("Harness supervisor init failed; continuing without rehydrate")
 
-    # Load preset registry from DB before accepting requests.
+    # Seed BEFORE the preset registry so a missing animal (coyote) is in the
+    # DB the first time spawn looks it up. Test clones skip: they are seeded
+    # at the conftest template build.
+    if "eyot_test" not in settings.DATABASE_URL:
+        try:
+            from app.core.knowledge import ensure_knowledge_seeds
+            from app.core.seeds import ensure_system_seeds
+
+            async with get_session_factory()() as s:
+                await ensure_knowledge_seeds(s)
+                await ensure_system_seeds(s)
+        except Exception:
+            logger.opt(exception=True).error("Failed to ensure system / knowledge seeds")
+
+    # Load preset registry from DB after seeds so coyote (and aliases) exist.
     try:
         from app.core.preset_registry import registry
 
@@ -98,31 +110,6 @@ async def lifespan(app: FastAPI):
             await registry.load(s)
     except Exception:
         logger.opt(exception=True).error("Failed to load preset registry")
-
-    # v4.2: idempotently ensure the two system knowledge seeds exist.
-    # Test clones (eyot_test_*) are skipped: they pin exact resolved counts
-    # and must stay seed-free (they are seeded at the conftest template build).
-    if "eyot_test" not in settings.DATABASE_URL:
-        try:
-            from app.core.knowledge import ensure_knowledge_seeds
-
-            async with get_session_factory()() as s:
-                await ensure_knowledge_seeds(s)
-                await s.commit()
-        except Exception:
-            logger.opt(exception=True).error("Failed to ensure knowledge seeds")
-
-    # Eyot rename: default system data (default org + builtin 始祖 + permission
-    # atoms + cmd capabilities) is seeded idempotently at the app layer. Test
-    # clones get the same through the conftest template build.
-    if "eyot_test" not in settings.DATABASE_URL:
-        try:
-            from app.core.seeds import ensure_system_seeds
-
-            async with get_session_factory()() as s:
-                await ensure_system_seeds(s)
-        except Exception:
-            logger.opt(exception=True).error("Failed to ensure system seeds")
 
     try:
         async with get_session_factory()() as s:
@@ -141,6 +128,7 @@ async def lifespan(app: FastAPI):
     if os.environ.get("EYOT_POD_MODE", "").lower() == "true":
         try:
             from app.core.event_watcher import event_watcher
+
             await event_watcher.start()
         except Exception:
             logger.opt(exception=True).warning("EventWatcher start failed")
@@ -180,6 +168,7 @@ async def lifespan(app: FastAPI):
 
     try:
         from app.core.harness_supervisor import supervisor
+
         await supervisor.shutdown()
     except Exception:
         logger.opt(exception=True).warning("Supervisor shutdown failed")
@@ -189,12 +178,14 @@ async def lifespan(app: FastAPI):
     if os.environ.get("EYOT_POD_MODE", "").lower() == "true":
         try:
             from app.core.event_watcher import event_watcher
+
             await event_watcher.stop()
         except Exception:
             logger.opt(exception=True).warning("EventWatcher stop failed")
 
     try:
         from app.services.k8s.client_manager import k8s_manager
+
         await k8s_manager.close_all()
     except Exception:
         logger.opt(exception=True).warning("K8s client manager close failed")

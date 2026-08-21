@@ -6,7 +6,8 @@
     "explore": "Search",
     "research": "Research",
     "vision": "Vision",
-    "heading": "Available Subagent Capabilities"
+    "heading": "Available Subagent Capabilities",
+    "tag": "Subagent"
   },
   "common": {
     "appName": "Eyot",
@@ -98,6 +99,7 @@
     "entity": "Clone bloodline",
     "organization": "Clone continent",
     "workspace": "Clone habitat",
+    "action": "Clone",
     "cloning": "Cloning…",
     "confirmOrganization": "Clone continent \"{{name}}\"? Regions, habitat structure, and progenitors are copied; member members are not.",
     "confirmWorkspace": "Clone habitat \"{{name}}\"? Only sapiens members and beast trails between them are copied.",
@@ -124,7 +126,7 @@
     "noResults": "No matching users found.",
     "addMember": "Add member",
     "addMemberTitle": "Add a member to this continent",
-    "atomSelect": "Grant atoms",
+    "atomSelect": "Grant permissions",
     "removeMember": "Remove",
     "removeConfirm": "Remove {{name}} from this continent? Their grants will be revoked.",
     "selfLockError": "Cannot remove your own continent-management permission.",
@@ -154,20 +156,46 @@
     "title": "Region members",
     "inheritedTooltip": "Inherited from the continent member",
     "inheritedLabel": "Inherited from continent",
-    "namespaceLabel": "Region atoms",
+    "namespaceLabel": "Region permissions",
     "empty": "No members in this region yet.",
     "loading": "Loading members…",
-    "addAtom": "Add atom",
-    "removeAtom": "Remove atom",
+    "addAtom": "Add permission",
+    "removeAtom": "Remove permission",
     "contractCount": "{{count}} members"
   },
   "statusBar": {
-    "atomsLabel": "Continent atoms",
+    "atomsLabel": "Permissions",
+    "geneLabel": "Sapiens gene",
+    "permissionsLabel": "Permissions",
+    "permissionsHint": "Permissions inside this sapiens gene. Topology changes do not rewrite them.",
     "role": {
       "owner": "Owner",
       "operator": "Operator",
       "editor": "Editor",
       "viewer": "Viewer"
+    }
+  },
+  "permissions": {
+    "unit": "Permission",
+    "pack": "Sapiens gene",
+    "kind": "Kind",
+    "atoms": {
+      "can_manage_organization": "Manage continent",
+      "can_manage_org_members": "Manage continent members",
+      "can_manage_namespace": "Manage regions",
+      "can_manage_workspace": "Manage habitats",
+      "can_edit_workspace": "Edit habitats",
+      "can_view_workspace": "View habitats",
+      "can_operate_workspace": "Operate habitats",
+      "can_manage_genes": "Manage genes",
+      "can_manage_capabilities": "Manage capabilities",
+      "can_manage_ai_genes": "Manage AI genes",
+      "can_clone_base_class": "Clone progenitors",
+      "can_clone_entity": "Clone bloodlines",
+      "can_clone_organization": "Clone continent",
+      "can_clone_workspace": "Clone habitat",
+      "can_manage_knowledge": "Manage knowledge",
+      "can_manage_meetings": "Manage meetings"
     }
   },
   "legacyRedirect": {
@@ -650,7 +678,9 @@
       "org": "Continent",
       "namespace": "Region",
       "workspace": "Habitat"
-    }
+    },
+    "conventionBadge": "Convention",
+    "conventionHint": "A standing rule, not a snapshot of topology or the granary. Moving passages or files does not rewrite this row."
   },
   "employees": {
     "eyebrow": "Workforce",
@@ -1168,8 +1198,8 @@
     "instanceStatus": "Status",
     "instancesPromote": "Metamorphose",
     "goIntroduceInWorkspace": "Go introduce in a habitat",
-    "genesTitle": "Human genes",
-    "genesDetail": "Permission packs (can_*). Idbloodline genes are locked packs; others can be attached to users.",
+    "genesTitle": "Permissions and sapiens genes",
+    "genesDetail": "Atomic permissions are capability bits (shown in product language). A sapiens gene is a permission pack.",
     "genesSubDeepSea": "Deep-sea genes",
     "genesSubHuman": "Human genes",
     "aiGenesTitle": "Deep-sea genes",
@@ -1486,14 +1516,18 @@
     "nicknameHint": "Display name (like display_name)",
     "email": "Email",
     "identity": "Idbloodline",
-    "lockedGenes": "Locked genes",
-    "extraGenes": "Extra genes",
+    "lockedGenes": "Locked sapiens genes",
+    "extraGenes": "Extra sapiens genes",
     "noExtraGenes": "No extra genes",
     "changePassword": "Change password",
     "currentPassword": "Current password",
     "newPassword": "New password",
     "saved": "Saved",
-    "passwordChanged": "Password updated"
+    "passwordChanged": "Password updated",
+    "debugTitle": "Debug panel",
+    "debugHint": "Debug is not a day-to-day feature. Super-admins can hide it from navigation.",
+    "hideDebug": "Hide debug from navigation",
+    "openDebug": "Open debug panel"
   },
   "deploy": {
     "runningTitle": "Deploying descendant",

@@ -240,7 +240,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
 
   return (
     <>
-      <div className="space-y-8">
+      <div className="max-w-xl space-y-8">
         {errorMessage !== null ? (
           <div
             role="alert"
@@ -436,7 +436,7 @@ export function OrganizationProvidersPanel({ canWrite, orgId }: ProvidersPanelPr
             })()
           : null}
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6">
           <HubSettingsPanel
             title={t('organization.systemHub.title')}
             subtitle={t('organization.systemHub.subtitle')}

@@ -33,12 +33,26 @@ export function extractSubagentCapabilities(
 
 type SubagentChipsProps = {
   readonly capabilities: readonly SubagentCapabilityId[];
+  readonly variant?: 'list' | 'tag';
 };
 
-/** Render subagent capability chips. Display-only, no interaction. */
-export default function SubagentChips({ capabilities }: SubagentChipsProps) {
+/** Render subagent capability chips, or a compact 子代理 tag. */
+export default function SubagentChips({ capabilities, variant = 'list' }: SubagentChipsProps) {
   const { t } = useTranslation();
   if (capabilities.length === 0) return null;
+
+  if (variant === 'tag') {
+    const names = capabilities.map((cap) => t(`subagent.${cap}`)).join(', ');
+    return (
+      <span
+        data-testid="subagent-tag"
+        title={names}
+        className="inline-flex shrink-0 items-center rounded-md border border-brand/30 bg-brand-soft px-2 py-0.5 text-xs font-medium text-brand"
+      >
+        {t('subagent.tag')}
+      </span>
+    );
+  }
 
   return (
     <div className="space-y-1.5">

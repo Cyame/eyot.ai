@@ -39,7 +39,8 @@ One-line definitions for every Eyot code-term (backend), display-name (frontend 
 - **SystemHub**（星球中枢）- Org-level implicit assistant for description generation and LLM defaults。Backend 代码名 `system_hub`。Display 中文「星球中枢」（v5.0.1 从「系统中枢」改名）。
 - **IntelligenceProvider**（智能）- LLM provider configured at org level。Backend 代码名 `OrganizationProvider`。Display 中文「智能」（v5.0.1 从「智能供者」改名）。
 - **AiGene**（生物基因）- Capability pack (tool/skill/command) installable on bloodlines。Display 中文「生物基因」（v5.0.1 从「深海基因」改名；对齐 AI 成员=生物）。
-- **UserGene**（智人基因）- Permission/capability gene for human users。Display 中文「智人基因」（对齐真人=智人）。
+- **UserGene**（智人基因）- Permission pack for human users. Display 中文「智人基因」。
+- **Permission**（权限）- One `can_*` atom. Display 中文「权限」. Never show the raw slug in operator UI.
 - **summon / spawn**（创生）- 动词：创建血脉（Entity）或后裔（Instance）。v5.0.1 从「召唤」改名，与名词体系对齐。
 
 ### Runtime 概念
@@ -119,6 +120,7 @@ Code-term-only entities from the core domain model. No product UI display-names.
 - **content-ref** — A scope-qualified reference to content: mandatory scope prefix (workspace|blackboard|vault|memory) with optional path。
 - **composer compartmentalization** — The Composer UI splits a message into per-entity compartments before send。
 - **subagent 策略** — Per-始祖 manifest 声明：能否使用 subagent、模板、约束（v5.1 落实）。
+- **standing knowledge convention** — System knowledge rows `eyot.collab.passage` and `eyot.hub.shared_work` are **policy text**, not live dumps. Changing 兽道 or Hub files does **not** rewrite them. Neighbor routing uses Passage rows; Hub layout uses the shared/work prefixes at runtime.
 
 ---
 

@@ -72,7 +72,7 @@ describe('NamespaceContractsPage', () => {
     expect(await screen.findByText('Alice')).toBeInTheDocument();
     expect(screen.getByText(/alice · alice@example\.com/)).toBeInTheDocument();
     const inheritedSection = screen.getByTestId('inherited-atoms');
-    expect(within(inheritedSection).getByText('can_manage_organization')).toBeInTheDocument();
+    expect(within(inheritedSection).getByText('Manage continent')).toBeInTheDocument();
     expect(within(inheritedSection).queryAllByRole('button')).toHaveLength(0);
     expect(screen.getByText('1 members')).toBeInTheDocument();
   });
@@ -100,7 +100,7 @@ describe('NamespaceContractsPage', () => {
     });
     renderContractsPage();
 
-    fireEvent.click(await screen.findByTitle('Remove atom: can_manage_knowledge'));
+    fireEvent.click(await screen.findByTitle('Remove permission: Manage knowledge'));
 
     await waitFor(() => {
       expect(mockedApi).toHaveBeenCalledWith('/namespaces/ns-1/contracts/c-1/atoms', {
@@ -109,8 +109,8 @@ describe('NamespaceContractsPage', () => {
       });
     });
     const inheritedSection = screen.getByTestId('inherited-atoms');
-    expect(screen.getAllByText('can_edit_workspace').length).toBeGreaterThanOrEqual(2);
-    expect(within(inheritedSection).getByText('can_manage_organization')).toBeInTheDocument();
+    expect(screen.getAllByText('Edit habitats').length).toBeGreaterThanOrEqual(2);
+    expect(within(inheritedSection).getByText('Manage continent')).toBeInTheDocument();
   });
 
   it('adding an atom appends it to namespace_atoms without touching inherited atoms', async () => {
@@ -136,7 +136,7 @@ describe('NamespaceContractsPage', () => {
     });
     renderContractsPage();
 
-    fireEvent.click(await screen.findByTitle('Add atom: can_operate_workspace'));
+    fireEvent.click(await screen.findByTitle('Add permission: Operate habitats'));
 
     await waitFor(() => {
       expect(mockedApi).toHaveBeenCalledWith('/namespaces/ns-1/contracts/c-1/atoms', {
@@ -145,7 +145,7 @@ describe('NamespaceContractsPage', () => {
       });
     });
     const inheritedSection = screen.getByTestId('inherited-atoms');
-    expect(within(inheritedSection).getByText('can_manage_organization')).toBeInTheDocument();
+    expect(within(inheritedSection).getByText('Manage continent')).toBeInTheDocument();
   });
 
   it('renders an empty state when the namespace has no contracts', async () => {

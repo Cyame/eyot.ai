@@ -30,6 +30,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.preset_aliases import LEGACY_PRESET_ALIASES
 from app.models.base_class import BaseClass
 
 # ── Global commands ──────────────────────────────────────────────────────────
@@ -115,8 +116,24 @@ class PresetRegistry:
         await self.load(session)
 
     def get(self, slug: str) -> BaseClass | None:
-        """Return the active preset with *slug*, or ``None``."""
-        return self._cache.get(slug)
+        """Return the active preset with *slug*, or ``None``.
+
+        Unknown animal slugs also resolve through :data:`LEGACY_PRESET_ALIASES`
+        so a live DB that still has ``zhu-jin`` can serve ``coyote`` spawn.
+        """
+        hit = self._cache.get(slug)
+        if hit is not None:
+            return hit
+        alias = LEGACY_PRESET_ALIASES.get(slug)
+        if alias is not None:
+            return self._cache.get(alias)
+        # Reverse: UI asks for coyote, DB still has zhu-jin.
+        for legacy, animal in LEGACY_PRESET_ALIASES.items():
+            if animal == slug:
+                hit = self._cache.get(legacy)
+                if hit is not None:
+                    return hit
+        return None
 
     def get_tools(self, slug: str) -> list[str]:
         """Return the tools list for the preset identified by *slug*.

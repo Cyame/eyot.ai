@@ -27,6 +27,7 @@ import {
   updateUserGene,
 } from '@/lib/api/users';
 import { resolveError } from '@/lib/apiError';
+import { isPermissionAtom, permissionLabel } from '@/lib/permissionAtoms';
 import { toSlug } from '@/lib/slug';
 
 type TFn = TFunction;
@@ -1331,7 +1332,7 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
             <thead className="border-b border-line bg-surface-muted text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">{t('namespaces.name')}</th>
-                <th className="px-4 py-3">{t('namespaces.genesSlug')}</th>
+                <th className="px-4 py-3">{t('permissions.kind')}</th>
                 <th className="px-4 py-3">{t('namespaces.scopeLabel')}</th>
                 <th className="px-4 py-3">{t('namespaces.readonly')}</th>
                 <th className="px-4 py-3">{t('namespaces.entityActions')}</th>
@@ -1342,8 +1343,12 @@ export function HumanGenesPanel({ t }: { readonly t: TFn }) {
                 const readonly = isReadonlyGene(gene);
                 return (
                   <tr key={gene.id} className="border-b border-line-subtle last:border-0">
-                    <td className="px-4 py-3 font-medium text-ink">{gene.name}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-ink">{gene.slug}</td>
+                    <td className="px-4 py-3 font-medium text-ink">
+                      {isPermissionAtom(gene.slug) ? permissionLabel(t, gene.slug) : gene.name}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted">
+                      {isPermissionAtom(gene.slug) ? t('permissions.unit') : t('permissions.pack')}
+                    </td>
                     <td className="px-4 py-3">
                       <ScopeBadge scope={gene.effect_scope} t={t} />
                     </td>

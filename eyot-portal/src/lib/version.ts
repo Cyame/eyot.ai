@@ -8,4 +8,4 @@
  *
  * Keep in sync with `eyot-portal/package.json` and `eyot-backend/pyproject.toml`.
  */
-export const APP_VERSION = '0.5.3';
+export const APP_VERSION = '0.5.3.dev1';

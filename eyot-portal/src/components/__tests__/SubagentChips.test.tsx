@@ -136,4 +136,11 @@ describe('SubagentChips', () => {
       'Available Subagent Capabilities',
     );
   });
+
+  it('renders a compact 子代理 tag', () => {
+    const caps = extractSubagentCapabilities(BEAVER_MANIFEST);
+    render(<SubagentChips capabilities={caps} variant="tag" />);
+    expect(screen.getByTestId('subagent-tag')).toHaveTextContent('Subagent');
+    expect(screen.queryByTestId('subagent-chips')).not.toBeInTheDocument();
+  });
 });

@@ -1,6 +1,7 @@
 import { AlertCircle, KeyRound, LoaderCircle, User } from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import {
   type AccountProfile,
   changeAccountPassword,
@@ -8,6 +9,8 @@ import {
   updateAccount,
 } from '@/lib/api/users';
 import { resolveError } from '@/lib/apiError';
+import { useDebugNavStore } from '@/stores/debugNav';
+import { useSessionStore } from '@/stores/session';
 
 const IDENTITY_LABEL_KEYS: Record<string, string> = {
   system: 'identity.system',
@@ -19,6 +22,9 @@ const IDENTITY_LABEL_KEYS: Record<string, string> = {
 
 export default function AccountPage() {
   const { t } = useTranslation();
+  const currentOrgId = useSessionStore((state) => state.currentOrgId);
+  const debugHidden = useDebugNavStore((state) => state.hidden);
+  const setDebugHidden = useDebugNavStore((state) => state.setHidden);
   const [profile, setProfile] = useState<AccountProfile | null>(null);
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -259,6 +265,34 @@ export default function AccountPage() {
           </button>
         </div>
       </form>
+
+      {profile?.is_super_admin ? (
+        <section
+          className="mt-6 rounded-xl border border-line bg-surface p-5 shadow-sm"
+          data-testid="account-debug-settings"
+        >
+          <h2 className="text-sm font-semibold text-ink">{t('account.debugTitle')}</h2>
+          <p className="mt-1 text-sm text-muted">{t('account.debugHint')}</p>
+          <label className="mt-4 flex items-center gap-2 text-sm text-ink">
+            <input
+              type="checkbox"
+              checked={debugHidden}
+              onChange={(event) => setDebugHidden(event.currentTarget.checked)}
+              data-testid="account-hide-debug"
+              className="size-4 accent-brand"
+            />
+            {t('account.hideDebug')}
+          </label>
+          {currentOrgId !== null && !debugHidden ? (
+            <Link
+              to={`/orgs/${currentOrgId}/debug`}
+              className="mt-3 inline-flex text-sm font-medium text-brand hover:text-brand-hover"
+            >
+              {t('account.openDebug')}
+            </Link>
+          ) : null}
+        </section>
+      ) : null}
     </section>
   );
 }

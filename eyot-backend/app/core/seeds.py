@@ -20,10 +20,12 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.builtin_presets import ALL_BUILTIN_PRESETS
+from app.core.builtin_presets import ALL_BUILTIN_PRESETS, BUILTIN_PRESETS
 from app.core.capabilities import attach_base_class_capability, upsert_capability
 from app.core.gene_atoms import ensure_atom_genes
+from app.core.preset_aliases import LEGACY_PRESET_ALIASES
 from app.models.base_class import BaseClass
+from app.models.entity import Entity
 from app.models.organization import Namespace, Organization
 
 DEFAULT_ORG_SLUG = "default"
@@ -88,8 +90,49 @@ async def ensure_default_namespace(db: AsyncSession, org: Organization) -> Names
     return ns
 
 
+def _legacy_slug_for(animal: str) -> str | None:
+    for legacy, target in LEGACY_PRESET_ALIASES.items():
+        if target == animal:
+            return legacy
+    return None
+
+
+async def _rename_legacy_preset(db: AsyncSession, legacy: str, animal: str) -> BaseClass | None:
+    """Rename a leftover 15d slug (e.g. zhu-jin → coyote) and retarget entities."""
+    row = (
+        await db.execute(
+            select(BaseClass).where(
+                BaseClass.slug == legacy,
+                BaseClass.deleted_at.is_(None),
+            )
+        )
+    ).scalar_one_or_none()
+    if row is None:
+        return None
+    row.slug = animal
+    entities = (
+        (
+            await db.execute(
+                select(Entity).where(
+                    Entity.preset_slug == legacy,
+                    Entity.deleted_at.is_(None),
+                )
+            )
+        )
+        .scalars()
+        .all()
+    )
+    for entity in entities:
+        entity.preset_slug = animal
+    await db.flush()
+    return row
+
+
 async def ensure_builtin_base_classes(db: AsyncSession) -> dict[str, BaseClass]:
     """Upsert the built-in 始祖 (BaseClass) templates as ``scope=system`` rows.
+
+    Missing animal slugs are inserted. A leftover 15d slug (``zhu-jin`` etc.)
+    is renamed in place so spawn of ``coyote`` does not 422.
 
     Returns ``slug → BaseClass`` so callers can wire junctions.
     """
@@ -104,6 +147,10 @@ async def ensure_builtin_base_classes(db: AsyncSession) -> dict[str, BaseClass]:
                 )
             )
         ).scalar_one_or_none()
+        if existing is None and slug in {p["slug"] for p in BUILTIN_PRESETS}:
+            legacy = _legacy_slug_for(slug)
+            if legacy is not None:
+                existing = await _rename_legacy_preset(db, legacy, slug)
         if existing is not None:
             out[slug] = existing
             continue
@@ -124,9 +171,7 @@ async def ensure_builtin_base_classes(db: AsyncSession) -> dict[str, BaseClass]:
     return out
 
 
-async def ensure_command_capabilities(
-    db: AsyncSession, base_classes: dict[str, BaseClass]
-) -> None:
+async def ensure_command_capabilities(db: AsyncSession, base_classes: dict[str, BaseClass]) -> None:
     """Seed ``cmd-<verb>`` capabilities and wire them to their base_classes.
 
     Mirrors the old v4.0 migration's ``builtin commands → cmd-* capabilities +
@@ -151,9 +196,7 @@ async def ensure_command_capabilities(
             if verb in commands:
                 bc = base_classes.get(slug)
                 if bc is not None:
-                    await attach_base_class_capability(
-                        db, base_class_id=bc.id, capability_id=cap.id
-                    )
+                    await attach_base_class_capability(db, base_class_id=bc.id, capability_id=cap.id)
 
 
 async def ensure_cerebellum_baseclass(db: AsyncSession) -> None:
