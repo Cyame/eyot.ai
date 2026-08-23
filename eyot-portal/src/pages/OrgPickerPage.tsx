@@ -167,12 +167,12 @@ export default function OrgPickerPage() {
         ) : (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-nav-ink">{t('orgPicker.listTitle')}</h2>
+              <h2 className="text-sm font-semibold text-ink">{t('orgPicker.listTitle')}</h2>
               <button
                 type="button"
                 onClick={openCreate}
                 data-testid="org-picker-create"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-nav-line px-3 py-1.5 text-xs font-semibold text-nav-ink transition-colors hover:bg-surface-muted"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-xs font-semibold text-ink transition-colors hover:bg-surface-muted"
               >
                 <Plus className="size-3.5" aria-hidden="true" />
                 {t('orgPicker.ctaCreate')}
@@ -185,14 +185,12 @@ export default function OrgPickerPage() {
                     type="button"
                     onClick={() => handleSelect(org.id)}
                     data-testid={`org-card-${org.slug}`}
-                    className="w-full rounded-xl border border-nav-line bg-overlay p-4 text-left transition-colors hover:border-brand/60 hover:bg-surface"
+                    className="w-full rounded-xl border border-earth-line bg-earth p-4 text-left transition-colors hover:border-brand/60 hover:bg-surface"
                   >
-                    <p className="truncate text-sm font-semibold text-nav-ink">{org.name}</p>
-                    <p className="mt-0.5 truncate font-mono text-xs text-muted">{org.slug}</p>
+                    <p className="truncate text-sm font-semibold text-ink">{org.name}</p>
+                    <p className="mt-0.5 truncate font-mono text-xs text-ink-muted">{org.slug}</p>
                     {org.description ? (
-                      <p className="mt-2 line-clamp-2 text-xs text-muted-subtle">
-                        {org.description}
-                      </p>
+                      <p className="mt-2 line-clamp-2 text-xs text-ink-muted">{org.description}</p>
                     ) : null}
                   </button>
                 </li>
@@ -204,11 +202,11 @@ export default function OrgPickerPage() {
         {showCreate ? (
           <form
             onSubmit={(event) => void handleCreate(event)}
-            className="mt-6 space-y-4 rounded-xl border border-nav-line bg-overlay p-5"
+            className="mt-6 space-y-4 rounded-xl border border-earth-line bg-earth p-5"
           >
-            <h2 className="text-sm font-semibold text-nav-ink">{t('orgPicker.createTitle')}</h2>
+            <h2 className="text-sm font-semibold text-ink">{t('orgPicker.createTitle')}</h2>
             <div>
-              <label htmlFor="org-name" className="mb-1.5 block text-sm font-medium text-nav-muted">
+              <label htmlFor="org-name" className="mb-1.5 block text-sm font-medium text-ink-muted">
                 {t('orgPicker.name')}
               </label>
               <input
@@ -222,11 +220,11 @@ export default function OrgPickerPage() {
                   }
                 }}
                 required
-                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
+                className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             <div>
-              <label htmlFor="org-slug" className="mb-1.5 block text-sm font-medium text-nav-muted">
+              <label htmlFor="org-slug" className="mb-1.5 block text-sm font-medium text-ink-muted">
                 {t('orgPicker.slug')}
               </label>
               <input
@@ -238,13 +236,13 @@ export default function OrgPickerPage() {
                 }}
                 placeholder="kebab-case"
                 required
-                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
+                className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             <div>
               <label
                 htmlFor="org-description"
-                className="mb-1.5 block text-sm font-medium text-nav-muted"
+                className="mb-1.5 block text-sm font-medium text-ink-muted"
               >
                 {t('orgPicker.description')}
               </label>
@@ -253,7 +251,7 @@ export default function OrgPickerPage() {
                 value={description}
                 onChange={(event) => setDescription(event.currentTarget.value)}
                 rows={2}
-                className="w-full rounded-lg border border-nav-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
+                className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted-subtle focus:border-brand focus:ring-2 focus:ring-brand/30"
               />
             </div>
             {createError !== null ? (
@@ -266,7 +264,7 @@ export default function OrgPickerPage() {
               <button
                 type="button"
                 onClick={() => setShowCreate(false)}
-                className="rounded-lg border border-nav-line px-3 py-2 text-sm font-medium text-nav-muted hover:bg-surface-muted"
+                className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink-muted hover:bg-surface-muted"
               >
                 {t('common.cancel')}
               </button>

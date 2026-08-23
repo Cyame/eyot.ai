@@ -30,5 +30,6 @@ describe('EmptyState', () => {
     expect(box).toHaveClass('bg-earth');
     expect(box).toHaveClass('border-earth-line');
     expect(screen.getByText('No continents yet')).toHaveClass('text-ink');
+    expect(screen.getByText('Create one.')).toHaveClass('text-ink');
   });
 });

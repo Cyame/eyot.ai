@@ -78,6 +78,8 @@ describe('OrgPickerPage', () => {
     expect(await screen.findByText('Acme')).toBeInTheDocument();
     expect(screen.getByText('Omega')).toBeInTheDocument();
     expect(screen.getByTestId('org-card-acme')).toHaveTextContent('acme');
+    expect(screen.getByTestId('org-card-acme')).toHaveClass('bg-earth');
+    expect(screen.getByTestId('org-card-acme')).not.toHaveClass('bg-overlay');
   });
 
   it('selecting a world sets the org context and enters its dashboard', async () => {

@@ -72,6 +72,7 @@ pre-1.0 trajectory.
 - 定义 `eyot.collab.passage` / `eyot.hub.shared_work` 为静态公约，不随拓扑或粮仓变化。
 - 调试入口移到账户分组，超管可隐藏；主题开关只留侧栏左下。
 - 顶栏去掉重复的「Eyot / 控制台」；大陆选择器与权限监视左对齐。
+- 大陆选择卡片不再用 modal overlay 灰底，改为土黄框底 + 墨色字。
 - 版本同步为 **0.5.3.dev1**。
 
 ### 2026-08-19 — 0.5.2.dev4（Composer 命令历史）

@@ -57,7 +57,7 @@ export default function EmptyState({
         <p
           className={cn(
             compact ? 'mt-1 text-xs' : 'mt-1 text-sm',
-            isDanger ? 'text-danger/80' : 'text-ink-muted',
+            isDanger ? 'text-danger/80' : isEarth ? 'text-ink' : 'text-ink-muted',
           )}
         >
           {description}
