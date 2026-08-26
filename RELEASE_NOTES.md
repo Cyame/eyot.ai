@@ -21,7 +21,7 @@ pre-1.0 trajectory.
 - **Version reset**: 5.2.1 → **0.5.2.dev1** (pre-1.0; tags will start at 1.0).
 - **0.x generation framing**: 版本轨重置为 **0.x pre-1.0**，正式 tag 从 1.0 起；MINOR 每完成一个切片 +1。
   已交付切片等价映射：**0.4.x ≈ v4 功能收口**、**0.5.0 = v5.0 命名**、**0.5.1 = v5.1 定义**、
-  **0.5.2 = v5.2 UIUX**（v5 世代实现已落地，改名重置后以 0.x 编号）。**当前 active = 0.5.3（v5.3 视觉波）**。
+  **0.5.2 = v5.2 UIUX**、**0.5.3 = v5.3 视觉**（G7 2026-08-25 关闭）。**当前程序 = 0.5.x 固化**。
 - **Alembic reset**: the 35 incremental migration files were squashed into a
   single **schema-only baseline** (`Base.metadata.create_all`).
 - **Seeding moved to the app layer**: a fresh database is now populated at
@@ -74,6 +74,13 @@ pre-1.0 trajectory.
 - 顶栏去掉重复的「Eyot / 控制台」；大陆选择器与权限监视左对齐。
 - 大陆选择卡片不再用 modal overlay 灰底，改为土黄框底 + 墨色字。
 - 版本同步为 **0.5.3.dev1**。
+
+### 2026-08-25 — 0.5.3 G7 视觉验收关闭
+
+- 用户确认视觉无大问题，G7 关闭。0.5.3 切片 Done。
+- 后续 0.5.x 转为既有功能固化（中枢 → gene → 协作）；`0.5.N` / `0.5.N.devM` 由临时变更 + proposal 打开，不预开空号。
+- Composer 多模态 + 富文本渲染为近期项，硬门禁是上述三层稳定；Session engine v2 仍远期。
+- 产品版本仍为 **0.5.3.dev1**，直到下一张 proposal 指定新号。
 
 ### 2026-08-19 — 0.5.2.dev4（Composer 命令历史）
 

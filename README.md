@@ -85,12 +85,13 @@ Eyot is pre-1.0. The current application version is `0.5.3.dev1`.
 | Provider configuration and model catalog | Shipped |
 | Harness controls, event stream, deployment records, and Tunnel | Shipped |
 | Learning write-back and capability market | Shipped |
-| Portal visual refresh, themes, avatars, density, and empty states | Shipped in `0.5.3` (user visual review) |
+| Portal visual refresh, themes, avatars, density, and empty states | Shipped in `0.5.3` (G7 accepted 2026-08-25) |
 | Session-engine v2 multimodal protocol, Voice, and external channels | Later |
+| Composer multimodal + rich text | Near-term after hub / gene / collab are stable |
 
-The project is deliberately narrower than a general agent platform. The
-current focus is a useful control plane with a clear runtime boundary, not a
-catalog of every possible integration.
+The project is deliberately narrower than a general agent platform. After the
+0.5.3 visual wave, the current program is hardening shipped surfaces (hub,
+gene, collaboration) so they behave as designed.
 
 ## How it fits together
 
