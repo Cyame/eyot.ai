@@ -7,7 +7,7 @@
 > **Next generation**: **v5** — 完整世代（更名 → 定义 → UIUX → 视觉）**已交付**；SoT `.omo/evidence/v5-rename-decisions.md` + 执行总图 `.omo/plans/0x-roadmap.md`。**当前程序 = 0.5.x 既有功能固化**（`.omo/plans/0-5-x-hardening.md`）。
 > **Archived PRDs**: `docs/archive/` (prd-v1 … prd-v3.4.1). Subsystem `docs/*-system.md` = pre-v4 reference; conflicts → audit wins.
 > **Naming**: `docs/terminology.md` + `docs/metaphor-name-table.md`（**v5 命名基线**：大陆/区域/生境/始祖/血脉/后裔/5 动物；15d 版归档于 `docs/archive/`）。
-> **Last revision**: 2026-08-25（0.5.3 G7 关闭；当前程序 = 0.5.x 固化）。
+> **Last revision**: 2026-08-27（记录外接后裔运行时方向；当前程序 = 0.5.x 固化）。
 
 ---
 
@@ -302,6 +302,7 @@ Full history: `.omo/plans/archive/` + `.omo/plans/archive/eyot-v2-roadmap.md` (p
 | **0.5.3 视觉波**（= v5.3） | `@theme` + dark/light + 壳层 + 5 头像 + Avatar + 空态 | **Done**；G7 2026-08-25 关闭 → `archive/0x-gen/0-5-3-visual.md` |
 | Capability hub assist | skill/capability 中枢撰写 | Later-D；≠ 固化 gene 产品面 |
 | Session engine v2 | 会话引擎整包 + 多模态协议 day-1 | `.omo/drafts/session-engine-v2.md`（远期；不要和 Composer 多模态切片混） |
+| **外接后裔运行时** | 在当前 Eyot 托管 `spawn` 之外，于创生/attach 时绑定本机或远程已运行的 runtime（初始目标：pi）；同一后裔不热切换，目录通过显式授权、挂载或文件桥接提供 | `.omo/evidence/v5-rename-decisions.md` §7.2 + `.omo/drafts/session-engine-v2.md` |
 | Gene LLM real | Richer distill than heuristics | Former P16c |
 | Voice / channels / multi-runtime / multi-compute / DLP / OTel / backup / S3 | nodeskclaw parity candidates | Former P16e–m |
 
@@ -343,8 +344,9 @@ Full ops: AGENTS.md "Eyot Deployment Operations Rules" + "Persistent Fix Policy"
 Recorded so future planners do not lose intent:
 
 1. **Session engine v2** — lighter store; multimodal `{text|image|audio|video}` first-class; Tunnel-class transport. Draft: `.omo/drafts/session-engine-v2.md`。**不要**与近期的 Composer 多模态切片（门禁草稿 `.omo/drafts/composer-multimodal.md`）混为一谈。
-2. **nodeskclaw surface parity (selective)** — Tunnel, Voice, Knowledge scopes, multi-runtime, multi-compute, Feishu, etc. Only after PRD-v2 control plane is solid.
-3. **Plan hygiene** — phase plans immutable after merge; drift goes to evidence, not silent plan rewrites.
+2. **外接后裔运行时** — 在当前 Eyot 托管 `spawn` 之外，于创生/attach 时绑定已存在的本机/远程 runtime（初始目标为 pi）；逻辑执行体仍是 `Instance`，同一后裔不热切换 runtime，本机目录访问必须显式授权，远程场景评估挂载 / 同步 / 文件桥接。见 `.omo/evidence/v5-rename-decisions.md` §7.2。
+3. **nodeskclaw surface parity (selective)** — Tunnel, Voice, Knowledge scopes, multi-runtime, multi-compute, Feishu, etc. Only after PRD-v2 control plane is solid.
+4. **Plan hygiene** — phase plans immutable after merge; drift goes to evidence, not silent plan rewrites.
 
 ---
 
@@ -405,5 +407,6 @@ Recorded so future planners do not lose intent:
 | 2026-08-07 | **v5 完整世代立项** — 四切片（v5.0 命名 / v5.1 定义 / v5.2 UIUX / v5.3 视觉）；MAJOR bump 5.x；grill-me 会话闭环全部待定项：5 常驻始祖（狐狸/海狸/麻雀/郊狼/狮子）+ 6 subagent 能力（唤灵/灵视/衡判/游魂/潜知/百瞳 退出体系）、三层名始祖/血脉/后裔、结构术语大陆/区域/生境/迁徙路线、其余术语全量新词（成员/信号塔/标本/粮仓/足迹/诞生记录/领地地图/蜕变/演化/领悟/兽道）、rank 全量退役、slug 直接改名+存量 UPDATE、代码名不动。SoT `.omo/evidence/v5-rename-decisions.md` + `.omo/plans/0x-roadmap.md`；v4.9.5 closeout 先行。 |
 | 2026-08-09 | **v5.0 命名波交付 + v5.1 定义波执行中** — 版本 5.0.2；6 降级 Memory 物理删光（迁移 `78137b7985e5` M2）；T1 落地 6 能力 subagent agent .md（intent/architecture/quality/explore/research/vision）；T6 Tunnel 协议清理（提交 a3f0b85：错误码中性化 host_spawn_error/host_stdin_closed/turn_rejected/host_error + done payload 去 finish_reason + control interrupt）。SoT 同步：`v5-rename-decisions.md` §六.2「Memory 经验回流」条目作废 + §七.1 扩充；terminology / metaphor-name-table 补能力 id 列。 |
 | 2026-08-25 | **0.5.3 G7 关闭** — 视觉验收无大问题。此后 0.5.x = 既有功能固化（中枢 → gene → 协作）；`0.5.N` / `0.5.N.devM` 由临时变更 + proposal 打开。Composer 多模态 + 富文本为近期项，硬门禁是上述三层稳定；Session engine v2 仍远期。 |
+| 2026-08-27 | **记录外接后裔运行时远期方向** — 在当前 Eyot 托管 `spawn` 之外，未来支持接入本机/远程已运行的 pi 等 runtime；Instance 仍是唯一领域执行体，目录访问必须显式授权。 |
 
 *Next update trigger: 用户打开一张 0.5.N 固化 proposal，或 Composer 多模态门禁被显式放行。*

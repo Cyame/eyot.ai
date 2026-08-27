@@ -47,6 +47,8 @@ One-line definitions for every Eyot code-term (backend), display-name (frontend 
 
 - **Workspace control plane** — Eyot's operator + harness surface (Portal, Supervisor, Boulder, Passage, CentralHub, deploy, observability)。Product peer: a more flexible / observable **senpi · oh-my-openagent · oh-my-pi**。Not the per-Instance agent binary。
 - **pi runtime** — Preferred sandboxed agent loop that drives each **Instance（后裔）**。Entity `system_prompt` + `config_override` serialize to pi AgentConfig。React runtime is an optional alternative。**Not** Senpi CLI。
+- **托管运行时（managed runtime）** — Eyot 创建并管理的 Instance runtime；当前线上沙箱化 pi 路径属于此类。runtime 在 Instance 创生时选择并绑定，运行中不热切换。
+- **外接运行时（attached / external runtime）** — 已在本机或远程运行、由 Eyot 接入并绑定到既有 Instance 的 runtime；“离体个体运行时”是该方向的用户表述。attach 本身不授予本机目录访问，目录必须通过显式授权、挂载或文件桥接提供；绑定后同一 Instance 不热切换 runtime。
 - **LoopState**（心智状态）— Harness runtime state for an Instance: loop_status (6 states), continuation_count, breaker_config, last_checkpoint_at。保留中性词。
 - **InstanceProviderConfig** — LLM provider configuration for an Instance。Internal config, no UI equivalent。
 - **delivery_mode**（投递模式, v4.7）— How a collaboration/inject payload reaches an Instance: `notify` / `soft_inject` / `wake`。
