@@ -1,12 +1,9 @@
-> **Pre-v4 reference**: Conflict with `.omo/evidence/audit-product-design.md` → audit wins. Awaiting v4 PRD rewrite.
->
-
 # Eyot API 架构约定
 
-> **Code rename pending (15d-rename wave)**: This doc describes target architecture (15d+). Current code uses old naming.
-
-> P3 落地的后端 API 权威参考。P4-P10 所有业务端点必须遵循本文约定；调整约定时先改本文、再改代码。
+> 活约定。资源标识符用英文（Organization / Namespace / Workspace / Entity / Instance）。界面中文名见 [`terminology.zh.md`](terminology.zh.md)。
+> 冲突时功能语义以 `.omo/evidence/audit-product-design.md` 为准；本文管 URL / 信封 / 分页 / 错误，不管产品名词。
 > 代码位置：`eyot-backend/app/` —— 路由 `app/api/`、中间件 `app/core/middleware/`、错误 `app/core/errors.py`、分页 `app/core/pagination.py`、OpenAPI `app/core/openapi.py`。
+> 调整约定时先改本文、再改代码。
 
 ## 1. RESTful URL 规则集
 
@@ -18,12 +15,12 @@
 
 ### 1.2 JSON 字段命名（R2）
 
-snake_case 端到端：Pydantic 字段名即线上字段名，**无别名转换层**。请求体、响应体、查询参数全部 snake_case（如 `next_cursor`、`office_id`）。前端不得期望 camelCase 字段。
+snake_case 端到端：Pydantic 字段名即线上字段名，**无别名转换层**。请求体、响应体、查询参数全部 snake_case（如 `next_cursor`、`workspace_id`、`namespace_id`）。前端不得期望 camelCase 字段。JSON **不**使用中文显示名。
 
 ### 1.3 资源命名（R3）
 
-- 复数 + kebab-case：`/api/v1/entities`、`/api/v1/base-classes`。
-- 嵌套最多 2 层：`/api/v1/workspaces/{workspace_id}/entities` 合法；更深层级用查询参数拍平，如 `GET /api/v1/entities?workspace_id=<uuid>`。
+- 复数 + kebab-case：`/api/v1/entities`、`/api/v1/base-classes`、`/api/v1/workspaces`。
+- 嵌套最多 2 层：`/api/v1/namespaces/{namespace_id}/entities` 合法；更深层级用查询参数拍平，如 `GET /api/v1/entities?namespace_id=<uuid>`。血脉属于区域，后裔属于生境，不要把 Entity 嵌进 Workspace。
 - 路径参数统一 UUID：`/api/v1/instances/{instance_id}`，不暴露自增整数主键。
 
 ### 1.4 动作端点（R4）
@@ -68,7 +65,7 @@ snake_case 端到端：Pydantic 字段名即线上字段名，**无别名转换�
 | `GET /api/v1/workspaces?limit=50&cursor=abc` | 列表 + 游标分页 |
 | `POST /api/v1/workspaces` | 创建，返 201 |
 | `GET /api/v1/workspaces/{workspace_id}` | 读单条 |
-| `GET /api/v1/workspaces/{workspace_id}/entities` | 2 层嵌套列表 |
+| `GET /api/v1/namespaces/{namespace_id}/entities` | 2 层嵌套列表（血脉属于区域） |
 | `POST /api/v1/instances/{instance_id}/archive` | 动作端点 |
 | `DELETE /api/v1/entities/{entity_id}` | 软删除，返 204 |
 
@@ -90,25 +87,23 @@ client
 │  │ 2. LoggingMiddleware      (app/core/middleware/      │  │
 │  │    logging)                                          │  │
 │  │    每个请求一条结构化 JSON 日志（含 request_id）     │  │
-│  │    P3.5 引入                                          │  │
 │  │  ┌───────────────────────────────────────────────┐  │  │
 │  │  │ 3. CORSMiddleware    (fastapi.middleware.cors)│  │  │
 │  │  │    dev: allow_origins/methods/headers = ["*"] │  │  │
-│  │  │    P7 按环境收紧                               │  │  │
+│  │  │    部署环境应收紧 origins                      │  │  │
 │  │  │  ┌─────────────────────────────────────────┐  │  │  │
 │  │  │  │ 4. AuthMiddleware (app/core/middleware/ │  │  │  │
 │  │  │  │    auth)                                │  │  │  │
 │  │  │  │    解析 Authorization: Bearer <token>    │  │  │  │
-│  │  │  │    → request.state.token / .user_id      │  │  │  │
-│  │  │  │    P3 存根只提取不校验；P4 接入真实 JWT   │  │  │  │
+│  │  │  │    JWT 校验 → request.state.user_id       │  │  │  │
 │  │  │  │  ┌─────────────────────────────────────┐  │  │  │  │
 │  │  │  │  │ 5. RateLimitMiddleware             │  │  │  │  │
 │  │  │  │  │  (app/core/middleware/rate_limit)  │  │  │  │  │
-│  │  │  │  │  固定窗口 100 次/60s，按客户端 IP   │  │  │  │  │
+│  │  │  │  │  固定窗口 600 次/60s，按客户端 IP   │  │  │  │  │
 │  │  │  │  │  仅计数 /api/*；/health、/docs 豁免 │  │  │  │  │
 │  │  │  │  │  超限 → 429 + Retry-After          │  │  │  │  │
 │  │  │  │  │       + X-RateLimit-Remaining      │  │  │  │  │
-│  │  │  │  │  内存存根；P8 换 Redis              │  │  │  │  │
+│  │  │  │  │  内存实现；多副本 Redis 仍延后      │  │  │  │  │
 │  │  │  │  │                ↓                   │  │  │  │  │
 │  │  │  │  │        APIRouter → endpoint        │  │  │  │  │
 │  │  │  │  └─────────────────────────────────────┘  │  │  │  │
@@ -132,15 +127,15 @@ app.add_middleware(RateLimitMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Dev default; tighten per-environment in P7.
+    allow_origins=["*"],  # Dev default; tighten per-environment in deploy.
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(LoggingMiddleware)  # P3.5 — sits between CORS and RequestID.
+app.add_middleware(LoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
 ```
 
-> LoggingMiddleware 在 P3.5 加入（位于 CORS 与 RequestID 之间）——为每个请求生成结构化 JSON 日志条目，注入 request_id。
+> LoggingMiddleware 位于 CORS 与 RequestID 之间——为每个请求生成结构化 JSON 日志条目，注入 request_id。
 
 新增中间件时按期望的执行位置**反向**插入注册序列，并在块上方注释中更新两行顺序说明。
 
@@ -254,10 +249,10 @@ Link: </api/v1/entities?limit=50&cursor=2026-07-25T08%3A30%3A00Z>; rel="next"
 from sqlalchemy import select
 
 from app.core.pagination import OffsetPage, paginate_offset
-from app.models.employee import Employee
+from app.models.entity import Entity
 
-async def list_entities(db: DB, offset: int, limit: int) -> OffsetPage[Employee]:
-    query = select(Employee).where(Employee.deleted_at.is_(None))
+async def list_entities(db: DB, offset: int, limit: int) -> OffsetPage[Entity]:
+    query = select(Entity).where(Entity.deleted_at.is_(None))
     return await paginate_offset(db, query, offset=offset, limit=limit)
 ```
 
@@ -267,16 +262,16 @@ async def list_entities(db: DB, offset: int, limit: int) -> OffsetPage[Employee]
 from datetime import datetime
 
 from app.core.pagination import CursorPage, paginate_cursor
-from app.models.memory import MemoryEntry
+from app.models.memory import Memory
 
-async def list_memory(db: DB, cursor: str | None, limit: int) -> CursorPage[MemoryEntry]:
+async def list_memory(db: DB, cursor: str | None, limit: int) -> CursorPage[Memory]:
     query = (
-        select(MemoryEntry)
-        .where(MemoryEntry.deleted_at.is_(None))
-        .order_by(MemoryEntry.created_at)  # 升序，契约要求
+        select(Memory)
+        .where(Memory.deleted_at.is_(None))
+        .order_by(Memory.created_at)  # 升序，契约要求
     )
     return await paginate_cursor(
-        db, query, MemoryEntry.created_at, limit,
+        db, query, Memory.created_at, limit,
         decoder=datetime.fromisoformat,
         cursor=cursor,
     )
@@ -291,40 +286,34 @@ async def list_memory(db: DB, cursor: str | None, limit: int) -> CursorPage[Memo
 | 依赖 | 别名 | 作用 |
 |------|------|------|
 | `get_db` | `DB` | 从 session 工厂产出 `AsyncSession`，请求结束自动关闭 |
-| `get_current_user` | `CurrentUserDep` | 认证用户。P3 存根：`ENV=dev` 时一律视为超级管理员；其他环境抛 401，待 P4 接入真实校验（只换函数体，`CurrentUser` 模型不变） |
+| `get_current_user` | `CurrentUserDep` | JWT 校验后的当前用户。无效 / 缺失 token → 401 |
 | `get_pagination_params` | `PaginationParams` | 解析 `limit`（1-200，默认 50）、`cursor`、`offset`（默认 0）为 `dict` |
 
 ```python
 from app.api.deps import DB, CurrentUserDep, PaginationParams
-from app.core.errors import ForbiddenError
+from app.models.entity import Entity
 
-@router.get("/workspaces/{workspace_id}/entities")
-async def list_workspace_entities(
-    workspace_id: str,
+@router.get("/namespaces/{namespace_id}/entities")
+async def list_namespace_entities(
+    namespace_id: str,
     db: DB,
     current_user: CurrentUserDep,
     page: PaginationParams,
-) -> OffsetPage[Employee]:
-    if not current_user.is_super_admin:
-        raise ForbiddenError(
-            "workspace.forbidden",
-            "errors.workspace.forbidden",
-            "Only super-admins may list workspace entities",
-        )
+) -> OffsetPage[Entity]:
     query = (
-        select(Employee)
-        .where(Employee.deleted_at.is_(None))
+        select(Entity)
+        .where(Entity.deleted_at.is_(None), Entity.namespace_id == namespace_id)
     )
     return await paginate_offset(db, query, offset=page["offset"], limit=page["limit"])
 ```
 
-`CurrentUser` 模型（`app/schemas/auth.py`）是 P4-P10 的认证契约：`user_id: str`、`is_super_admin: bool`、`token: str | None`。新依赖一律在 `app/api/deps.py` 注册并导出 `Annotated` 别名，禁止在端点里手写 `Depends(get_db)` 长链。
+`CurrentUser`（`app/schemas/auth.py`）：`user_id: str`、`is_super_admin: bool`、`token: str | None`。业务鉴权走 `require_permission(..., can_*)`（OrganizationContract / NamespaceContract 上的 UserGene 原子），不要把 `is_super_admin` 当日常授权。新依赖一律在 `app/api/deps.py` 注册并导出 `Annotated` 别名。
 
 ## 6. OpenAPI 规范
 
 - 文档入口（根路径、不版本化）：Swagger UI `/docs`，ReDoc `/redoc`，schema `/openapi.json`。
 - 应用元数据在 `app/main.py` 的 `FastAPI(...)` 构造中：`title="Eyot API"`、`version="1.0.0"`、`swagger_ui_parameters={"defaultModelsExpandDepth": -1}`（默认折叠 model 区，保持端点列表可读）。
-- 标签组织（`openapi_tags`）：`Health`、`Auth`、`BaseClasses`、`Entities`、`Workspaces`、`Instances`、`Messaging`、`Blackboard`、`Learning`（共 9 个）。每个子路由文件用 `APIRouter(prefix="/entities", tags=["Entities"])` 对齐其一，禁止自造新标签名。
+- 标签：每个子路由文件用 `APIRouter(..., tags=[...])` 声明。`app/main.py` 的 `openapi_tags` 是概览描述，不必穷举所有 router（现有标签含 Organizations、Namespaces、CentralHub、Knowledge、Tunnel、Events 等）。新资源跟所属域用已有标签，不要再发明 `Blackboard`。
 - 标准错误响应：`app/core/openapi.py` 的 `STANDARD_ERROR_RESPONSES` 定义了 401 / 403 / 404 / 422 / 500 五个状态码的信封示例。每个业务路由注册一次：
 
 ```python
@@ -347,7 +336,7 @@ async def get_entity(entity_id: str):
 ### 7.1 新业务路由骨架（`app/api/v1/widgets.py`）
 
 ```python
-"""Widget API routes (template for P4-P10 resources)."""
+"""Widget API routes (template for a new resource)."""
 
 from fastapi import APIRouter, Response, status
 from sqlalchemy import select

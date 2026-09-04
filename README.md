@@ -280,11 +280,12 @@ eyot/
 
 ## Read next
 
-- [System roadmap and blueprint](docs/roadmap.md)
-- [Product terminology](docs/terminology.md)
-- [Metaphor name table](docs/metaphor-name-table.md)
+- [Docs index](docs/README.md)
+- [中文术语](docs/terminology.zh.md)
+- [中文产品设计](docs/design.zh.md)
+- [中文架构](docs/architecture.zh.md)
+- [System roadmap](docs/roadmap.md)
 - [API architecture](docs/api-architecture.md)
-- [Observability conventions](docs/observability.md)
 - [Backend development notes](eyot-backend/README.md)
 - [Instance Host environment and protocol](eyot-instance-host/README.md)
 - [Release notes](RELEASE_NOTES.md)

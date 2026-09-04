@@ -1,12 +1,10 @@
-> **Pre-v4 reference**: Conflict with `.omo/evidence/audit-product-design.md` → audit wins. Awaiting v4 PRD rewrite.
->
-
 # Eyot 可观测性约定
 
-> **Code rename pending (15d-rename wave)**: This doc describes target architecture (15d+). Current code uses old naming.
-
-> P3.5 落地的日志、事件审计、任务队列权威参考。与 `docs/api-architecture.md`（P3 API 约定）构成姊妹文档。
+> 活约定。与 [`api-architecture.md`](api-architecture.md) 构成姊妹文档。界面中文名见 [`terminology.zh.md`](terminology.zh.md)。
 > 代码位置：`eyot-backend/app/core/` —— 日志 `logging.py`、事件 `events.py` / `event_types.py`、队列 `queue.py`、中间件 `middleware/logging.py`、模型 `models/event.py`。
+> 审计行在产品上叫 **足迹（Event）**。
+
+## 1. 日志约定
 
 ## 1. 日志约定
 
@@ -112,40 +110,20 @@ class Event(BaseModel, Base):
 
 | 常量 | 值 | 域 | 发射点 |
 |------|-----|-----|--------|
-| `SYSTEM_STARTUP` | `system.startup` | 系统生命周期 | P3.5（lifespan startup） |
-| `SYSTEM_SHUTDOWN` | `system.shutdown` | 系统生命周期 | P3.5（lifespan shutdown） |
-| `MESSAGING_MESSAGE_SENT` | `messaging.message_sent` | 消息 | P5（`route_message()` 投递成功） |
-| `MESSAGING_DELIVERY_BLOCKED` | `messaging.delivery_blocked` | 消息 | P5（`route_message()` 投递被门控） |
-| `MESSAGING_ACTIVATION_TRIGGERED` | `messaging.activation_triggered` | 消息 | P5（`trigger_on_mention` / `_daily_report_handler`） |
-| `INSTANCE_CREATED` | `instance.created` | 实例 | P7（`POST /instances`） |
-| `INSTANCE_DEPLOYED` | `instance.deployed` | 实例 | P7（`POST .../deploy`） |
-| `INSTANCE_STARTED` | `instance.started` | 实例 | P7（`POST .../start`） |
-| `INSTANCE_RESTARTED` | `instance.restarted` | 实例 | P7（`POST .../restart`） |
-| `INSTANCE_STOPPED` | `instance.stopped` | 实例 | P7（`POST .../stop`） |
-| `INSTANCE_FAILED` | `instance.failed` | 实例 | P7（`POST .../fail`） |
-| `INSTANCE_DELETED` | `instance.deleted` | 实例 | P7（`DELETE ...`） |
-| `BLACKBOARD_FILE_CREATED` | `blackboard.file_created` | 穹窿 | P6（`POST .../files`） |
-| `BLACKBOARD_FILE_UPDATED` | `blackboard.file_updated` | 穹窿 | P6（`PATCH .../files/{id}`） |
-| `BLACKBOARD_FILE_ARCHIVED` | `blackboard.file_archived` | 穹窿 | P6（`POST .../files/{id}/archive`） |
-| `MEMORY_ENTRY_APPENDED` | `memory.entry_appended` | 记忆 | P6（`POST /memory/entries`） |
-| `HARNESS_LOOP_STARTED` | `harness.loop_started` | 控制循环 | P8 落地 |
-| `HARNESS_CHECKPOINT` | `harness.checkpoint` | 控制循环 | P8 落地 |
-| `HARNESS_CONTINUATION_INJECTED` | `harness.continuation_injected` | 控制循环 | P8 落地 |
-| `HARNESS_LOOP_STOPPED` | `harness.loop_stopped` | 控制循环 | P8 落地 |
-| `HARNESS_BREAKER_TRIPPED` | `harness.breaker_tripped` | 控制循环 | P8 落地 |
+| `SYSTEM_STARTUP` / `SYSTEM_SHUTDOWN` | `system.*` | 系统生命周期 | lifespan |
+| `MESSAGING_MESSAGE_SENT` | `messaging.message_sent` | 消息 | `route_message()` 投递成功 |
+| `MESSAGING_DELIVERY_BLOCKED` | `messaging.delivery_blocked` | 消息 | 投递被门控 |
+| `MESSAGING_ACTIVATION_TRIGGERED` | `messaging.activation_triggered` | 消息 | on-mention / 调度唤醒 |
+| `CHAT_RESPONSE_*` | `chat.response.*` | Composer / Tunnel | chunk / done / error / activity |
+| `INSTANCE_CREATED` … `INSTANCE_DELETED` | `instance.*` | 后裔生命周期 | 创建 / 部署 / 启停 / 失败 / 删除 |
+| `FORNIX_FILE_*` | `fornix.file_*` | 粮仓 | 共享文件 CRUD / 同步失败 / work 写入 |
+| `MEMORY_ENTRY_APPENDED` | `memory.entry_appended` | 记忆 | 血脉记忆追加 |
+| `HARNESS_*` | `harness.*` | 控制循环 | loop / checkpoint / pause / inject / report |
+| `LEARNING_*` | `learning.*` | 领悟 / 蜕变 / 演化 | distill / promote / transmute / compose / inject |
+| `BASE_CLASS_CLONED` 等 | `*.cloned` | 副本 | Org / Workspace / Entity / BaseClass clone |
+| `MEETING_*` / `SCHEDULE_*` | `meeting.*` / `schedule.*` | 会议与脑干调度 | 已落地 |
 
-**v4.7 计划新增**（设计稿；实现前勿当已落地）：`harness.inject_requested` / `harness.inject_applied` / `harness.inject_failed` / `harness.report_received`；可选 `messaging.file_touched`。见 `.omo/plans/v4-7-harness-collab.md`（对照 [jcode](https://github.com/1jehuang/jcode) soft-interrupt / report 卫生，非 swarm 广播）。
-
-**发射状态总结**：
-
-- **P3.5 落地**：`system.startup` / `system.shutdown`（2 个）
-- **P5 落地**：`messaging.*`（3 个）
-- **P6 落地**：`blackboard.*` / `memory.*`（4 个）
-- **P7 落地**：`instance.*`（7 个，过去式命名 P7.5 已统一）
-- **P8 待落地**：`harness.*`（5 个，常量已预埋）
-- **v4.7 设计稿**：inject / report 事件族（上表）
-
-harness 族常量已定义但发射点（`emit()` 调用）留到 P8 落地。
+完整常量以 `app/core/event_types.py` 为准。上表按家族折叠；新增类型先加常量再 `emit()`。
 
 ### 2.3 emit() 用法
 
@@ -203,7 +181,7 @@ register_handler("system.*", log_system_events)
 2. 在业务代码中调用 `emit(event_type, ...)` 发射事件。
 3. 如需自动响应，调用 `register_handler(pattern, handler)` 注册监听器。
 
-harness 族常量已预先定义，P8 直接使用即可。
+查询已落地：`GET /api/v1/events`（Portal 足迹面）。不要把事件表当可变业务状态。
 
 ---
 
@@ -254,31 +232,25 @@ task_id = await queue.enqueue("reminder.send", delay=30.0, payload={"user_id": "
 
 ---
 
-## 4. 延后清单
+## 4. 仍延后
 
-以下能力在 P3.5 已设计接口/协议，但实现推迟到后续阶段。
+协议已经留缝，实现尚未换生产后端。不要把下面几行当成「还在 P8 排队」。
 
-| 能力 | 当前状态 | 目标阶段 | 说明 |
-|------|---------|---------|------|
-| Redis Streams 事件桥接 | `register_handler` 是桥接缝（seam），无需改代码 | P6 / P8 | 在 handler 层注册转发 handler 到 Redis Streams |
-| Redis TaskQueue | `TaskQueue` 协议已有，`InMemoryTaskQueue` 仅开发用 | P6 / P8 | 持久化、多 worker、跨进程 |
-| Langfuse LLM 可观测性 | 已批准，不集成进 FastAPI 后端 | P7 / P8 | agent runtime 层独立集成 |
-| 事件查询 API | 无端点，事件表仅用于审计 | P9 | `GET /api/v1/events` 不分页不暴露 |
-| Metrics / OpenTelemetry | 未定阶段 | TBD | 指标导出、trace 采样、dashboard 集成 |
+| 能力 | 当前状态 | 说明 |
+|------|---------|------|
+| Redis Streams 事件桥接 | `register_handler` 是接缝 | 需要时注册 `"*"` 转发 handler，现有 `emit()` 调用方零改动 |
+| Redis TaskQueue | `TaskQueue` 协议已有，线上仍是 `InMemoryTaskQueue` | 进程重启丢任务；多副本前必须替换 |
+| Langfuse | 不进 FastAPI 后端 | 若做，放在后裔 runtime 层 |
+| Metrics / OpenTelemetry | 未做 | 指标、trace、dashboard |
 
-**Redis Streams 桥接设计位置**：`app/core/events.py` 的 `register_handler` 是唯一接缝。P6/P8 只需注册一个 `"*"` 通配 handler 将事件转发到 Redis Streams，现有 `emit()` 调用方零改动。
-
-**Redis TaskQueue 替换位置**：`app/core/queue.py` 的 `TaskQueue` 协议。P6/P8 实现一个 `RedisTaskQueue` 类，满足协议即可在 `app/main.py` lifespan 中替换 `InMemoryTaskQueue` 实例。
+事件查询 **已有** `GET /api/v1/events`，不再延后。
 
 ---
 
 ## 参考
 
-- `docs/api-architecture.md` —— P3 API 约定（姊妹文档）
-- `docs/domain-model.md` —— 已迁 `docs/archive/pre-v4-system/domain-model.md`（P2 历史；v4 以 audit SoT 为准）
-- `app/core/logging.py` —— loguru 配置与 sink 选择
-- `app/core/events.py` —— emit / register_handler
-- `app/core/event_types.py` —— 事件分类法常量
-- `app/core/queue.py` —— TaskQueue 协议与 InMemory 实现
-- `app/core/middleware/logging.py` —— request_id 贯通
-- `app/models/event.py` —— Event 审计模型
+- [`api-architecture.md`](api-architecture.md) —— API 约定
+- [`terminology.zh.md`](terminology.zh.md) —— 足迹 / 粮仓 / 后裔 等显示名
+- `app/core/logging.py` / `events.py` / `event_types.py` / `queue.py`
+- `app/core/middleware/logging.py`
+- `app/models/event.py`

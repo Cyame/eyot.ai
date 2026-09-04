@@ -1,129 +1,140 @@
-> **Canonical source**: v5 命名基线（2026-08-07 终稿）。决策 SoT：`.omo/evidence/v5-rename-decisions.md`。
-> **Prior**: 15d（克苏鲁）命名已归档至 `docs/archive/terminology-15d.md`（只读）。
-> **执行波**: v5（`.omo/plans/0x-roadmap.md`）——v5.0 命名波起 UI 显示名逐步切换；后端代码名/DB/API 不动。
+# Eyot terminology
 
-One-line definitions for every Eyot code-term (backend), display-name (frontend 山海+生物世界观), and protocol entity. Code-terms stay English; display-names in parentheses are for product UI reference.
+> **Canonical names**: v5 display names (山海 + 生物). Decision SoT: `.omo/evidence/v5-rename-decisions.md`.
+> **Readable Chinese**: [`terminology.zh.md`](terminology.zh.md). Lookup table: [`metaphor-name-table.md`](metaphor-name-table.md).
+> Historical 15d (Cthulhu) snapshot: `docs/archive/terminology-15d.md` (read-only; not current).
 
----
-
-## Structure Terms（3 层租户 + 3 层实体）
-
-### 租户层级（大陆 → 区域 → 生境）
-
-- **Organization**（大陆）— Top-level isolation unit. 单租户默认 slug=`default`。
-- **Namespace**（区域）— Within an Organization: **region partition**（e.g. coding vs social-media），**not** env。Entity（血脉）belongs here so region identity spans multiple Workspaces。
-- **Workspace**（生境）— Within a Namespace: a concrete workstream（e.g. a product system or a publish platform）。**代码名保持 `Office` 不变**（v5 只改 UI 显示名，代码名不动）。单租户默认：一个生境 shared by all users。Starts empty。
-- **场景意象**（迁徙路线）— Portal 拓扑背景意象；动物通用。
-
-### 实体层级（始祖 → 血脉 → 后裔）
-
-> v5 三层名：从大到小 始祖（源头）> 血脉（传承线）> 后裔（个体）。
-
-- **BaseClass**（始祖）— Preset template defining rules, prompt, commands, tools, provider config, subagent 策略。Created by humans or distilled（演化）from Entity experience。System-scoped。**5 built-in 始祖**（§BaseClasses）。
-- **Entity**（血脉）— Instantiation of a BaseClass **per-Namespace**，with identity + accumulated Memory（记忆）。Region-scoped so one Entity can 创生 Instances across Workspaces in that Namespace。Can be promoted（蜕变）/transmuted（演化）。
-- **Instance**（后裔）— Running materialization of an Entity in one Workspace。One Instance per pod。Lifecycle ≤ Workspace。**Invariant**: at most one active Instance per `(workspace_id, entity_id)` because `@slug` addresses the Entity。
-- **Membership**（智人 / 生物）— Workspace presence with posx/posy。Exclusive-FK: user XOR instance。**v5 产品名**: user row = **智人**（真人，对应 15d 觉醒者）; instance row = **生物**（AI 成员，对应 15d 迷失者）。
-- **NamespaceContract**（成员）— Namespace ↔ User 关系。**v5 不再造专有名词**：直接表达为「某区域的成员」。
-
-### 结构概念
-
-- **Passage**（兽道）— Adjacency edge between two Memberships, defining the selectable neighbor set for messaging。CorridorNode dropped。
-- **CentralHub**（信号塔）— Per-Workspace 协作中枢容器，含 4 脑区（Fornix 粮仓 / 额叶 / 脑干 / **小脑 = 内置中央智能体 CerebellumAgent 1:1**）。Display 中文「信号塔」，backend 代码名 `CentralHub`。
-- **CerebellumAgent**（小脑 / 中央智能体）— Built-in system agent on every CentralHub。v4: migrates to Entity(`is_cerebellum`) + Instance。
-- **Fornix**（粮仓）— Active shared file region per CentralHub（对应 15d 穹窿）。Display 中文「粮仓」。
-- **Vault**（标本）— Cold archive per Workspace。DB KV (`vault_entries`, optional inline value); eventual MinIO/S3 via `archived_key`。Display 中文「标本」。
-- **Memory**（记忆）— Append-only per-Entity memory log, indexed by kind (experience/lesson/decision/problem) and time。No `updated_at` column。
-- **Event**（足迹）— Audit log row。Display 中文「足迹」（对应 15d 印痕）。
-- **DeployRecord**（诞生记录）— K8s deployment lifecycle record: 9-step pipeline。Display 中文「诞生记录」（对应 15d 降世记录）。
-- **Topology**（领地地图）— Spatial visualization of Workspace members as SVG nodes with glow halos, 3 interaction modes (Select/Connect/Move), message-flow particle animation。Display 中文「领地地图」（对应 15d 心灵图景）。
-- **SystemHub**（星球中枢）- Org-level implicit assistant for description generation and LLM defaults。Backend 代码名 `system_hub`。Display 中文「星球中枢」（v5.0.1 从「系统中枢」改名）。
-- **IntelligenceProvider**（智能）- LLM provider configured at org level。Backend 代码名 `OrganizationProvider`。Display 中文「智能」（v5.0.1 从「智能供者」改名）。
-- **AiGene**（生物基因）- Capability pack (tool/skill/command) installable on bloodlines。Display 中文「生物基因」（v5.0.1 从「深海基因」改名；对齐 AI 成员=生物）。
-- **UserGene**（智人基因）- Permission pack for human users. Display 中文「智人基因」。
-- **Permission**（权限）- One `can_*` atom. Display 中文「权限」. Never show the raw slug in operator UI.
-- **summon / spawn**（创生）- 动词：创建血脉（Entity）或后裔（Instance）。v5.0.1 从「召唤」改名，与名词体系对齐。
-
-### Runtime 概念
-
-- **Workspace control plane** — Eyot's operator + harness surface (Portal, Supervisor, Boulder, Passage, CentralHub, deploy, observability)。Product peer: a more flexible / observable **senpi · oh-my-openagent · oh-my-pi**。Not the per-Instance agent binary。
-- **pi runtime** — Preferred sandboxed agent loop that drives each **Instance（后裔）**。Entity `system_prompt` + `config_override` serialize to pi AgentConfig。React runtime is an optional alternative。**Not** Senpi CLI。
-- **托管运行时（managed runtime）** — Eyot 创建并管理的 Instance runtime；当前线上沙箱化 pi 路径属于此类。runtime 在 Instance 创生时选择并绑定，运行中不热切换。
-- **外接运行时（attached / external runtime）** — 已在本机或远程运行、由 Eyot 接入并绑定到既有 Instance 的 runtime；“离体个体运行时”是该方向的用户表述。attach 本身不授予本机目录访问，目录必须通过显式授权、挂载或文件桥接提供；绑定后同一 Instance 不热切换 runtime。
-- **LoopState**（心智状态）— Harness runtime state for an Instance: loop_status (6 states), continuation_count, breaker_config, last_checkpoint_at。保留中性词。
-- **InstanceProviderConfig** — LLM provider configuration for an Instance。Internal config, no UI equivalent。
-- **delivery_mode**（投递模式, v4.7）— How a collaboration/inject payload reaches an Instance: `notify` / `soft_inject` / `wake`。
-- **subagent 能力** — Runtime 内部机制（pi task tool / opencode 子代理 / Claude Task），由 Host adapter 映射为「模块功能」；**不进拓扑、不进 Tunnel 协议、不进 Memory/蒸馏链**。6 个内置 subagent 能力：唤灵/灵视/衡判/游魂/潜知/百瞳（对应 15d 神职降级，v5.1 落实）。
+Code, DB, and API use English identifiers. Portal UI uses the Chinese display names in parentheses. This file is the English glossary for implementers.
 
 ---
 
-## BaseClasses（5 Built-in 始祖）
+## Structure (tenant + identity)
 
-> v5 终稿：11 神职 → **5 常驻始祖**（有动物名）。其余 6 神职（唤灵/灵视/衡判/游魂/潜知/百瞳）**降级为 subagent 能力**，不命名、不占拓扑（v5.1 落实）。Slug = 英文动物名 kebab-case。Display = i18n key。DB does not store display_name column。
+### Tenant stack（大陆 → 区域 → 生境）
 
-| # | Slug | Display | 15d 名 | Role | omo Agent Source |
-|---|---|---|---|---|---|
-| 1 | `fox` | 狐狸 | 密士 | Interview planner, plan mode sticky, `.omo` plan writer | Prometheus (Strategic Planner) |
-| 2 | `beaver` | 海狸 | 暗行 | Solo full-stack coder, boulder-pusher | Sisyphus (Main Coder) |
-| 3 | `sparrow` | 麻雀 | 暗影 | Junior coder, high-throughput fast response | Sisyphus-Junior |
-| 4 | `coyote` | 郊狼 | 铸金 | Autonomous deep worker, goal-driven | Hephaestus |
-| 5 | `lion` | 狮子 | 旧日 | Top-level delegation / monitoring / approval | Atlas (Orchestrator) |
+- **Organization**（大陆）— Top-level isolation unit. Single-tenant default slug `default` is allowed; multi-org is real (org picker + contracts).
+- **Namespace**（区域）— Scenario partition inside an Organization (e.g. coding vs social-media). **Not** env. Entity（血脉）lives here so identity and Memory span Workspaces in that region.
+- **Workspace**（生境）— Concrete workstream inside a Namespace. Code and table name are `Workspace` / `workspaces`. Instance, Membership, Passage, CentralHub, and Vault live here.
+- **迁徙路线** — Portal topology background metaphor (not a DB entity).
 
-### 内置 subagent 能力（v5.1 落实，不命名）
+### Identity stack（始祖 → 血脉 → 后裔）
 
-> T1 已建 6 个能力 agent：`eyot-instance-host/subagents/agents/{intent,architecture,quality,explore,research,vision}.md`；frontmatter `name` = 能力 id，`subagent_strategy.enabled` 值复用同名。
+From large to small: 始祖 (source) > 血脉 (lineage) > 后裔 (individual).
 
-| 能力 id | 15d 神职 | 能力角色 | omo Agent Source | 归属（per-始祖声明） |
-|---|---|---|---|---|
-| `intent` | 唤灵 | Intent analysis, pre-planner | Metis | 常驻始祖按需声明 |
-| `architecture` | 灵视 | Read-only architecture / hard debugging | Oracle | 常驻始祖按需声明 |
-| `quality` | 衡判 | Quality gate: review/approve/reject | Momus | 常驻始祖按需声明 |
-| `explore` | 游魂 | Codebase grep / exploration | Explore | 常驻始祖按需声明 |
-| `research` | 潜知 | External reference + multi-repo + docs | Librarian | 常驻始祖按需声明 |
-| `vision` | 百瞳 | Visual / media / audio analysis | Multimodal-Looker | 常驻始祖按需声明 |
+- **BaseClass**（始祖）— Role archetype: prompt, provider, gene/capability bindings, subagent strategy. Human-created or 演化 from an Entity. Scope `system | org | namespace`. **Five built-in** 始祖（§BaseClasses）.
+- **Entity**（血脉）— Per-Namespace identity of a BaseClass, with its own gene/capability bindings and append-only Memory. Can spawn Instances across Workspaces in that Namespace. Can 蜕变 / 演化. Cerebellum uses `is_cerebellum` and is hidden from ordinary 血脉 lists.
+- **Instance**（后裔）— Running materialization of an Entity in one Workspace (pod + runtime). Lifecycle ≤ Workspace. **Invariant**: at most one active Instance per `(workspace_id, entity_id)` because `@slug` addresses the Entity.
+- **Membership**（智人 / 生物）— Workspace presence with `posx/posy`. Exclusive-FK: user XOR instance. User row = **智人**; instance row = **生物**.
+- **NamespaceContract**（成员）— User is a member of a Namespace. No special product noun.
 
----
+Lab **rank is retired**. There is no intern / researcher / director axis.
 
-## Learning 动作（领悟 / 蜕变 / 演化）
+### Collaboration and storage
 
-| 后端动作 | 15d 名 | v5 名 | 语义 |
-|---|---|---|---|
-| distill | 蒸馏 | **领悟** | Memory（记忆）→ capability；P10「学习」页面同步改「领悟」 |
-| promote | 晋升 | **蜕变** | Instance（后裔）→ Entity（血脉）：运行状态 + Memory 回写，就地增强 |
-| transmute | 炼化 | **演化** | Entity（血脉）→ BaseClass（始祖）：经验蒸馏成新始祖，新 slug 全域可用 |
+- **Passage**（兽道）— Directed adjacency edge between two Memberships. Messaging is near-neighbor only. CorridorNode dropped.
+- **CentralHub**（信号塔）— Per-Workspace collaboration hub. Four regions: Fornix（粮仓）, Frontal Lobe（额叶 / Kanban）, Brainstem（脑干 / schedule）, Cerebellum（小脑）.
+- **CerebellumAgent**（小脑）— Product: one cerebellum **Entity** per Namespace; first Workspace creates Entity + Instance, later Workspaces add Instances of the same Entity. Not a topology Membership.
+- **Fornix**（粮仓）— Active shared files: pod `shared/` mount; `work/` is private tmp. `FornixFile` is index/cache, not the only human surface.
+- **Vault**（标本）— Cold archive per Workspace (DB KV; object store deferred).
+- **Memory**（记忆）— Append-only per-Entity log, indexed by kind and time. No `updated_at`.
+- **Event**（足迹）— Audit log row.
+- **DeployRecord**（诞生记录）— K8s deploy lifecycle (9-step pipeline).
+- **Topology**（领地地图）— SVG canvas of Memberships + glow(`loop_status`) + Select/Connect/Move + Passage flow.
+- **SystemHub**（星球中枢）— Org-level implicit assistant (description generation / LLM defaults). Code: `system_hub`.
+- **IntelligenceProvider**（智能）— LLM provider at org level. Code: `OrganizationProvider`.
+- **AiGene**（生物基因）— Capability pack for 血脉 (manifest-inline skills/tools/commands).
+- **UserGene**（智人基因）— Permission atom `can_*` with `effect_scope`. Catalog is org-neutral; grant lives on OrganizationContract / NamespaceContract.
+- **Permission**（权限）— One `can_*` atom. Never show the raw slug as the operator-facing label.
+- **Knowledge**（知识）— Independent table with scope `system | org | namespace | workspace`. Two dimensions: **require** (on gene/capability) and **has** (on BaseClass / Entity / Instance). Override: workspace > namespace > org > system.
+- **CapabilityMarket**（能力）— Manageable capability catalog (CRUD), not a read-only view.
+- **summon / spawn**（创生）— Verb: create an Entity or Instance.
 
----
+### Runtime
 
-## Sub-entities（Data Layer）
-
-Code-term-only entities from the core domain model. No product UI display-names.
-
-- **User** — Human authentication identity: username, email, password hash。
-- **BaseClass**（was EmployeePreset）— Persisted preset record storing slug, manifest JSONB, version。
-- **Entity**（was Employee）— Per-Namespace identity referencing a BaseClass, with accumulated memory across Workspaces。
-- **Membership**（智人 / 生物）— Workspace presence。Exclusive-FK user XOR instance。
-- **NamespaceContract**（成员）— Namespace-scoped human membership（v5 概念化）。
-- **BlackboardFile** / **FornixFile** — File record on CentralHub fornix（粮仓）。
-- **CerebellumAgent** — Built-in central agent (1:1 CentralHub); system-owned, not a Membership。
-- **VaultEntry**（标本条目）— Archived KV entry in a Vault。
-- **Memory**（was MemoryEntry）— Append-only memory log entry per Entity, indexed by kind and time。
-- **InstanceProviderConfig** — LLM provider config for an Instance。
-
----
-
-## Concepts
-
-- **Entity-as-role-identity** — Entity（血脉）is a persistent role identity composed of a BaseClass（始祖）manifest plus shared cross-instance Memory; it grows as memory accumulates。
-- **Instance=materialization** — An Instance（后裔）is a concrete materialization of an Entity in one Workspace, with isolated workspace and runtime。
-- **near-neighbor messaging** — Messaging restricted to passage（兽道）-defined adjacent nodes only; no broadcast fan-out。
-- **activation trigger** — Event that causes a node to sync topology and state: daily-report self-sync, on-mention, or scheduled task invocation。
-- **slash-protocol** — Structured turn-based command grammar: a Turn is a list of Directives, each with optional target, command, args, and content-ref。
-- **directive** — A single command unit within a Turn: target_entity, cmd, args, content_ref, and raw_text。
-- **command-registry** — Registry of four command families: GLOBAL (/read, /list, /write, /archive), PER-PRESET (manifest.commands), CONTROL (/interrupt, /pause, /resume, /status, /snapshot), LEARNING (/distill, /consolidate, /reflect)。
-- **content-ref** — A scope-qualified reference to content: mandatory scope prefix (workspace|blackboard|vault|memory) with optional path。
-- **composer compartmentalization** — The Composer UI splits a message into per-entity compartments before send。
-- **subagent 策略** — Per-始祖 manifest 声明：能否使用 subagent、模板、约束（v5.1 落实）。
-- **standing knowledge convention** — System knowledge rows `eyot.collab.passage` and `eyot.hub.shared_work` are **policy text**, not live dumps. Changing 兽道 or Hub files does **not** rewrite them. Neighbor routing uses Passage rows; Hub layout uses the shared/work prefixes at runtime.
+- **Outer control plane (Eyot)** — Portal + Passage + CentralHub + deploy + observability. HarnessSupervisor is the outer loop registry. Eyot harnesses many role-harnesses; it is **not** a senpi studio.
+- **Inner role harness (后裔)** — Each Instance is a harness-agent entry specialized by 始祖. Loop engineering (Boulder / notepad / subagent) lives in-pod. Class of senpi · oh-my-openagent, not Eyot’s outer product.
+- **pi runtime** — Preferred sandboxed loop that drives each Instance. Entity overlay serializes to pi AgentConfig. React runtime optional. **Not** Senpi CLI.
+- **Ticket entry (far-term)** — Submitter files a ticket; SystemHub provisions and deploys a network; that Workspace’s cerebellum Instance returns the conclusion. Not shipped. See `design.zh.md` §10.3.
+- **托管运行时（managed runtime）** — Eyot creates and manages the Instance runtime (current online path: sandboxed pi). Bound at 创生; no hot-swap.
+- **外接运行时（attached / external runtime）** — An already-running local or remote runtime bound onto an Instance. Attach does not grant host directory access; directories need explicit grant / mount / file bridge. No hot-swap on the same Instance.
+- **LoopState**（心智状态）— Harness state: `loop_status` (6 values), continuation, breakers, checkpoint.
+- **InstanceProviderConfig** — Per-Instance LLM config (internal).
+- **delivery_mode**（投递模式）— `notify` / `soft_inject` / `wake`.
+- **subagent 能力** — In-pod mechanism (pi task tool / Host adapter). **No topology node, no Tunnel type, no Memory/distill chain.** Six built-in ids: `intent` / `architecture` / `quality` / `explore` / `research` / `vision`. Declared per 始祖 via `subagent_strategy`.
 
 ---
 
-*v5 命名基线 2026-08-07。15d 快照归档于 `docs/archive/terminology-15d.md`；决策 SoT `.omo/evidence/v5-rename-decisions.md`；执行总图 `.omo/plans/0x-roadmap.md`。*
+## BaseClasses（5 built-in 始祖）
+
+Five named 始祖. Six former tool-like roles are subagent capabilities only (no animal name, no Entity card).
+
+Slug = English animal kebab-case (DB unique). Display = i18n. DB does not store a display_name column.
+
+| Slug | Display | Role |
+|---|---|---|
+| `fox` | 狐狸 | Strategic planner, plan-mode sticky, `.omo` plan writer |
+| `beaver` | 海狸 | Solo full-stack coder |
+| `sparrow` | 麻雀 | Fast high-throughput coder (do not label as “cheap”) |
+| `coyote` | 郊狼 | Autonomous deep worker |
+| `lion` | 狮子 | Top-level delegation / monitoring |
+
+### Built-in subagent capabilities (no product name)
+
+| id | Role |
+|---|---|
+| `intent` | Intent analysis, pre-planner |
+| `architecture` | Read-only architecture / hard debugging |
+| `quality` | Quality gate: review / approve / reject |
+| `explore` | Codebase grep / exploration |
+| `research` | External reference + multi-repo + docs |
+| `vision` | Visual / media / audio analysis |
+
+---
+
+## Learning actions
+
+| Code | Display | Meaning |
+|---|---|---|
+| distill | **领悟** | Memory → capability（CapabilityMarket） |
+| promote | **蜕变** | Instance → Entity (write-back, including has-knowledge) |
+| transmute | **演化** | Entity → BaseClass (new 始祖, org scope) |
+| compose | （打包） | N capabilities → 1 AiGene (manifest-inline) |
+
+Two independent chains — not a single four-step ladder:
+
+```
+Chain A (content):  Memory ──distill──▶ Capability ──compose──▶ AiGene
+Chain B (identity): Instance ──promote──▶ Entity ──transmute──▶ BaseClass
+```
+
+---
+
+## Data-layer names
+
+These are persisted types. Product copy uses the display names above.
+
+- **User** — Human auth identity.
+- **OrganizationContract** — User membership of an Organization + granted UserGene atoms. No contract → org is invisible.
+- **BaseClass** / **Entity** / **Instance** / **Workspace** / **Membership** / **Passage** / **Namespace** / **NamespaceContract**
+- **FornixFile** — Index row for a 粮仓 file.
+- **VaultEntry** — KV row in 标本.
+- **Memory** — Append-only memory row.
+- **KnowledgeEntry** / **KnowledgeDimension**
+- **InstanceProviderConfig** / **InstanceLoopState** / **InstanceInjectQueue** / **DeployRecord** / **Event**
+
+---
+
+## Concepts (do not conflate)
+
+- **Entity-as-role-identity** — Persistent role identity = BaseClass + own bindings + Memory. It grows; the Instance is not the identity.
+- **Instance = materialization** — One running body of that identity in one Workspace.
+- **near-neighbor messaging** — Only Passage-adjacent Memberships; no workspace broadcast bus.
+- **slash-protocol** — A Turn is a list of Directives (`target`, `cmd`, `args`, `content-ref`).
+- **command-registry** — Four families: GLOBAL (`/read` `/list` `/write` `/archive`), PER-PRESET (`manifest.commands`), CONTROL (`/interrupt` `/pause` `/resume` `/status` `/snapshot`), LEARNING (`/distill` `/consolidate` `/reflect`).
+- **content-ref** — Scope-prefixed pointer. Hub content uses `hub` (not `blackboard`); instance-local content uses `instance`.
+- **composer compartmentalization** — Composer splits a send into per-entity compartments.
+- **standing knowledge convention** — System rows `eyot.collab.passage` and `eyot.hub.shared_work` are **policy text**, not live dumps. Neighbor routing uses Passage rows.
+
+---
+
+*Living glossary. Chinese: `docs/terminology.zh.md`. Mapping: `docs/metaphor-name-table.md`. Naming SoT: `.omo/evidence/v5-rename-decisions.md`.*
