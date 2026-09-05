@@ -1,7 +1,7 @@
 {
   "name": "eyot-portal",
   "private": true,
-  "version": "0.5.3.dev1",
+  "version": "0.5.4.dev1",
   "type": "module",
   "scripts": {
     "dev": "vite",

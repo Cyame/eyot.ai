@@ -9,6 +9,7 @@ in P11a Todo 4:
 * ``create_or_skip`` swallows 409 Conflict
 """
 
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -109,3 +110,29 @@ async def test_create_or_skip_handles_409() -> None:
         await client.create_or_skip(forbidden, "ns", {"foo": "bar"})
     assert excinfo.value.status == 403
     forbidden.assert_awaited_once_with("ns", {"foo": "bar"})
+
+
+@pytest.mark.asyncio
+async def test_list_pods_exposes_waiting_reason() -> None:
+    """Container waiting.reason is surfaced as ``waiting_reason``."""
+    api_client = MagicMock(spec=k8s_client.ApiClient)
+    client = K8sClient(api_client)
+    waiting = SimpleNamespace(reason="ImagePullBackOff")
+    state = SimpleNamespace(waiting=waiting)
+    container = SimpleNamespace(
+        name="app", ready=False, restart_count=0, state=state
+    )
+    pod = SimpleNamespace(
+        metadata=SimpleNamespace(name="pod-1", creation_timestamp=None),
+        status=SimpleNamespace(phase="Pending", pod_ip=None, container_statuses=[container]),
+        spec=SimpleNamespace(node_name=None),
+    )
+    client.core.list_namespaced_pod = AsyncMock(return_value=SimpleNamespace(items=[pod]))
+
+    pods = await client.list_pods("ns", "eyot/instance-id=inst-1")
+    assert pods[0]["name"] == "pod-1"
+    assert pods[0]["containers"][0]["waiting_reason"] == "ImagePullBackOff"
+    client.core.list_namespaced_pod.assert_awaited_once_with(
+        "ns", label_selector="eyot/instance-id=inst-1"
+    )
+

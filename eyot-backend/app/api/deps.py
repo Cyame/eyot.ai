@@ -94,6 +94,50 @@ async def get_current_user(
     )
 
 
+async def get_current_user_jwt_only(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Security(_bearer_scheme),
+) -> CurrentUser:
+    """Authenticate from JWT claims only — no database round-trip.
+
+    Used by operational endpoints that must remain reachable when Postgres
+    is down (dependency watchdog). ``is_super_admin`` is taken from the
+    token payload, not the user row.
+    """
+    token: str | None = getattr(request.state, "token", None)
+    if not token and credentials is not None:
+        token = credentials.credentials
+    if not token:
+        raise UnauthorizedError(
+            "auth.token_missing",
+            "errors.auth.token_missing",
+            "Authentication required",
+        )
+
+    try:
+        payload = decode_token(token, settings.JWT_SECRET)
+    except JWTError:
+        raise UnauthorizedError(
+            "auth.token_invalid",
+            "errors.auth.token_invalid",
+            "Invalid or expired token",
+        )
+
+    user_id: str = payload.get("sub", "")
+    if not user_id:
+        raise UnauthorizedError(
+            "auth.token_invalid",
+            "errors.auth.token_invalid",
+            "Invalid token payload",
+        )
+
+    return CurrentUser(
+        user_id=user_id,
+        is_super_admin=bool(payload.get("is_super_admin", False)),
+        token=token,
+    )
+
+
 async def get_pagination_params(
     limit: int = Query(50, ge=1, le=200),
     cursor: str | None = Query(None),
@@ -105,6 +149,7 @@ async def get_pagination_params(
 
 DB = Annotated[AsyncSession, Depends(get_db)]
 CurrentUserDep = Annotated[CurrentUser, Depends(get_current_user)]
+CurrentUserJwtDep = Annotated[CurrentUser, Depends(get_current_user_jwt_only)]
 PaginationParams = Annotated[dict, Depends(get_pagination_params)]
 XOrgIdHeader = Annotated[str | None, Header(alias="X-Organization-Id")]
 

@@ -1,5 +1,6 @@
 import DeployProgressFloat from '@/components/DeployProgressFloat';
 import EntityDetailModal from '@/components/EntityDetailModal';
+import ServiceWatchdog from '@/components/ServiceWatchdog';
 import FirstRunOnboardingModal from '@/pages/FirstRunOnboardingModal';
 import { useEntityModalStore } from '@/stores/entityModalStore';
 import { useOnboardingModalStore } from '@/stores/onboardingModalStore';
@@ -25,6 +26,7 @@ export default function GlobalModals({ onOnboardingComplete }: GlobalModalsProps
           }}
         />
       ) : null}
+      <ServiceWatchdog />
       <DeployProgressFloat />
     </>
   );

@@ -33,6 +33,7 @@ from app.services.k8s.client_manager import k8s_manager
 from app.services.k8s.event_bus import event_bus
 from app.services.k8s.k8s_client import K8sClient
 from app.services.k8s.resource_builder import (
+    LABEL_INSTANCE_ID,
     build_configmap,
     build_deployment,
     build_env_secret,
@@ -47,6 +48,9 @@ logger = logging.getLogger(__name__)
 DEPLOY_PIPELINE_TIMEOUT_SECONDS = 300  # healthz watch window (image start + ready)
 DEPLOY_HEALTHZ_PATH = "/healthz"  # reserved; pipeline only checks ready_replicas
 GATEWAY_CLUSTER_ID = "_gateway"  # sentinel; gateway client is the single API surface
+_IMAGE_PULL_FAIL_REASONS: Final[frozenset[str]] = frozenset(
+    {"ImagePullBackOff", "ErrImagePull"}
+)
 
 # v5.1 N2: pi engine pin — MUST stay in sync with
 # `eyot-instance-host/package.json` `@earendil-works/pi-coding-agent` version.
@@ -233,6 +237,22 @@ async def _restore_agent_bundle_with_retry(
             ctx.instance_id,
         )
     return ok
+
+
+async def _detect_image_pull_failure(client: K8sClient, ctx: _DeployContext) -> str | None:
+    """Return a fail message if any instance pod is stuck pulling its image."""
+    pods = await client.list_pods(
+        ctx.namespace,
+        label_selector=f"{LABEL_INSTANCE_ID}={ctx.name}",
+    )
+    for pod in pods:
+        for container in pod.get("containers") or []:
+            reason = container.get("waiting_reason")
+            if reason in _IMAGE_PULL_FAIL_REASONS:
+                pod_name = pod.get("name") or "unknown"
+                container_name = container.get("name") or "container"
+                return f"image pull failed ({reason}) on pod {pod_name}/{container_name}"
+    return None
 
 
 def _k8s_resource_name(instance_id: str) -> str:
@@ -698,6 +718,9 @@ async def _execute_deploy_pipeline(ctx: _DeployContext) -> None:
             if status["ready_replicas"] >= ctx.replicas:
                 ready = True
                 break
+            pull_error = await _detect_image_pull_failure(client, ctx)
+            if pull_error is not None:
+                raise RuntimeError(pull_error)
             await asyncio.sleep(1)
         if not ready:
             raise RuntimeError(

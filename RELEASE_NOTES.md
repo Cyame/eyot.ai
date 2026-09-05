@@ -10,6 +10,14 @@ for the version they will become. The first tagged release is **1.0**.
 
 ## Unreleased — targeting 1.0
 
+### 2026-09-05 — 0.5.4.dev1（依赖心跳与部署流故障可见性）
+
+- 新增 `GET /api/v1/system/dependencies`：可注册的依赖检查原语（首版 database + kubernetes），JWT-only 鉴权，pg 挂时端点仍能 200 报告。
+- 全局 `ServiceWatchdog` 轮询心跳，依赖异常时非阻塞 banner + 重试。
+- 部署流：`ImagePullBackOff`/`ErrImagePull` 秒级失败；SSE ping + nginx `proxy_read_timeout 300s`；DeployProgressFloat 区分连接中断 / 记录消失，终态可重试部署。
+- 版本同步为 **0.5.4.dev1**。
+
+
 ### 2026-08-17 — Cocoa → Eyot (project rebirth)
 
 The project was **renamed from *Cocoa* to *Eyot*** and reset for a clean

@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 
-export type DeployProgressPhase = 'running' | 'success' | 'failed' | 'cancelled' | 'timeout';
+export type DeployProgressPhase =
+  | 'running'
+  | 'success'
+  | 'failed'
+  | 'cancelled'
+  | 'timeout'
+  | 'connection_lost'
+  | 'record_missing';
 
 export type DeployProgressJob = {
   readonly recordId: string;

@@ -1553,7 +1553,15 @@
       "network_policy": "Network policy",
       "healthz_watch": "Wait until ready",
       "status_update": "Update status"
-    }
+    },
+    "connectionLostTitle": "Connection to backend lost",
+    "connectionLost": "Deploy progress cannot be synced. Check the network and retry.",
+    "retryConnection": "Retry",
+    "recordMissingTitle": "Deploy record missing",
+    "recordMissing": "This deploy record could not be found. It may have been cleaned up.",
+    "close": "Close",
+    "retryDeploy": "Retry deploy",
+    "retryFailed": "Failed to retry deploy"
   },
   "genePacks": {
     "orgAdmin": "Organization admin",
@@ -1567,5 +1575,15 @@
     "proxyPort": "Port",
     "proxyUsername": "Username",
     "proxyPassword": "Password"
+  },
+  "watchdog": {
+    "title": "Background services unavailable",
+    "retry": "Retry now",
+    "unknown": "{{name}} is unavailable",
+    "dependency": {
+      "database": "Database connection lost",
+      "kubernetes": "Kubernetes cluster unreachable",
+      "backend": "Connection to backend lost"
+    }
   }
 }

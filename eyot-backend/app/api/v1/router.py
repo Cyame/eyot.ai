@@ -28,6 +28,7 @@ from app.api.v1.namespace_contracts import router as namespace_contracts_router
 from app.api.v1.namespaces import router as namespaces_router
 from app.api.v1.organizations import router as organizations_router
 from app.api.v1.provider_catalog import router as provider_catalog_router
+from app.api.v1.system import router as system_router
 from app.api.v1.system_hub import router as system_hub_router
 from app.api.v1.tunnel import router as tunnel_router
 from app.api.v1.user_genes import router as user_genes_router
@@ -62,6 +63,7 @@ api_router.include_router(namespaces_router)
 api_router.include_router(namespace_contracts_router)
 api_router.include_router(organizations_router)
 api_router.include_router(provider_catalog_router)
+api_router.include_router(system_router)
 api_router.include_router(system_hub_router)
 api_router.include_router(tunnel_router)
 api_router.include_router(user_genes_router)

@@ -185,3 +185,93 @@ async def test_execute_pipeline_runs_9_steps_mocked(
     # Final DB state — DeployRecord transitioned to success
     await session.refresh(record)
     assert record.status == DeployStatus.success.value
+
+
+@pytest.mark.asyncio
+async def test_execute_pipeline_fails_fast_on_image_pull_backoff(
+    session: AsyncSession,
+    workspace_factory,
+    entity_factory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Step 8 fails immediately when a pod is stuck in ImagePullBackOff."""
+    from app.models.instance import Instance, InstanceStatus
+
+    workspace = await workspace_factory()
+    entity = await entity_factory()
+    record_id, ctx = await deploy_instance(
+        name="test-deploy-pull",
+        image_version="missing-tag",
+        workspace_id=workspace.id,
+        entity_id=entity.id,
+        db=session,
+    )
+    record = await session.get(DeployRecord, record_id)
+    assert record is not None
+
+    publish_calls: list[tuple[str, dict]] = []
+
+    def fake_publish(event_type: str, data: dict, event_id: str | None = None) -> None:
+        publish_calls.append((event_type, data))
+
+    monkeypatch.setattr(
+        "app.services.deploy_service.event_bus",
+        MagicMock(publish=fake_publish),
+    )
+    monkeypatch.setattr(
+        "app.services.deploy_service.k8s_manager",
+        MagicMock(get_gateway_client=AsyncMock(return_value=MagicMock(name="ApiClient"))),
+    )
+
+    fake_client = MagicMock(name="K8sClient")
+    fake_client.ensure_namespace = AsyncMock(return_value=None)
+    fake_client.create_or_skip = AsyncMock(return_value=None)
+    fake_client.apply = AsyncMock(return_value=None)
+    fake_client.scale_deployment = AsyncMock(return_value=None)
+    fake_client.get_deployment_status = AsyncMock(return_value={"ready_replicas": 0})
+    fake_client.list_pods = AsyncMock(
+        return_value=[
+            {
+                "name": "inst-pod",
+                "containers": [
+                    {"name": "app", "ready": False, "restart_count": 0, "waiting_reason": "ImagePullBackOff"}
+                ],
+            }
+        ]
+    )
+    fake_client.core = MagicMock()
+    fake_client.core.delete_namespace = AsyncMock(return_value=None)
+    fake_client.apps = MagicMock()
+    fake_client.networking = MagicMock()
+    monkeypatch.setattr(
+        "app.services.deploy_service.K8sClient",
+        MagicMock(return_value=fake_client),
+    )
+
+    @asynccontextmanager
+    async def fake_session_ctx():
+        yield session
+
+    monkeypatch.setattr(
+        "app.services.deploy_service.get_session_factory",
+        lambda: lambda: fake_session_ctx(),
+    )
+
+    await execute_deploy_pipeline(ctx)
+
+    fake_client.list_pods.assert_awaited()
+    failed_events = [
+        data
+        for event_type, data in publish_calls
+        if event_type == "deploy_progress" and data.get("status") == "failed"
+    ]
+    assert failed_events
+    assert "ImagePullBackOff" in (failed_events[-1].get("message") or "")
+
+    await session.refresh(record)
+    assert record.status == DeployStatus.failed.value
+    assert "ImagePullBackOff" in (record.message or "")
+    instance = await session.get(Instance, ctx.instance_id)
+    assert instance is not None
+    assert instance.status == InstanceStatus.failed.value
+

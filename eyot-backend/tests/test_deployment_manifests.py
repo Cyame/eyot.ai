@@ -37,3 +37,16 @@ def test_portal_acceptance_scripts_use_the_non_legacy_node_port() -> None:
         content = script.read_text()
         assert "30174" in content
         assert "30173" not in content
+
+
+def test_portal_nginx_api_proxy_read_timeout() -> None:
+    """Portal nginx must keep /api/ SSE connections open for the deploy window."""
+    dockerfile = (
+        Path(__file__).resolve().parents[2]
+        / "eyot-artifacts"
+        / "docker"
+        / "Dockerfile.portal"
+    )
+    content = dockerfile.read_text()
+    assert "proxy_read_timeout 300s;" in content
+

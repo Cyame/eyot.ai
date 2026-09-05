@@ -1554,7 +1554,15 @@
       "network_policy": "网络策略",
       "healthz_watch": "等待就绪",
       "status_update": "更新状态"
-    }
+    },
+    "connectionLostTitle": "与后端连接中断",
+    "connectionLost": "部署进度暂时无法同步，请检查网络后重试。",
+    "retryConnection": "重试",
+    "recordMissingTitle": "部署记录已消失",
+    "recordMissing": "找不到这次部署的记录，可能已被清理。",
+    "close": "关闭",
+    "retryDeploy": "重试部署",
+    "retryFailed": "重试部署失败"
   },
   "genePacks": {
     "orgAdmin": "组织管理",
@@ -1568,5 +1576,15 @@
     "proxyPort": "端口",
     "proxyUsername": "用户名",
     "proxyPassword": "密码"
+  },
+  "watchdog": {
+    "title": "后台服务不可用",
+    "retry": "立即重试",
+    "unknown": "{{name}} 不可用",
+    "dependency": {
+      "database": "数据库连接中断",
+      "kubernetes": "K8s 集群不可达",
+      "backend": "与后端连接中断"
+    }
   }
 }

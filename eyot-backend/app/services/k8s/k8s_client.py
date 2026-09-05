@@ -15,6 +15,14 @@ from app.services.k8s.k8s_client_watch import K8sClientWatchMixin
 logger = logging.getLogger(__name__)
 
 
+def _container_waiting_reason(container_status) -> str | None:
+    """Return ``state.waiting.reason`` when the container is waiting, else None."""
+    state = getattr(container_status, "state", None)
+    waiting = getattr(state, "waiting", None) if state is not None else None
+    reason = getattr(waiting, "reason", None) if waiting is not None else None
+    return str(reason) if reason else None
+
+
 class K8sClient(K8sClientWatchMixin):
     """Wraps kubernetes-asyncio APIs for a single cluster.
 
@@ -145,6 +153,7 @@ class K8sClient(K8sClientWatchMixin):
                     "name": cs.name,
                     "ready": cs.ready,
                     "restart_count": cs.restart_count,
+                    "waiting_reason": _container_waiting_reason(cs),
                 }
                 for cs in (pod.status.container_statuses or [])
             ]

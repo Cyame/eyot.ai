@@ -23,6 +23,7 @@ specific tests. The shared ``session`` / ``db_url`` fixtures come from
 
 from __future__ import annotations
 
+import asyncio
 import uuid
 
 import pytest  # noqa: E402
@@ -230,3 +231,40 @@ async def test_cancel_endpoint_marks_record_cancelled(
     refreshed = await session.get(DeployRecord, record_id)
     assert refreshed is not None
     assert refreshed.status == DeployStatus.cancelled.value
+
+
+@pytest.mark.asyncio
+async def test_deploy_sse_emits_ping_when_idle(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Idle SSE subscriptions emit ping frames so proxies do not cut them."""
+    import app.api.v1.deploy as deploy_mod
+
+    monkeypatch.setattr(deploy_mod, "SSE_PING_INTERVAL_SECONDS", 0.05)
+    agen = deploy_mod.iter_deploy_sse("rec-idle")
+    try:
+        frame = await asyncio.wait_for(agen.__anext__(), timeout=1)
+    finally:
+        await agen.aclose()
+    assert "event: ping" in frame
+    assert "\"type\": \"ping\"" in frame
+
+
+@pytest.mark.asyncio
+async def test_deploy_sse_forwards_matching_progress_event() -> None:
+    """Progress events for the subscribed record pass through unchanged."""
+    import app.api.v1.deploy as deploy_mod
+    from app.services.k8s.event_bus import event_bus
+
+    agen = deploy_mod.iter_deploy_sse("rec-match")
+    try:
+        pending = asyncio.create_task(agen.__anext__())
+        await asyncio.sleep(0)
+        event_bus.publish(
+            "deploy_progress",
+            {"record_id": "rec-match", "step": 3, "status": "running"},
+        )
+        frame = await asyncio.wait_for(pending, timeout=1)
+    finally:
+        await agen.aclose()
+    assert "deploy_progress" in frame
+    assert "rec-match" in frame
+    assert "running" in frame

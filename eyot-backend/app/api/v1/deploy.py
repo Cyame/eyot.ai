@@ -16,6 +16,9 @@ lazily (P11c Todo 1) so this module loads even before the service ships.
 
 from __future__ import annotations
 
+import asyncio
+import json
+
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
@@ -27,6 +30,32 @@ from app.services.k8s.event_bus import event_bus
 
 router = APIRouter(prefix="/deploy", tags=["Deploy"])
 add_error_responses(router)
+
+SSE_PING_INTERVAL_SECONDS = 30.0
+
+
+async def iter_deploy_sse(record_id: str, request: Request | None = None):
+    """Yield SSE frames for a deploy record, pinging on idle."""
+    queue, cleanup = event_bus.create_subscription("deploy_progress")
+    try:
+        while True:
+            try:
+                sse_event = await asyncio.wait_for(
+                    queue.get(), timeout=SSE_PING_INTERVAL_SECONDS
+                )
+            except TimeoutError:
+                yield f"event: ping\ndata: {json.dumps({'type': 'ping'})}\n\n"
+                if request is not None and await request.is_disconnected():
+                    break
+                continue
+            payload = sse_event.data
+            if payload.get("record_id") != record_id:
+                continue
+            yield sse_event.format()
+            if request is not None and await request.is_disconnected():
+                break
+    finally:
+        cleanup()
 
 
 async def _load_active_record(record_id: str, db) -> DeployRecord:
@@ -66,15 +95,18 @@ async def stream_deploy_progress(
     await _load_active_record(record_id, db)
 
     async def event_generator():
-        async for sse_event in event_bus.subscribe("deploy_progress"):
-            payload = sse_event.data
-            if payload.get("record_id") != record_id:
-                continue
-            yield sse_event.format()
-            if await request.is_disconnected():
-                break
+        async for frame in iter_deploy_sse(record_id, request):
+            yield frame
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @router.get("/deploy-progress/{record_id}/snapshot")

@@ -1,14 +1,21 @@
-import { AlertCircle, CheckCircle2, LoaderCircle, Square, XCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2, LoaderCircle, RefreshCw, Square, XCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { ApiError, api } from '@/lib/api';
 import { cancelDeploy, fetchDeploySnapshot, streamDeployProgress } from '@/lib/api/deploy';
+import { resolveError } from '@/lib/apiError';
 import { cn } from '@/lib/utils';
 import { useDeployProgressStore } from '@/stores/deployProgressStore';
 import { useSessionStore } from '@/stores/session';
 
 /** Client-side deploy watch timeout (matches backend healthz window). */
 export const DEPLOY_UI_TIMEOUT_MS = 300_000;
+
+export const deployWatchConfig = {
+  pollIntervalMs: 2_000,
+  failThreshold: 3,
+};
 
 function parseStepNames(message: string | null): readonly string[] | null {
   if (!message) return null;
@@ -29,6 +36,7 @@ export default function DeployProgressFloat() {
   const token = useSessionStore((s) => s.token);
   const job = useDeployProgressStore((s) => s.job);
   const patch = useDeployProgressStore((s) => s.patch);
+  const start = useDeployProgressStore((s) => s.start);
   const minimize = useDeployProgressStore((s) => s.minimize);
   const expand = useDeployProgressStore((s) => s.expand);
   const clear = useDeployProgressStore((s) => s.clear);
@@ -42,6 +50,7 @@ export default function DeployProgressFloat() {
     const ac = new AbortController();
     abortRef.current = ac;
     let finished = false;
+    let consecutiveFailures = 0;
 
     const timeoutId = window.setTimeout(() => {
       if (finished) return;
@@ -53,7 +62,8 @@ export default function DeployProgressFloat() {
     const pollSnapshot = async () => {
       try {
         const snap = await fetchDeploySnapshot(recordId);
-        if (ac.signal.aborted || finished) return;
+        if (ac.signal.aborted || finished) return false;
+        consecutiveFailures = 0;
         const names = parseStepNames(snap.message);
         if (names !== null) patch({ stepNames: names });
         if (snap.status === 'success') {
@@ -71,14 +81,32 @@ export default function DeployProgressFloat() {
           patch({ phase: 'cancelled' });
           return true;
         }
-      } catch {
-        // best-effort
+      } catch (error) {
+        if (ac.signal.aborted || finished) return false;
+        if (error instanceof ApiError && error.status === 404) {
+          finished = true;
+          patch({
+            phase: 'record_missing',
+            minimized: false,
+            message: t('deploy.recordMissing'),
+          });
+          return true;
+        }
+        consecutiveFailures += 1;
+        if (consecutiveFailures >= deployWatchConfig.failThreshold) {
+          finished = true;
+          patch({
+            phase: 'connection_lost',
+            minimized: false,
+            message: t('deploy.connectionLost'),
+          });
+          return true;
+        }
       }
       return false;
     };
 
     void (async () => {
-      // Seed from snapshot (late subscribe / already done).
       if (await pollSnapshot()) {
         window.clearTimeout(timeoutId);
         return;
@@ -108,12 +136,11 @@ export default function DeployProgressFloat() {
         );
       } catch {
         if (!finished && !ac.signal.aborted) {
-          // Fall back to snapshot polling until timeout.
           const interval = window.setInterval(() => {
             void pollSnapshot().then((done) => {
               if (done) window.clearInterval(interval);
             });
-          }, 2000);
+          }, deployWatchConfig.pollIntervalMs);
           ac.signal.addEventListener('abort', () => window.clearInterval(interval));
         }
       } finally {
@@ -131,6 +158,21 @@ export default function DeployProgressFloat() {
 
   if (job === null) return null;
 
+  const titleKey =
+    job.phase === 'success'
+      ? 'deploy.successTitle'
+      : job.phase === 'cancelled'
+        ? 'deploy.cancelledTitle'
+        : job.phase === 'timeout'
+          ? 'deploy.timeoutTitle'
+          : job.phase === 'connection_lost'
+            ? 'deploy.connectionLostTitle'
+            : job.phase === 'record_missing'
+              ? 'deploy.recordMissingTitle'
+              : job.phase === 'failed'
+                ? 'deploy.failedTitle'
+                : 'deploy.runningTitle';
+
   if (job.minimized && !terminal) {
     return (
       <button
@@ -145,6 +187,23 @@ export default function DeployProgressFloat() {
     );
   }
 
+  const handleRetryDeploy = () => {
+    void api<{ id: string; instance_id: string }>(
+      `/instances/${encodeURIComponent(job.instanceId)}/deploy`,
+      { method: 'POST' },
+    )
+      .then((record) => {
+        start({
+          recordId: record.id,
+          instanceId: record.instance_id,
+          workspaceId: job.workspaceId,
+        });
+      })
+      .catch((error) => {
+        patch({ message: resolveError(t, error, 'deploy.retryFailed') });
+      });
+  };
+
   return (
     <div
       role="dialog"
@@ -156,15 +215,7 @@ export default function DeployProgressFloat() {
       <div className="flex w-full max-w-md flex-col overflow-hidden rounded-t-xl border border-line bg-surface shadow-2xl sm:rounded-xl">
         <header className="border-b border-line px-5 py-4">
           <h2 id="deploy-progress-title" className="text-base font-semibold text-ink">
-            {terminal
-              ? job.phase === 'success'
-                ? t('deploy.successTitle')
-                : job.phase === 'cancelled'
-                  ? t('deploy.cancelledTitle')
-                  : job.phase === 'timeout'
-                    ? t('deploy.timeoutTitle')
-                    : t('deploy.failedTitle')
-              : t('deploy.runningTitle')}
+            {t(titleKey)}
           </h2>
           <p className="mt-1 text-xs text-muted">{t('deploy.subtitle')}</p>
         </header>
@@ -209,9 +260,20 @@ export default function DeployProgressFloat() {
             );
           })}
 
-          {job.message && (job.phase === 'failed' || job.phase === 'timeout') ? (
+          {job.message &&
+          (job.phase === 'failed' ||
+            job.phase === 'timeout' ||
+            job.phase === 'connection_lost' ||
+            job.phase === 'record_missing') ? (
             <div
               role="alert"
+              data-testid={
+                job.phase === 'connection_lost'
+                  ? 'deploy-connection-lost'
+                  : job.phase === 'record_missing'
+                    ? 'deploy-record-missing'
+                    : 'deploy-error-message'
+              }
               className="flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-red-800"
             >
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -250,19 +312,51 @@ export default function DeployProgressFloat() {
                 {t('deploy.cancel')}
               </button>
             </>
-          ) : (
+          ) : job.phase === 'connection_lost' ? (
             <button
               type="button"
-              onClick={() => {
-                const workspaceId = job.workspaceId;
-                clear();
-                navigate(`/workspaces/${encodeURIComponent(workspaceId)}`);
-              }}
-              data-testid="deploy-start-using"
-              className="rounded-lg bg-brand px-4 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
+              onClick={() => patch({ phase: 'running' })}
+              data-testid="deploy-retry-connection"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
             >
-              {t('deploy.startUsing')}
+              <RefreshCw className="size-3.5" aria-hidden="true" />
+              {t('deploy.retryConnection')}
             </button>
+          ) : job.phase === 'record_missing' ? (
+            <button
+              type="button"
+              onClick={() => clear()}
+              data-testid="deploy-close"
+              className="rounded-lg border border-line bg-surface px-4 py-1.5 text-sm font-medium text-ink hover:bg-surface-muted"
+            >
+              {t('deploy.close')}
+            </button>
+          ) : (
+            <>
+              {job.phase === 'failed' || job.phase === 'timeout' ? (
+                <button
+                  type="button"
+                  onClick={handleRetryDeploy}
+                  data-testid="deploy-retry"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink hover:bg-surface-muted"
+                >
+                  <RefreshCw className="size-3.5" aria-hidden="true" />
+                  {t('deploy.retryDeploy')}
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => {
+                  const workspaceId = job.workspaceId;
+                  clear();
+                  navigate(`/workspaces/${encodeURIComponent(workspaceId)}`);
+                }}
+                data-testid="deploy-start-using"
+                className="rounded-lg bg-brand px-4 py-1.5 text-sm font-semibold text-brand-fg hover:bg-brand-hover"
+              >
+                {t('deploy.startUsing')}
+              </button>
+            </>
           )}
         </footer>
       </div>
