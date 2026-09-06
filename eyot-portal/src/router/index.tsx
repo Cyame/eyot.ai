@@ -154,10 +154,6 @@ const router = createBrowserRouter([
     Component: LoginPage,
   },
   {
-    path: '/403',
-    Component: ForbiddenPage,
-  },
-  {
     path: '/orgs/picker',
     element: (
       <RequireAuth>
@@ -167,11 +163,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/account',
-    element: (
-      <RequireAuth>
-        <AccountPage />
-      </RequireAuth>
-    ),
+    Component: AppShell,
+    children: [{ index: true, Component: AccountPage }],
+  },
+  {
+    path: '/403',
+    Component: AppShell,
+    children: [{ index: true, Component: ForbiddenPage }],
   },
   {
     path: '/orgs/:orgId',

@@ -453,6 +453,77 @@ async def test_topology_unknown_instance_404(
 
 
 # ---------------------------------------------------------------------------
+# GET /internal/channels
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_channels_returns_dynamic_surfaces(
+    internal_client: TestClient,
+    session: AsyncSession,
+    workspace_factory,
+    entity_factory,
+    instance_factory,
+    loop_state_factory,
+) -> None:
+    workspace = await workspace_factory()
+    ent_a = await entity_factory(slug="ent-chan-a")
+    ent_b = await entity_factory(slug="ent-chan-b")
+    inst_a = await instance_factory(workspace_id=workspace.id, entity_id=ent_a.id)
+    inst_b = await instance_factory(workspace_id=workspace.id, entity_id=ent_b.id)
+
+    mem_a = Membership(
+        workspace_id=workspace.id, instance_id=inst_a.id, posx=0, posy=0
+    )
+    mem_b = Membership(
+        workspace_id=workspace.id, instance_id=inst_b.id, posx=1, posy=1
+    )
+    session.add_all([mem_a, mem_b])
+    await session.flush()
+    lo, hi = sorted([mem_a.id, mem_b.id])
+    session.add(
+        Passage(
+            workspace_id=workspace.id,
+            from_membership_id=lo,
+            to_membership_id=hi,
+            is_active=True,
+            mode="dual",
+        )
+    )
+    await loop_state_factory(inst_a, loop_status=LoopStatus.running.value)
+    await session.commit()
+
+    resp = internal_client.get(
+        "/api/v1/internal/channels",
+        params={"instance_id": inst_a.id},
+        headers=_AUTH_HEADERS,
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+
+    assert body["self"]["instance_id"] == inst_a.id
+    assert body["self"]["membership_id"] == mem_a.id
+    assert body["self"]["entity_slug"] == ent_a.slug
+    assert body["self"]["loop_status"] == "running"
+    assert body["delivery_modes"] == ["notify", "soft_inject", "wake"]
+    assert "connected" in body["tunnel"]
+    assert len(body["neighbors"]) == 1
+    assert body["neighbors"][0]["entity_slug"] == ent_b.slug
+
+
+@pytest.mark.asyncio
+async def test_channels_unknown_instance_404(
+    internal_client: TestClient, session: AsyncSession
+) -> None:
+    resp = internal_client.get(
+        "/api/v1/internal/channels",
+        params={"instance_id": "no-such-instance"},
+        headers=_AUTH_HEADERS,
+    )
+    assert resp.status_code == 404, resp.text
+    assert resp.json()["error_code"] == "internal.channels.instance_not_found"
+
+# ---------------------------------------------------------------------------
 # POST /internal/report
 # ---------------------------------------------------------------------------
 
@@ -554,5 +625,10 @@ async def test_new_endpoints_require_internal_token(
 
     resp = internal_client.get(
         "/api/v1/internal/topology", params={"instance_id": "nope"}
+    )
+    assert resp.status_code == 401
+
+    resp = internal_client.get(
+        "/api/v1/internal/channels", params={"instance_id": "nope"}
     )
     assert resp.status_code == 401
