@@ -109,7 +109,7 @@ type TopologyPageProps = {
 const VIEW_BOX = '-1000 -1000 2000 2000';
 const NODE_RADIUS = 40;
 const HALO_RADIUS = 52;
-const HALO_STROKE_WIDTH = 8;
+const HALO_STROKE_WIDTH = 6;
 const CORE_STROKE_WIDTH = 2;
 const MIN_ZOOM = 0.25;
 const MAX_ZOOM = 4;
@@ -992,7 +992,7 @@ export default function TopologyPage({
 
       <div className="relative flex min-h-0 flex-1">
         <div
-          className="relative flex min-w-0 flex-1 items-center justify-center overflow-hidden bg-surface-muted"
+          className="topology-canvas relative flex min-w-0 flex-1 items-center justify-center overflow-hidden"
           data-testid="topology-canvas-container"
         >
           <ModeToolbar
@@ -1024,7 +1024,7 @@ export default function TopologyPage({
               <TopologyGlowDefs />
 
               {/* subtle grid backdrop - purely cosmetic, no role in tests */}
-              <g opacity="0.25">
+              <g opacity="0.16">
                 {[-800, -400, 0, 400, 800].map((tick) => (
                   <line
                     key={`v-${tick}`}
@@ -1032,7 +1032,7 @@ export default function TopologyPage({
                     y1={-1000}
                     x2={tick}
                     y2={1000}
-                    stroke="#cbd5e1"
+                    stroke="#a9b6c9"
                     strokeWidth={1}
                   />
                 ))}
@@ -1043,7 +1043,7 @@ export default function TopologyPage({
                     y1={tick}
                     x2={1000}
                     y2={tick}
-                    stroke="#cbd5e1"
+                    stroke="#a9b6c9"
                     strokeWidth={1}
                   />
                 ))}
@@ -1278,6 +1278,7 @@ function NodeView({
           strokeOpacity={haloOpacity}
           strokeWidth={HALO_STROKE_WIDTH}
           filter="url(#topology-glow-blur)"
+          className="animate-node-float"
           data-testid={`topology-node-halo-${node.id}`}
         />
       ) : null}

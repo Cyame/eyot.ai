@@ -56,6 +56,7 @@
     "workspaces": "Habitats",
     "backToWorldDashboard": "Back to continent",
     "currentNamespace": "Current region",
+    "workspaceCanvas": "Workspace",
     "pending": "Content migration in progress"
   },
   "orgPicker": {

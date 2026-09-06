@@ -43,10 +43,12 @@ export default function NamespaceSwitcher({ orgId }: NamespaceSwitcherProps) {
     }
   }, [namespaces, t]);
 
+  // Load on mount (not only when opened) so the current namespace's display
+  // name is available on first paint instead of showing the raw id until the
+  // user opens the dropdown.
   useEffect(() => {
-    if (!open) return;
     void load();
-  }, [open, load]);
+  }, [load]);
 
   useEffect(() => {
     if (!open) return;

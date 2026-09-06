@@ -71,8 +71,8 @@ export function OutdatedOverlay({ nodeId }: { readonly nodeId: string }) {
 
 export const GLOW_INTENSITY_OPACITY = {
   static: 0,
-  weak: 0.2,
-  low: 0.4,
-  medium: 0.65,
-  strong: 0.95,
+  weak: 0.14,
+  low: 0.26,
+  medium: 0.4,
+  strong: 0.55,
 } as const;

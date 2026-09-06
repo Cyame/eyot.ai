@@ -137,6 +137,38 @@
   }
 }
 
+/* Gentle breathing float for topology nodes — a soft scale pulse on the
+   halo, decoupled from SVG translate/filter so node placement is untouched. */
+@keyframes node-float {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+.animate-node-float {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: node-float 4.5s ease-in-out infinite;
+}
+
+/* Airy canvas backdrop for the topology view — a soft brand-tinted radial
+   glow over the muted surface, replacing the flat "funeral" gray. */
+.topology-canvas {
+  background:
+    radial-gradient(720px 520px at 50% 28%, oklch(0.94 0.03 160 / 0.7), transparent 62%),
+    var(--eyot-surface-muted);
+}
+
+.dark .topology-canvas {
+  background:
+    radial-gradient(720px 520px at 50% 28%, oklch(0.34 0.06 160 / 0.4), transparent 62%),
+    var(--eyot-surface-muted);
+}
+
 html {
   background-color: var(--eyot-canvas);
 }
