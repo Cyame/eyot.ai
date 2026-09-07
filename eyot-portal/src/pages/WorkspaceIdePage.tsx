@@ -1,9 +1,6 @@
 import {
   AlertCircle,
   Archive,
-  Brain,
-  CalendarDays,
-  Cpu,
   FilePlus,
   FileText,
   Folder,
@@ -15,7 +12,6 @@ import {
   Search,
   Trash,
   UserRound,
-  Users,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,8 +60,8 @@ import type {
 import TopologyPage from '@/pages/TopologyPage';
 import { useSelectedStore } from '@/stores/selected';
 import { useSessionStore } from '@/stores/session';
+import { type CanvasTab, useWorkspaceCanvasStore } from '@/stores/workspaceCanvas';
 
-type CanvasTab = 'topology' | 'memberships' | 'instances' | 'meetings' | 'brain';
 type BrainSubTab = 'fornix' | 'vault' | 'frontal' | 'brainstem' | 'cerebellum';
 
 type OffsetPage<T> = {
@@ -106,10 +102,16 @@ export default function WorkspaceIdePage() {
   const { id } = useParams<{ id: string }>();
   const setWorkspaceId = useSelectedStore((state) => state.setWorkspaceId);
   const interactionMode = useSelectedStore((state) => state.interactionMode);
+  const activeTabByWorkspace = useWorkspaceCanvasStore((state) => state.activeTabByWorkspace);
+  const setCanvasTab = useWorkspaceCanvasStore((state) => state.setActiveTab);
+  const activeTab: CanvasTab = activeTabByWorkspace[id ?? ''] ?? 'topology';
+  const setActiveTab = (tab: CanvasTab) => {
+    if (id === undefined) return;
+    setCanvasTab(id, tab);
+  };
   const currentUserId = useSessionStore((state) => state.user?.user_id ?? null);
 
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
-  const [activeTab, setActiveTab] = useState<CanvasTab>('topology');
   const [brainSubTab, setBrainSubTab] = useState<BrainSubTab>('fornix');
   const [memberships, setMemberships] = useState<readonly Membership[]>([]);
   const [instances, setInstances] = useState<readonly Instance[]>([]);
@@ -232,18 +234,9 @@ export default function WorkspaceIdePage() {
   );
   const modeLabel = t(`topology.mode.${interactionMode}`);
 
-  const TABS: readonly { id: CanvasTab; label: string; Icon: typeof Users }[] = [
-    { id: 'topology', label: t('workspace.tabs.topology'), Icon: Users },
-    { id: 'memberships', label: t('workspace.tabs.memberships'), Icon: Users },
-    { id: 'instances', label: t('workspace.tabs.instances'), Icon: Cpu },
-    { id: 'meetings', label: t('workspace.tabs.meetings'), Icon: CalendarDays },
-    { id: 'brain', label: t('workspace.tabs.brain'), Icon: Brain },
-  ];
-
   if (id === undefined) {
     return <p className="p-6 text-sm text-danger">{t('workspace.idMissing')}</p>;
   }
-
   return (
     <IdeShell
       workspaceId={id}
@@ -252,26 +245,6 @@ export default function WorkspaceIdePage() {
       modeLabel={modeLabel}
     >
       <div className="flex h-full flex-col">
-        <div className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-surface px-3 pt-2">
-          {TABS.map(({ id: tabId, label, Icon }) => (
-            <button
-              key={tabId}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === tabId}
-              onClick={() => setActiveTab(tabId)}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-t-lg border-b-2 px-4 py-2 text-sm font-medium ${
-                activeTab === tabId
-                  ? 'border-brand bg-brand-soft text-brand'
-                  : 'border-transparent text-muted hover:bg-surface-muted'
-              }`}
-            >
-              <Icon className="size-4" aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </div>
-
         <div className="min-h-0 flex-1 overflow-hidden">
           {errorMessage !== null ? (
             <div

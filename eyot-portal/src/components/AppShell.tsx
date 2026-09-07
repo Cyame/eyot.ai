@@ -1,7 +1,10 @@
 import {
   BookOpen,
+  Brain,
   Bug,
   Building2,
+  CalendarDays,
+  Cpu,
   Dna,
   Fingerprint,
   FlaskConical,
@@ -31,6 +34,7 @@ import { cn } from '@/lib/utils';
 import { APP_VERSION } from '@/lib/version';
 import { useDebugNavStore } from '@/stores/debugNav';
 import { useSessionStore } from '@/stores/session';
+import { type CanvasTab, useWorkspaceCanvasStore } from '@/stores/workspaceCanvas';
 
 const DESKTOP_LINK_CLASS =
   'flex items-center gap-3 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand';
@@ -96,6 +100,12 @@ function navActive(item: NavItem, pathname: string): boolean {
   return pathname === item.to || pathname.startsWith(`${item.to}/`);
 }
 
+/** Extract the workspace id from a canonical /orgs/:orgId/workspaces/:wsId/… path. */
+function workspaceIdFromPath(pathname: string): string | null {
+  const match = pathname.match(/^\/orgs\/[^/]+\/workspaces\/([^/]+)/);
+  return match?.[1] ?? null;
+}
+
 /** Extract the namespace id from a canonical /orgs/:orgId/namespaces/:nsId/… path. */
 function namespaceIdFromPath(pathname: string): string | null {
   const match = pathname.match(/^\/orgs\/[^/]+\/namespaces\/([^/]+)/);
@@ -115,6 +125,10 @@ export default function AppShell() {
   const setCurrentNamespace = useSessionStore((state) => state.setCurrentNamespace);
   const clearToken = useSessionStore((state) => state.clearToken);
   const debugHidden = useDebugNavStore((state) => state.hidden);
+  const activeTabByWorkspace = useWorkspaceCanvasStore((state) => state.activeTabByWorkspace);
+  const setCanvasTab = useWorkspaceCanvasStore((state) => state.setActiveTab);
+
+  const activeWorkspaceId = workspaceIdFromPath(location.pathname);
 
   useEffect(() => {
     if (token === null) return;
@@ -183,6 +197,17 @@ export default function AppShell() {
     activeOrgId !== null && activeNamespaceId !== null
       ? namespaceNavItems(activeOrgId, activeNamespaceId)
       : [];
+  const canvasItems: readonly {
+    tab: CanvasTab;
+    label: string;
+    Icon: typeof Users;
+  }[] = [
+    { tab: 'topology', label: t('workspace.tabs.topology'), Icon: Users },
+    { tab: 'memberships', label: t('workspace.tabs.memberships'), Icon: Users },
+    { tab: 'instances', label: t('workspace.tabs.instances'), Icon: Cpu },
+    { tab: 'meetings', label: t('workspace.tabs.meetings'), Icon: CalendarDays },
+    { tab: 'brain', label: t('workspace.tabs.brain'), Icon: Brain },
+  ];
   const showDebug = activeOrgId !== null && !debugHidden;
 
   return (
@@ -266,6 +291,37 @@ export default function AppShell() {
                 </div>
               </section>
             </>
+          ) : null}
+
+          {activeOrgId !== null && activeWorkspaceId !== null ? (
+            <section aria-label={t('nav.workspaceCanvas')}>
+              <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-nav-muted">
+                {t('nav.workspaceCanvas')}
+              </p>
+              <div className="flex flex-col gap-1">
+                {canvasItems.map((item) => {
+                  const isActive = activeTabByWorkspace[activeWorkspaceId] === item.tab;
+                  return (
+                    <button
+                      key={item.tab}
+                      type="button"
+                      onClick={() => setCanvasTab(activeWorkspaceId, item.tab)}
+                      aria-current={isActive ? 'true' : undefined}
+                      className={cn(
+                        DESKTOP_LINK_CLASS,
+                        'w-full text-left',
+                        isActive
+                          ? 'bg-brand text-brand-fg shadow-sm'
+                          : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
+                      )}
+                    >
+                      <item.Icon className="size-4 shrink-0" aria-hidden="true" />
+                      <span className="truncate">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           ) : null}
 
           <section aria-label={t('nav.account')}>
@@ -371,6 +427,27 @@ export default function AppShell() {
           className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-surface px-3 pt-2 md:hidden"
           aria-label="Primary mobile"
         >
+          {activeOrgId !== null && activeWorkspaceId !== null
+            ? canvasItems.map((item) => {
+                const isActive = activeTabByWorkspace[activeWorkspaceId] === item.tab;
+                return (
+                  <button
+                    key={item.tab}
+                    type="button"
+                    onClick={() => setCanvasTab(activeWorkspaceId, item.tab)}
+                    aria-current={isActive ? 'true' : undefined}
+                    className={cn(
+                      'shrink-0 rounded-t-lg border-b-2 px-3 py-2 text-xs font-medium transition-colors',
+                      isActive
+                        ? 'border-brand bg-brand-soft text-brand'
+                        : 'border-transparent text-muted hover:bg-surface-muted',
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })
+            : null}
           {activeNamespaceId === null
             ? worldItems.map((item) => (
                 <NavLink

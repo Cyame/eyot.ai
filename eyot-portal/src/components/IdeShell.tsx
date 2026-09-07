@@ -1,12 +1,8 @@
-import { Bug, Building2, Layers, LogOut, Sparkles, User, Users } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { LogOut, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, NavLink } from 'react-router';
+import { Navigate } from 'react-router';
 import ComposerPanel from '@/components/ComposerPanel';
 import GlobalModals from '@/components/GlobalModals';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { cn } from '@/lib/utils';
-import { useDebugNavStore } from '@/stores/debugNav';
 import { useSessionStore } from '@/stores/session';
 
 type IdeShellProps = {
@@ -14,9 +10,15 @@ type IdeShellProps = {
   readonly workspaceName: string;
   readonly healthLabel: string;
   readonly modeLabel: string;
-  readonly children: ReactNode;
+  readonly children: React.ReactNode;
 };
 
+/**
+ * Lean workspace layout: the main canvas/content on the left and the unified
+ * Composer on the right. Navigation lives in AppShell's left sidebar (the
+ * workspace canvas section), so this shell renders no redundant nav chrome —
+ * only a thin status footer at the bottom.
+ */
 export default function IdeShell({
   workspaceId,
   workspaceName,
@@ -27,93 +29,30 @@ export default function IdeShell({
   const { t } = useTranslation();
   const token = useSessionStore((state) => state.token);
   const user = useSessionStore((state) => state.user);
-  const orgId = useSessionStore((state) => state.currentOrgId);
   const clearToken = useSessionStore((state) => state.clearToken);
-  const debugHidden = useDebugNavStore((state) => state.hidden);
 
   if (token === null) {
     return <Navigate to="/login" replace />;
   }
 
-  const sidebarItems = [
-    { href: '/namespaces?tab=workspace', Icon: Building2, label: t('ide.sidebar.workspaces') },
-    { href: '/namespaces?tab=base-classes', Icon: Sparkles, label: t('ide.sidebar.baseClasses') },
-    { href: '/namespaces?tab=contracts', Icon: Users, label: t('ide.sidebar.contracts') },
-    { href: '/namespaces?tab=entities', Icon: Layers, label: t('ide.sidebar.entities') },
-    {
-      href:
-        orgId !== null
-          ? `/orgs/${encodeURIComponent(orgId)}/capabilities`
-          : '/namespaces?tab=capability-market',
-      Icon: Sparkles,
-      label: t('ide.sidebar.capabilityMarket'),
-    },
-    ...(orgId !== null && !debugHidden
-      ? [
-          {
-            href: `/orgs/${encodeURIComponent(orgId)}/debug`,
-            Icon: Bug,
-            label: t('ide.sidebar.debug'),
-          },
-        ]
-      : []),
-  ];
-
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-canvas text-ink">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="flex min-h-0 flex-1">
-        <aside className="nav-shell hidden w-14 shrink-0 flex-col items-center gap-2 border-r border-nav-line py-3 md:flex">
-          {sidebarItems.map(({ href, Icon, label }) => (
-            <NavLink
-              key={href}
-              to={href}
-              title={label}
-              className={({ isActive }) =>
-                cn(
-                  'grid size-10 place-items-center rounded-xl transition-colors',
-                  isActive
-                    ? 'bg-brand text-brand-fg shadow-sm'
-                    : 'text-nav-muted hover:bg-nav-hover hover:text-nav-ink',
-                )
-              }
-            >
-              <Icon className="size-5" aria-hidden="true" />
-              <span className="sr-only">{label}</span>
-            </NavLink>
-          ))}
+        <main className="min-w-0 flex-1 overflow-hidden">{children}</main>
+
+        <aside
+          className="hidden w-[360px] shrink-0 border-l border-line bg-surface lg:flex lg:flex-col"
+          aria-label={t('composer.title')}
+        >
+          <ComposerPanel workspaceId={workspaceId} compact />
         </aside>
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex h-10 shrink-0 items-center justify-between border-b border-line bg-surface/80 px-4 backdrop-blur-md">
-            <Link
-              to="/namespaces?tab=workspace"
-              className="text-sm font-medium text-muted hover:text-ink"
-            >
-              {t('ide.backToNamespaces')}
-            </Link>
-            <div className="flex items-center gap-2">
-              <LanguageSwitcher variant="surface" placement="down" />
-            </div>
-          </div>
-
-          <div className="flex min-h-0 flex-1">
-            <main className="min-w-0 flex-1 overflow-hidden">{children}</main>
-
-            <aside
-              className="hidden w-[360px] shrink-0 border-l border-line bg-surface lg:flex lg:flex-col"
-              aria-label={t('composer.title')}
-            >
-              <ComposerPanel workspaceId={workspaceId} compact />
-            </aside>
-          </div>
-        </div>
       </div>
 
-      <footer className="flex h-6 shrink-0 items-center justify-between border-t border-nav-line bg-nav px-3 text-xs text-nav-muted">
+      <footer className="flex h-6 shrink-0 items-center justify-between border-t border-line bg-surface-muted px-3 text-xs text-muted">
         <span className="truncate">
           {workspaceName} · {healthLabel} · {modeLabel}
         </span>
-        <span className="flex items-center gap-2 truncate text-nav-ink">
+        <span className="flex items-center gap-2 truncate text-ink">
           <User className="size-3" aria-hidden="true" />
           {user?.nickname?.trim() ||
             user?.username ||
@@ -122,7 +61,7 @@ export default function IdeShell({
           <button
             type="button"
             onClick={clearToken}
-            className="ml-2 inline-flex size-5 items-center justify-center rounded hover:bg-nav-hover"
+            className="ml-2 inline-flex size-5 items-center justify-center rounded hover:bg-surface-muted"
             aria-label={t('common.logOut')}
           >
             <LogOut className="size-3" aria-hidden="true" />
