@@ -52,13 +52,11 @@ from app.models.loop_state import InstanceLoopState, LoopStatus
 from app.models.workspace import Membership
 from app.schemas.internal import (
     AckRequest,
-    DeliveryMode,
     HubReadRequest,
     HubWriteRequest,
     InternalReportRequest,
 )
 from app.services import fornix_sync
-from app.services.tunnel.tunnel_hub import tunnel_hub
 
 router = APIRouter(prefix="/internal", tags=["internal"])
 
@@ -636,85 +634,6 @@ async def internal_topology(db: DB, instance_id: str = Query(...)) -> dict:
         ),
     }
 
-
-
-@router.get(
-    "/channels",
-    dependencies=[Depends(verify_internal_token)],
-)
-async def internal_channels(db: DB, instance_id: str = Query(...)) -> dict:
-    """Return the dynamic outbound communication surfaces for an instance.
-
-    This is a runtime-fetch surface (not a spawn-time env snapshot): tunnel
-    connectivity and reachable neighbors change while the instance is live.
-    ``delivery_modes`` lists the three outbound modes a caller may use to
-    reach this instance (notify / soft_inject / wake); ``neighbors`` are the
-    passage memberships this instance can currently message.
-
-    ``workspace_id`` is resolved from the caller's Instance row — no JWT / org
-    context is needed. Mirrors ``/internal/topology``.
-    """
-    instance = (
-        await db.execute(
-            select(Instance).where(
-                Instance.id == instance_id,
-                Instance.deleted_at.is_(None),
-            )
-        )
-    ).scalar_one_or_none()
-    if instance is None:
-        raise NotFoundError(
-            "internal.channels.instance_not_found",
-            "errors.internal.channels.instance_not_found",
-            f"Instance '{instance_id}' not found",
-        )
-
-    membership = (
-        await db.execute(
-            select(Membership).where(
-                Membership.workspace_id == instance.workspace_id,
-                Membership.instance_id == instance.id,
-                Membership.deleted_at.is_(None),
-            )
-        )
-    ).scalar_one_or_none()
-    if membership is None:
-        raise NotFoundError(
-            "internal.channels.membership_not_found",
-            "errors.internal.channels.membership_not_found",
-            f"No membership for instance '{instance_id}'",
-        )
-
-    entity = (
-        await db.execute(
-            select(Entity).where(
-                Entity.id == instance.entity_id,
-                Entity.deleted_at.is_(None),
-            )
-        )
-    ).scalar_one_or_none()
-    loop_statuses = await _loop_status_map(db, [instance.id])
-    loop_status = loop_statuses.get(instance.id, LoopStatus.idle.value)
-    neighbor_ids = await neighbor_membership_ids(
-        db, instance.workspace_id, membership.id
-    )
-
-    delivery_modes: list[DeliveryMode] = ["notify", "soft_inject", "wake"]
-
-    return {
-        "self": {
-            "instance_id": instance.id,
-            "membership_id": membership.id,
-            "entity_slug": entity.slug if entity is not None else None,
-            "loop_status": loop_status,
-            "glow": _glow_to_dict(loop_status_to_glow(loop_status)),
-        },
-        "tunnel": {"connected": tunnel_hub.is_connected(instance.id)},
-        "delivery_modes": delivery_modes,
-        "neighbors": await _neighbor_snapshots(
-            db, instance.workspace_id, neighbor_ids
-        ),
-    }
 
 @router.post(
     "/report",

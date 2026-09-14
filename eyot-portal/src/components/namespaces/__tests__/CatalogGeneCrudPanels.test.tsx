@@ -183,7 +183,6 @@ describe('CapabilityMarketTab tags + config_template', () => {
     fireEvent.change(within(modal).getByLabelText('namespaces.genesTagsLabel'), {
       target: { value: 'Search, Web Tools, search' },
     });
-    fireEvent.click(within(modal).getByTestId('advanced-json-toggle'));
     fireEvent.change(within(modal).getByLabelText('namespaces.capabilityConfigTemplateLabel'), {
       target: { value: '{"engine": "bing"}' },
     });
@@ -213,7 +212,6 @@ describe('CapabilityMarketTab tags + config_template', () => {
     fireEvent.change(within(modal).getByLabelText('namespaces.name'), {
       target: { value: 'Broken' },
     });
-    fireEvent.click(within(modal).getByTestId('advanced-json-toggle'));
     fireEvent.change(within(modal).getByLabelText('namespaces.capabilityConfigTemplateLabel'), {
       target: { value: '{not-json' },
     });
@@ -241,7 +239,6 @@ describe('CapabilityMarketTab tags + config_template', () => {
 
     const modal = await screen.findByTestId('catalog-form-modal');
     const tagsInput = within(modal).getByLabelText('namespaces.genesTagsLabel');
-    fireEvent.click(within(modal).getByTestId('advanced-json-toggle'));
     const jsonInput = within(modal).getByLabelText('namespaces.capabilityConfigTemplateLabel');
     expect(tagsInput).toHaveValue('search');
     expect(jsonInput).toHaveValue(JSON.stringify({ engine: 'bing' }, null, 2));
@@ -336,57 +333,6 @@ describe('CapabilityMarketTab tags + config_template', () => {
       'namespaces.capabilityParamsInvalid',
     );
     expect(mockedApi.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
-  });
-
-  it('collapses the advanced JSON by default and reveals it on toggle', async () => {
-    mockedApi.mockImplementation((path) => {
-      if (path === '/capability-market?limit=200&offset=0') {
-        return Promise.resolve({ items: [], offset: 0, limit: 200, total: 0 });
-      }
-      return Promise.reject(new Error(`unexpected ${String(path)}`));
-    });
-
-    render(<CapabilityMarketTab t={t} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'namespaces.createCapability' }));
-
-    const modal = await screen.findByTestId('catalog-form-modal');
-    const toggle = within(modal).getByTestId('advanced-json-toggle');
-    expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    // Collapsed — the JSON textarea is not rendered.
-    expect(
-      within(modal).queryByLabelText('namespaces.capabilityConfigTemplateLabel'),
-    ).not.toBeInTheDocument();
-
-    fireEvent.click(toggle);
-    expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    expect(
-      within(modal).getByLabelText('namespaces.capabilityConfigTemplateLabel'),
-    ).toBeInTheDocument();
-  });
-
-  it('does not clobber hand-authored JSON when editing the structured definition', async () => {
-    mockedApi.mockImplementation((path) => {
-      if (path === '/capability-market?limit=200&offset=0') {
-        return Promise.resolve({ items: [], offset: 0, limit: 200, total: 0 });
-      }
-      return Promise.reject(new Error(`unexpected ${String(path)}`));
-    });
-
-    render(<CapabilityMarketTab t={t} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'namespaces.createCapability' }));
-
-    const modal = await screen.findByTestId('catalog-form-modal');
-    fireEvent.click(within(modal).getByTestId('advanced-json-toggle'));
-    const jsonInput = within(modal).getByLabelText('namespaces.capabilityConfigTemplateLabel');
-    // Arbitrary key outside the skill structured projection.
-    fireEvent.change(jsonInput, { target: { value: '{"engine": "bing"}' } });
-
-    // Editing a structured field must not wipe hand-written JSON keys.
-    fireEvent.change(within(modal).getByLabelText('namespaces.capabilitySkillBodyLabel'), {
-      target: { value: 'Follow the checklist.' },
-    });
-
-    expect(jsonInput).toHaveValue('{"engine": "bing"}');
   });
 });
 

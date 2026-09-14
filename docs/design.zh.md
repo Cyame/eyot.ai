@@ -92,8 +92,6 @@ Eyot 的目标句是 **harness for harness**：它调度的不是一排聊天机
 
 两套分开管。创生时 has 盖不住 require 只提示，不阻断——上游不自洽不该把系统卡死。
 
-**资产 vs 事实——两种别塞进同一个静态注入容器。** 知识表（has / require）是**资产**：slow-change 的「身份有什么」（skills / tools 教学内容、prompt 上下文），创生时解析并注入 `runtime_config["knowledge"]` 是唯一合理时点——它定义了这个身份，构成快照，不随运行而变化。而**运行态事实**（拓扑、邻居、glow、tunnel 连通、未来的飞书 / Discord 出站通道接入）属于「此刻能碰到谁、怎么投递」，必须由后裔通过 backend 的 internal 接口**运行时动态拉取**（`/internal/topology`、`/internal/channels`），不写成静态环境变量，也不靠重启刷新。这两类一旦混用（把动态通道塞进 spawn 静态 env），就会让「身份资产」和「现场事实」相互污染——dev2 明确分开。
-
 ---
 
 ## 5. 协作：看得见的邻居，而不是会场麦克风

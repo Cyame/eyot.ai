@@ -14,6 +14,7 @@
 | 系统蓝图 + 当前程序 | [`roadmap.md`](roadmap.md) |
 | API 约定 | [`api-architecture.md`](api-architecture.md) |
 | 日志 / 事件 / 队列 | [`observability.md`](observability.md) |
+| **功能 Stub 与未闭环清单** | [`functional-stubs.md`](functional-stubs.md) |
 | v4 功能收口索引（已完成） | [`prd-v4.md`](prd-v4.md) |
 | 归档 | [`archive/README.md`](archive/README.md) |
 

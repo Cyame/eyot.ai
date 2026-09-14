@@ -1,15 +1,5 @@
 import type { TFunction } from 'i18next';
-import {
-  ArrowDown,
-  ArrowUp,
-  ChevronDown,
-  ChevronUp,
-  LoaderCircle,
-  Pencil,
-  Plus,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, LoaderCircle, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import EmptyState from '@/components/EmptyState';
 import {
@@ -174,17 +164,6 @@ function structuredFromTemplate(
   return { ...base, paramsText: params };
 }
 
-/** True when jsonText is exactly the projection of the structured fields. */
-function isCleanStructuredProjection(v: {
-  readonly type: CapabilityType;
-  readonly structured: StructuredForm;
-  readonly jsonText: string;
-}): boolean {
-  const parsed = parseJsonObjectInput(v.jsonText);
-  const projection = buildConfigTemplate(v.type, v.structured);
-  return parsed.ok && deepEqual(parsed.value, projection);
-}
-
 /** Read the inline `required_knowledge` slug array of a manifest object. */
 function manifestRequiredKnowledge(manifest: Record<string, unknown> | null): readonly string[] {
   if (manifest === null) return [];
@@ -276,23 +255,6 @@ export function parseJsonObjectInput(text: string): JsonParseResult {
   } catch {
     return { ok: false };
   }
-}
-
-/** Structural deep-equality for JSON object projections (no array/date). */
-function deepEqual(a: unknown, b: unknown): boolean {
-  if (a === b) return true;
-  if (a === null || b === null) return false;
-  if (typeof a !== 'object' || typeof b !== 'object') return false;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  const aKeys = Object.keys(a);
-  const bKeys = Object.keys(b);
-  if (aKeys.length !== bKeys.length) return false;
-  for (const key of aKeys) {
-    if (!deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) {
-      return false;
-    }
-  }
-  return true;
 }
 
 /** Read the inline `capabilities` array of a manifest object, deduped by name. */
@@ -395,30 +357,12 @@ function CatalogFormModal({
 }) {
   const [values, setValues] = useState(initial);
   const [validationError, setValidationError] = useState<string | null>(null);
-  // Advanced JSON is collapsed by default; reopen resets when the modal
-  // (re)opens or the underlying record changes.
-  const [jsonOpen, setJsonOpen] = useState(false);
 
   useEffect(() => {
     setValues(initial);
     setValidationError(null);
-    setJsonOpen(false);
   }, [initial]);
-  const applyStructured = (next: StructuredForm) => {
-    const built = buildConfigTemplate(values.type, next);
-    setValues((v) => {
-      // Only auto-regenerate the advanced JSON when the current value is a
-      // pure projection of the structured fields. Hand-written JSON carrying
-      // keys outside the structured shape (e.g. {"engine":"bing"}) must not be
-      // clobbered by a structured edit — `jsonDiverged` surfaces that instead.
-      const clean = isCleanStructuredProjection(v);
-      return {
-        ...v,
-        structured: next,
-        jsonText: clean ? (built !== null ? JSON.stringify(built, null, 2) : '') : v.jsonText,
-      };
-    });
-  };
+
   const jsonLabelKey =
     jsonField === 'manifest'
       ? 'namespaces.genesManifestLabel'
@@ -429,12 +373,15 @@ function CatalogFormModal({
       : 'namespaces.capabilityConfigTemplatePlaceholder';
 
   const structuredMode = jsonField === 'configTemplate';
-  // True when the advanced JSON carries content outside the structured form
-  // (e.g. hand-authored keys), so a structured edit won't silently wipe it.
-  const jsonDiverged = useMemo(() => {
-    if (jsonField !== 'configTemplate') return false;
-    return !isCleanStructuredProjection(values);
-  }, [jsonField, values]);
+
+  const applyStructured = (next: StructuredForm) => {
+    const built = buildConfigTemplate(values.type, next);
+    setValues((v) => ({
+      ...v,
+      structured: next,
+      jsonText: built !== null ? JSON.stringify(built, null, 2) : '',
+    }));
+  };
 
   const setStructuredField = (key: keyof StructuredForm, value: string) => {
     applyStructured({ ...values.structured, [key]: value });
@@ -797,71 +744,22 @@ function CatalogFormModal({
             </div>
           ) : null}
           {jsonField !== null ? (
-            structuredMode ? (
-              <div className="space-y-1 rounded-lg border border-line p-3">
-                <button
-                  type="button"
-                  onClick={() => setJsonOpen((open) => !open)}
-                  aria-expanded={jsonOpen}
-                  data-testid="advanced-json-toggle"
-                  className="flex w-full items-center justify-between gap-2 text-left text-sm"
-                >
-                  <span className="font-medium text-ink">
-                    {t('namespaces.capabilityConfigTemplateSection')}
-                  </span>
-                  <span className="flex min-w-0 items-center gap-2">
-                    {!jsonOpen && values.jsonText.trim() !== '' ? (
-                      <span className="max-w-48 truncate font-mono text-xs text-muted">
-                        {values.jsonText}
-                      </span>
-                    ) : null}
-                    {jsonOpen ? (
-                      <ChevronUp className="size-4 shrink-0 text-muted" aria-hidden="true" />
-                    ) : (
-                      <ChevronDown className="size-4 shrink-0 text-muted" aria-hidden="true" />
-                    )}
-                  </span>
-                </button>
-                {jsonOpen ? (
-                  <div className="space-y-1">
-                    <label className="block text-sm">
-                      <span className="mb-1 block font-medium text-ink">{t(jsonLabelKey)}</span>
-                      <textarea
-                        value={values.jsonText}
-                        onChange={(e) => handleRawJsonChange(e.target.value)}
-                        placeholder={t(jsonPlaceholderKey)}
-                        rows={4}
-                        spellCheck={false}
-                        className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
-                      />
-                    </label>
-                    {jsonDiverged ? (
-                      <p className="text-xs text-warning">
-                        {t('namespaces.capabilityJsonDivergedHint')}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-muted">
-                        {t('namespaces.capabilityJsonAdvancedHint')}
-                      </p>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <label className="block text-sm">
-                  <span className="mb-1 block font-medium text-ink">{t(jsonLabelKey)}</span>
-                  <textarea
-                    value={values.jsonText}
-                    onChange={(e) => handleRawJsonChange(e.target.value)}
-                    placeholder={t(jsonPlaceholderKey)}
-                    rows={4}
-                    spellCheck={false}
-                    className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
-                  />
-                </label>
-              </div>
-            )
+            <div className="space-y-1">
+              <label className="block text-sm">
+                <span className="mb-1 block font-medium text-ink">{t(jsonLabelKey)}</span>
+                <textarea
+                  value={values.jsonText}
+                  onChange={(e) => handleRawJsonChange(e.target.value)}
+                  placeholder={t(jsonPlaceholderKey)}
+                  rows={4}
+                  spellCheck={false}
+                  className="w-full rounded-lg border border-line px-3 py-2 font-mono text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft"
+                />
+              </label>
+              {structuredMode ? (
+                <p className="text-xs text-muted">{t('namespaces.capabilityJsonAdvancedHint')}</p>
+              ) : null}
+            </div>
           ) : null}
           {showCapabilities ? (
             <fieldset className="block text-sm" data-testid="gene-capabilities-picker">
